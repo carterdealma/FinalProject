@@ -1,4 +1,4 @@
-package finalproj.controller;
+package fin.controller;
 
 public class Runner
 {
