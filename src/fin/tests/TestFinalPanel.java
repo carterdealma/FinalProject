@@ -1,11 +1,11 @@
-package chat.tests; //Change me
+package fin.tests; //Change me
 
 
 /**
  * Project imports
  */
-import chat.controller.Controller; //Change me
-import chat.view.ChatPanel; //Change me
+import fin.controller.FinalController; //Change me
+import fin.view.FinalPanel; //Change me
 import javax.swing.*;
 
 import java.awt.*;
@@ -22,16 +22,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PanelTest
+class TestFinalPanel
 {
-	private Controller testedController; //Change me
-	private ChatPanel testedPanel; //Change me
+	private FinalController testedController; //Change me
+	private FinalPanel testedPanel; //Change me
 
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		this.testedController = new Controller(); //Change me
-		this.testedPanel = new ChatPanel(testedController); //Change me
+		this.testedController = new FinalController(); //Change me
+		this.testedPanel = new FinalPanel(testedController); //Change me
 	} 
 
 	@AfterEach

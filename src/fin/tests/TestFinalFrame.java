@@ -1,11 +1,11 @@
-package chat.tests; //Change!
+package fin.tests; //Change!
 
 /**
  * Project imports
  */
-import chat.controller.Controller; //Change!
-import chat.view.ChatPanel; //Change!
-import chat.view.ChatFrame; //Change!
+import fin.controller.FinalController; //Change!
+import fin.view.FinalPanel; //Change!
+import fin.view.FinalFrame; //Change!
 import javax.swing.*;
 
 import java.awt.Component;
@@ -24,14 +24,14 @@ import org.junit.jupiter.api.Test;
 
 class FrameTest
 {
-	private Controller testedController; //Change!
-	private ChatFrame testedFrame; //Change!
+	private FinalController testedController; //Change!
+	private FinalFrame testedFrame; //Change!
 
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		this.testedController = new Controller();
-		this.testedFrame = new ChatFrame(testedController);
+		this.testedController = new FinalController();
+		this.testedFrame = new FinalFrame(testedController);
 	}
 
 	@AfterEach
@@ -48,7 +48,7 @@ class FrameTest
 		Method [] methods = testedFrame.getClass().getDeclaredMethods();
 		assertTrue(methods.length == 1, "You need 1 method in the ChatFrame");
 		assertTrue(testedFrame.getTitle().length() > 5, "Your title needs at least 6 letters");
-		assertTrue(testedFrame.getContentPane() instanceof ChatPanel, "Your ChatFrame needs to have a ChatPanel inside");  //Change!
+		assertTrue(testedFrame.getContentPane() instanceof FinalPanel, "Your ChatFrame needs to have a ChatPanel inside");  //Change!
 	}
 
 }
