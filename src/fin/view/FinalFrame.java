@@ -25,6 +25,7 @@ public class FinalFrame extends JFrame
 		this.setTitle("Single Player Blackjack");
 		this.setSize(800, 600);
 		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 }
