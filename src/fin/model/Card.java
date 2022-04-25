@@ -2,5 +2,5 @@ package fin.model;
 
 public class Card
 {
-	private String pip;
+	private String value;
 }
