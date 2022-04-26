@@ -9,9 +9,11 @@ public class FinalController
 	public FinalController()
 	{
 		this.frame = new FinalFrame(this);
+		
+		prepareGame();
 	}
 	
-	public void start()
+	public void prepareGame()
 	{
 		
 	}
