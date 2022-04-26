@@ -21,5 +21,23 @@ public class Card
 		return this.suit;
 	}
 	
+	public void setValue()
+	{
+		this.value = value;
+	}
+	
+	public void setSuit()
+	{
+		this.suit = suit;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String description = "Card Value: " + value + ", Card Suit:" + suit;
+		
+		return description;
+	}
+	
 	
 }
