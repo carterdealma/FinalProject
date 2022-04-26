@@ -21,4 +21,9 @@ public class FinalController
 	{
 		
 	}
+	
+	public ArrayList<Card> shuffle(ArrayList<Card> cardList)
+	{
+		ArrayList<Card> shuffledCardList = new ArrayList<Card>();
+	}
 }
