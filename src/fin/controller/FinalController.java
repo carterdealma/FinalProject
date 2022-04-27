@@ -75,7 +75,7 @@ public class FinalController
 		Card jokerD = new Card("JD", 10);
 		Card jokerH = new Card("JH", 10);
 		Card jokerS = new Card("JS", 10);
-		ArrayList<Card> cardList = new ArrayList<Card>();
+		this.cardList = new ArrayList<Card>();
 		cardList.add(aceC);
 		cardList.add(aceD);
 		cardList.add(aceH);
