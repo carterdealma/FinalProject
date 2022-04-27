@@ -8,19 +8,36 @@ import java.util.ArrayList;
 
 public class FinalController
 {
+	/**
+	 * The GUI frame for the game of Blackjack.
+	 */
 	private FinalFrame frame;
+	
+	/**
+	 * The ArrayList of Card values that make up Blackjack.
+	 */
 	private ArrayList<Card> cardList;
 	
+	/**
+	 * Starts the GUI
+	 */
 	public FinalController()
 	{
 		this.frame = new FinalFrame(this);
 	}
 	
+	/**
+	 * Prepares the game of Blackjack by re-initializing the cardList
+	 */
 	public void start()
 	{
+		this.cardList = new ArrayList<Card>();
 		fillAndShuffle();
 	}
 	
+	/**
+	 * Adds all 52 cards to the Blackjack cardList and shuffles them
+	 */
 	public void fillAndShuffle()
 	{
 		Card aceC = new Card("AC", 1);
@@ -75,7 +92,6 @@ public class FinalController
 		Card jokerD = new Card("JD", 10);
 		Card jokerH = new Card("JH", 10);
 		Card jokerS = new Card("JS", 10);
-		this.cardList = new ArrayList<Card>();
 		cardList.add(aceC);
 		cardList.add(aceD);
 		cardList.add(aceH);

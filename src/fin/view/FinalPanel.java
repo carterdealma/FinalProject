@@ -25,6 +25,7 @@ public class FinalPanel extends JPanel
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.EAST, cardPanel, -150, SpringLayout.EAST, this);
 		this.hitButton = new JButton("Hit");
 		this.playerFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "8H" + ".png"));
 		this.houseFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "7S" + ".png"));
@@ -60,6 +61,5 @@ public class FinalPanel extends JPanel
 	{
 		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
-		layout.putConstraint(SpringLayout.EAST, cardPanel, -30, SpringLayout.EAST, this);
 	}
 }
