@@ -21,6 +21,7 @@ public class FinalController
 	/**
 	 * Starts the GUI
 	 */
+	
 	public FinalController()
 	{
 		this.frame = new FinalFrame(this);
@@ -32,11 +33,12 @@ public class FinalController
 	public void start()
 	{
 		this.cardList = new ArrayList<Card>();
-		fillAndShuffle();
+		System.out.println(this.cardList);
 	}
 	
 	/**
-	 * Adds all 52 cards to the Blackjack cardList and shuffles them
+	 * Adds all 52 cards to the Blackjack cardList and shuffles them and returns the shuffled deck
+	 * @return A shuffled deck of Cards
 	 */
 	public void fillAndShuffle()
 	{
@@ -144,6 +146,21 @@ public class FinalController
 		cardList.add(jokerD);
 		cardList.add(jokerH);
 		cardList.add(jokerS);
-		Collections.shuffle(cardList);
+		Collections.shuffle(cardList);;
+	}
+	
+	public void cardPlayed()
+	{
+		cardList.remove(0);
+	}
+	
+	public String sendName()
+	{
+		return cardList.get(0).getName();
+	}
+	
+	public int sendValue()
+	{
+		return cardList.get(0).getValue();
 	}
 }

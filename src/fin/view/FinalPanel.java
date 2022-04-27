@@ -31,8 +31,8 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
 		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
 		this.hitButton = new JButton("Hit");
-		this.playerFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "8H" + ".png"));
-		this.houseFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "7S" + ".png"));
+		this.playerFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "7H" + ".png"));
+		this.houseFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "8H" + ".png"));
 		this.houseImageLabel = new JLabel();
 		this.playerImageLabel = new JLabel();
 		
@@ -59,6 +59,7 @@ public class FinalPanel extends JPanel
 	public void setupListeners()
 	{
 		hitButton.addActionListener(click -> playerImageLabel.setIcon(playerFirstCard));
+		hitButton.addActionListener(click -> controller.cardPlayed());
 	}
 	
 	public void setupLayout()

@@ -65,7 +65,7 @@ public class Card
 	@Override
 	public String toString()
 	{
-		String description = "Card Value: " + value + ", Card Name: " + name;
+		String description = "Card Name: " + name + ", Card Value: " + value;
 		
 		return description;
 	}
