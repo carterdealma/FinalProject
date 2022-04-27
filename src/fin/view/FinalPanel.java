@@ -31,10 +31,6 @@ public class FinalPanel extends JPanel
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 30, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
-		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
-		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
 		this.startButton = new JButton("Start");
 		this.hitButton = new JButton("Hit");
 		this.playerImageLabel1 = new JLabel();
@@ -79,5 +75,9 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.EAST, cardPanel, -150, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
+		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
+		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
 	}
 }
