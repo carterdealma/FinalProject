@@ -14,7 +14,13 @@ public class FinalPanel extends JPanel
 	private JLabel houseImageLabel;
 	private JLabel playerImageLabel;
 	private ImageIcon playerFirstCard;
+	private Image playerFirstCardImage;
+	private Image playerFirstCardImageScaled;
+	private ImageIcon playerFirstCardIcon;
 	private ImageIcon houseFirstCard;
+	private Image houseFirstCardImage;
+	private Image houseFirstCardImageScaled;
+	private ImageIcon houseFirstCardIcon;
 	private JButton hitButton;
 	
 	public FinalPanel(FinalController controller)
@@ -27,7 +33,13 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
 		this.hitButton = new JButton("Hit");
 		this.playerFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "8H" + ".png"));
+		this.playerFirstCardImage = playerFirstCard.getImage();
+		this.playerFirstCardImageScaled = playerFirstCardImage.getScaledInstance(120, 180, Image.SCALE_SMOOTH);
+		this.playerFirstCardIcon = new ImageIcon(playerFirstCardImageScaled);
 		this.houseFirstCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "7S" + ".png"));
+		this.houseFirstCardImage = houseFirstCard.getImage();
+		this.houseFirstCardImageScaled = houseFirstCardImage.getScaledInstance(120, 180, Image.SCALE_SMOOTH);
+		this.houseFirstCardIcon = new ImageIcon(houseFirstCardImageScaled);
 		this.houseImageLabel = new JLabel();
 		this.playerImageLabel = new JLabel();
 		
@@ -45,8 +57,8 @@ public class FinalPanel extends JPanel
 		this.add(cardPanel);
 		cardPanel.add(houseImageLabel);
 		cardPanel.add(playerImageLabel);
-		houseImageLabel.setIcon(houseFirstCard);
-		playerImageLabel.setIcon(playerFirstCard);
+		houseImageLabel.setIcon(houseFirstCardIcon);
+		playerImageLabel.setIcon(playerFirstCardIcon);
 		houseImageLabel.setPreferredSize(new Dimension(70, 70));
 		playerImageLabel.setPreferredSize(new Dimension(20, 30));
 	}
