@@ -3,8 +3,8 @@ package fin.controller;
 import fin.view.*;
 import fin.model.*;
 
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FinalController
 {
@@ -32,8 +32,7 @@ public class FinalController
 	 */
 	public void start()
 	{
-		this.cardList = new ArrayList<Card>();
-		System.out.println(this.cardList);
+		fillAndShuffle();
 	}
 	
 	/**
@@ -42,6 +41,7 @@ public class FinalController
 	 */
 	public void fillAndShuffle()
 	{
+		this.cardList = new ArrayList<Card>();
 		Card aceC = new Card("AC", 1);
 		Card aceD = new Card("AD", 1);
 		Card aceH = new Card("AH", 1);
@@ -146,7 +146,8 @@ public class FinalController
 		cardList.add(jokerD);
 		cardList.add(jokerH);
 		cardList.add(jokerS);
-		Collections.shuffle(cardList);;
+		
+		Collections.shuffle(cardList);
 	}
 	
 	public void cardPlayed()
