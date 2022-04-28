@@ -82,11 +82,11 @@ public class FinalPanel extends JPanel
 		playerScore += controller.sendValue();
 		if (controller.sendName().charAt(0) == "A".charAt(0))
 		{
-			playerScoreText.setText("Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 		}
 		else
 		{
-			playerScoreText.setText("Score: " + String.valueOf(playerScore));
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
 		controller.cardPlayed();
 		
@@ -98,11 +98,11 @@ public class FinalPanel extends JPanel
 		houseScore += controller.sendValue();
 		if (controller.sendName().charAt(0) == "A".charAt(0))
 		{
-			houseScoreText.setText("Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
 		}
 		else
 		{
-			houseScoreText.setText("Score: " + String.valueOf(houseScore));
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 		}
 		controller.cardPlayed();
 		
@@ -112,13 +112,17 @@ public class FinalPanel extends JPanel
 		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel2.setIcon(playerCard2);
 		playerScore += controller.sendValue();
-		if (controller.sendName().charAt(0) == "A".charAt(0))
+		if (controller.sendName().charAt(0) == "A".charAt(0) && playerScore == 1)
 		{
-			playerScoreText.setText("Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 20)));
+		}
+		else if (controller.sendName().charAt(0) == "A".charAt(0))
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 		}
 		else
 		{
-			playerScoreText.setText("Score: " + String.valueOf(playerScore));
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
 		controller.cardPlayed();
 		
