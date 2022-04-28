@@ -23,11 +23,17 @@ public class FinalPanel extends JPanel
 	private JLabel playerImageLabel2;
 	private JLabel playerImageLabel3;
 	private ImageIcon playerCard1;
+	private String playerCard1Name;
 	private ImageIcon playerCard2;
+	private String playerCard2Name;
 	private ImageIcon playerCard3;
+	private String playerCard3Name;
 	private ImageIcon houseCard1;
+	private String houseCard1Name;
 	private ImageIcon houseCard2;
+	private String houseCard2Name;
 	private ImageIcon houseCard3;
+	private String houseCard3Name;
 	private JButton doubleButton;
 	private JButton hitButton;
 	private JButton standButton;
@@ -61,8 +67,10 @@ public class FinalPanel extends JPanel
 		this.turnNumber = 0;
 		this.playerImageLabel1 = new JLabel();
 		this.playerImageLabel2 = new JLabel();
+		this.playerImageLabel3 = new JLabel();
 		this.houseImageLabel1 = new JLabel();
 		this.houseImageLabel2 = new JLabel();
+		this.houseImageLabel3 = new JLabel();
 		
 		setupPanel();
 		setupListeners();
@@ -90,8 +98,9 @@ public class FinalPanel extends JPanel
 		 */
 		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel1.setIcon(playerCard1);
+		playerCard1Name = String.valueOf(controller.sendName());
 		playerScore += controller.sendValue();
-		if (controller.sendName().charAt(0) == "A".charAt(0))
+		if (playerCard1Name.charAt(0) == "A".charAt(0))
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 		}
@@ -106,8 +115,9 @@ public class FinalPanel extends JPanel
 		 */
 		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseImageLabel1.setIcon(houseCard1);
+		houseCard1Name = String.valueOf(controller.sendName());
 		houseScore += controller.sendValue();
-		if (controller.sendName().charAt(0) == "A".charAt(0))
+		if (houseCard1Name.charAt(0) == "A".charAt(0))
 		{
 			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
 		}
@@ -122,12 +132,13 @@ public class FinalPanel extends JPanel
 		 */
 		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel2.setIcon(playerCard2);
+		playerCard2Name = String.valueOf(controller.sendName());
 		playerScore += controller.sendValue();
-		if (controller.sendName().charAt(0) == "A".charAt(0) && playerScore == 1)
+		if (playerCard2Name.charAt(0) == "A".charAt(0) && playerCard1Name.charAt(0) == "A".charAt(0))
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 20)));
 		}
-		else if (controller.sendName().charAt(0) == "A".charAt(0))
+		else if (playerCard2Name.charAt(0) == "A".charAt(0))
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 		}
@@ -154,10 +165,7 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
-		hitButton.addActionListener(click -> playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png")));
-		hitButton.addActionListener(click -> playerImageLabel3.setIcon(playerCard3));
-		hitButton.addActionListener(click -> playerScore += controller.sendValue());
-		hitButton.addActionListener(click -> controller.cardPlayed());
+		hitButton.addActionListener(click -> turnOneHit());
 	}
 	
 	public void setupLayout()
@@ -175,5 +183,30 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
 		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+	}
+	
+	public void turnOneHit()
+	{
+		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerImageLabel3.setIcon(playerCard3);
+		playerCard3Name = String.valueOf(controller.sendName());
+		playerScore += controller.sendValue();
+		if (playerCard3Name.charAt(0) == "A".charAt(0) && playerCard2Name.charAt(0) == "A".charAt(0) && playerCard1Name.charAt(0) == "A".charAt(0))
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 30)));
+		}
+		else if (playerCard3Name.charAt(0) == "A".charAt(0) && playerCard2Name.charAt(0) == "A".charAt(0) || playerCard2Name.charAt(0) == "A".charAt(0) && playerCard1Name.charAt(0) == "A".charAt(0))
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 20)));
+		}
+		else if (playerCard3Name.charAt(0) == "A".charAt(0) || playerCard2Name.charAt(0) == "A".charAt(0) || playerCard1Name.charAt(0) == "A".charAt(0))
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+		}
+		else
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+		}
+		controller.cardPlayed();
 	}
 }
