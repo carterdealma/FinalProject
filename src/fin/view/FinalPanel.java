@@ -35,7 +35,7 @@ public class FinalPanel extends JPanel
 		this.controller = controller;
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
-		this.housePanel = new JPanel(new GridLayout (1,0));
+		this.housePanel = new JPanel();
 		housePanel.setBackground(new Color(0, 153, 0));
 		this.playerPanel = new JPanel();
 		playerPanel.setBackground(new Color(0, 153, 0));
@@ -61,6 +61,7 @@ public class FinalPanel extends JPanel
 		this.setBackground(Color.DARK_GRAY);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
+		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
 		housePanel.add(houseImageLabel1);
 		housePanel.add(houseImageLabel2);
 		cardPanel.add(playerPanel);
