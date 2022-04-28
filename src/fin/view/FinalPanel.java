@@ -133,13 +133,39 @@ public class FinalPanel extends JPanel
 		playerImageLabel2.setIcon(playerCard2);
 		playerCard2Value = controller.sendValue();
 		playerScore += playerCard2Value;
-		if (playerCard2Value == 1 && playerCard1Value == 1)
+		if (playerScore == 21)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 20)));
+			playerWin();
 		}
-		else if (playerCard2Value == 1)
+		else if (playerScore > 21)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			playerBust();
+		}
+		else if (playerCard2Value == 1 && playerCard1Value == 1)
+		{
+			if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
+		}
+		else if (playerCard2Value == 1 || playerCard1Value == 1)
+		{
+			if (playerScore + 10 == 21 || playerScore + 1 == 21)
+			{
+				playerWin();
+			}
+			else if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
 		}
 		else
 		{
@@ -201,23 +227,72 @@ public class FinalPanel extends JPanel
 		playerImageLabel3.setIcon(playerCard3);
 		playerCard3Value = controller.sendValue();
 		playerScore += playerCard3Value;
-		if (playerCard3Value == 1 && playerCard2Value == 1 && playerCard1Value == 1)
+		System.out.println(playerScore);
+		if (playerScore == 21)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 30)));
+			playerWin();
+		}
+		else if (playerScore > 21)
+		{
+			playerBust();
+		}
+		else if (playerCard3Value == 1 && playerCard2Value == 1 && playerCard1Value == 1)
+		{
+			playerWin();
 		}
 		else if (playerCard3Value == 1 && playerCard2Value == 1 || playerCard2Value == 1 && playerCard1Value == 1)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 20)));
+			if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			if (playerScore + 10 == 21 || playerScore + 1 == 21)
+			{
+				playerWin();
+			}
+			else if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
+			
 		}
 		else
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
+		
 		controller.cardPlayed();
 		turnNumber++;
+	}
+	
+	public void playerWin()
+	{
+		playerScoreText.setText("Your Score: WIN!");
+	}
+	
+	public void playerBust()
+	{
+		playerScoreText.setText("Your Score: BUST!");
+	}
+	
+	public void houseWin()
+	{
+		houseScoreText.setText("House Score: WIN!");
+	}
+	
+	public void houseBust()
+	{
+		playerScoreText.setText("House Score: BUST!");
 	}
 }
