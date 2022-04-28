@@ -41,7 +41,7 @@ public class FinalPanel extends JPanel
 	private JTextArea playerScoreText;
 	private int playerScore;
 	private int houseScore;
-	private int turnNumber;
+	private int playerHitNumber;
 	
 	public FinalPanel(FinalController controller)
 	{
@@ -63,7 +63,7 @@ public class FinalPanel extends JPanel
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.playerScore = 0;
 		this.houseScore = 0;
-		this.turnNumber = 1;
+		this.playerHitNumber = 0;
 		this.playerImageLabel1 = new JLabel();
 		this.playerImageLabel2 = new JLabel();
 		this.playerImageLabel3 = new JLabel();
@@ -135,7 +135,7 @@ public class FinalPanel extends JPanel
 		playerScore += playerCard2Value;
 		if (playerScore == 21)
 		{
-			playerWin();
+			playerBlackjack();
 		}
 		else if (playerScore > 21)
 		{
@@ -156,7 +156,7 @@ public class FinalPanel extends JPanel
 		{
 			if (playerScore + 10 == 21 || playerScore + 1 == 21)
 			{
-				playerWin();
+				playerBlackjack();
 			}
 			else if (playerScore + 10 < 21)
 			{
@@ -190,14 +190,34 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
-		if(turnNumber == 1)
+		standButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerStand();
+				standButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				doubleButton.setEnabled(false);
+			}
+		});
+		
+		if(playerHitNumber == 0)
 		{
 		hitButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
 			{
-				turnOneHit();
+				playerFirstHit();
 				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				doubleButton.setEnabled(false);
+			}
+		});
+		doubleButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerFirstHit();
+				((AbstractButton) mouseClick.getSource()).setEnabled(false);
 			}
 		});
 		}
@@ -221,13 +241,15 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.EAST, cardPanel, -200, SpringLayout.EAST, this);
 	}
 	
-	public void turnOneHit()
+	public void playerFirstHit()
 	{
+		/*
+		 * Player plays their first "Hit"
+		 */
 		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel3.setIcon(playerCard3);
 		playerCard3Value = controller.sendValue();
 		playerScore += playerCard3Value;
-		System.out.println(playerScore);
 		if (playerScore == 21)
 		{
 			playerWin();
@@ -271,9 +293,129 @@ public class FinalPanel extends JPanel
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
-		
 		controller.cardPlayed();
-		turnNumber++;
+		playerHitNumber++;
+	}
+	
+	public void playerStand()
+	{
+		houseRevealsSecondCard();
+	}
+	
+	public void houseRevealsSecondCard()
+	{
+		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseImageLabel2.setIcon(houseCard2);
+		houseCard2Value = controller.sendValue();
+		houseScore += houseCard2Value;
+		if(houseScore == 21)
+		{
+			houseBlackjack();
+		}
+		else if (houseScore > 21)
+		{
+			houseBust();
+		}
+		else if (houseCard2Value == 1 || houseCard1Value == 1)
+		{
+			if (houseScore + 10 == 21 || houseScore + 1 == 21)
+			{
+				houseBlackjack();
+			}
+			else if (houseScore > playerScore)
+			{
+				houseWin();
+			}
+			else if (houseScore >= 17)
+			{
+				houseStand();
+			}
+			else
+			{
+				houseFirstHit();
+			}
+		}
+		else if (houseScore >= 17)
+		{
+			houseStand();
+		}
+		else
+		{
+			houseFirstHit();
+		}
+	}
+	
+	public void houseFirstHit()
+	{
+		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseImageLabel3.setIcon(houseCard3);
+		houseCard3Value = controller.sendValue();
+		houseScore += houseCard3Value;
+		if (houseScore == 21)
+		{
+			houseWin();
+		}
+		else if (houseScore > 21)
+		{
+			houseBust();
+		}
+		else if (houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
+		{
+			houseWin();
+		}
+		else if (houseCard3Value == 1 && houseCard2Value == 1 || houseCard2Value == 1 && houseCard1Value == 1)
+		{
+			if (houseScore + 10 < 21)
+			{
+				houseScoreText.setText("Your Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+			}
+			else
+			{
+				houseScoreText.setText("Your Score: " + String.valueOf(houseScore));
+			}
+		}
+		else if (houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
+		{
+			if (houseScore + 10 == 21 || houseScore + 1 == 21)
+			{
+				houseWin();
+			}
+			else if (houseScore + 10 < 21)
+			{
+				houseScoreText.setText("Your Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+			}
+			else
+			{
+				houseScoreText.setText("Your Score: " + String.valueOf(houseScore));
+			}
+			
+		}
+		else if (houseScore >= 17)
+		{
+			houseStand();
+		}
+		else
+		{
+			houseFirstHit();
+		}
+		controller.cardPlayed();
+	}
+	
+	public void houseSecondHit()
+	{
+		System.out.println("HOUSE SECOND HIT");
+	}
+	
+	public void houseStand()
+	{
+		if (houseScore > playerScore)
+		{
+			houseWin();
+		}
+		else
+		{
+			playerWin();
+		}
 	}
 	
 	public void playerWin()
@@ -286,6 +428,11 @@ public class FinalPanel extends JPanel
 		playerScoreText.setText("Your Score: BUST!");
 	}
 	
+	public void playerBlackjack()
+	{
+		playerScoreText.setText("Your Score: BLACKJACK!");
+	}
+	
 	public void houseWin()
 	{
 		houseScoreText.setText("House Score: WIN!");
@@ -293,6 +440,11 @@ public class FinalPanel extends JPanel
 	
 	public void houseBust()
 	{
-		playerScoreText.setText("House Score: BUST!");
+		houseScoreText.setText("House Score: BUST!");
+	}
+	
+	public void houseBlackjack()
+	{
+		houseScoreText.setText("House Score: BLACKJACK!");
 	}
 }
