@@ -4,6 +4,7 @@ import fin.controller.FinalController;
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 public class FinalPanel extends JPanel
 {
@@ -11,6 +12,7 @@ public class FinalPanel extends JPanel
 	
 	private JPanel cardPanel;
 	private JPanel buttonPanel;
+	private JPanel scorePanel;
 	private SpringLayout layout;
 	private JLabel houseImageLabel1;
 	private JLabel houseImageLabel2;
@@ -22,6 +24,8 @@ public class FinalPanel extends JPanel
 	private ImageIcon houseCard2;
 	private JButton startButton;
 	private JButton hitButton;
+	private JTextArea scoreText;
+	private int score;
 	
 	public FinalPanel(FinalController controller)
 	{
@@ -31,10 +35,15 @@ public class FinalPanel extends JPanel
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
+		this.scorePanel = new JPanel(new GridLayout(0,1));
 		this.startButton = new JButton("Start");
 		this.hitButton = new JButton("Hit");
+		this.scoreText = new JTextArea("Score: ");
+		this.score = 0;
 		this.playerImageLabel1 = new JLabel();
+		this.playerImageLabel2 = new JLabel();
 		this.houseImageLabel1 = new JLabel();
+		this.houseImageLabel2 = new JLabel();
 		
 		setupPanel();
 		setupListeners();
@@ -49,23 +58,34 @@ public class FinalPanel extends JPanel
 		
 		this.add(cardPanel);
 		cardPanel.add(houseImageLabel1);
-		cardPanel.add(playerImageLabel1);
+		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseImageLabel1.setIcon(houseCard1);
+		controller.cardPlayed();
+		cardPanel.add(playerImageLabel1);
+		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerImageLabel1.setIcon(playerCard1);
+		if (controller.sendName().charAt(0) == "A".charAt(0))
+		{
+			scoreText.setText("Score: " + String.valueOf(score += controller.sendValue()) + " or " + String.valueOf(score + 10));
+		}
+		else
+		{
+			scoreText.setText("Score: " + String.valueOf(score += controller.sendValue()));
+		}
+		System.out.println(score);
+		controller.cardPlayed();
 		
 		this.add(buttonPanel);
 		buttonPanel.add(startButton);
 		buttonPanel.add(hitButton);
+		
+		this.add(scorePanel);
+		scorePanel.add(scoreText);
+		scoreText.setEditable(false);
 	}
 	
 	public void setupListeners()
 	{
-		startButton.addActionListener(click -> playerImageLabel1.setIcon(playerCard1));
-		startButton.addActionListener(click -> houseImageLabel1.setIcon(houseCard1));
-		startButton.addActionListener(click -> houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png")));
-		startButton.addActionListener(click -> controller.cardPlayed());
-		startButton.addActionListener(click -> playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png")));
-		startButton.addActionListener(click -> controller.cardPlayed());
-		startButton.addActionListener(click -> startButton.setEnabled(false));
 		hitButton.addActionListener(click -> controller.cardPlayed());
 	}
 	
@@ -75,9 +95,13 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.EAST, cardPanel, -150, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 30, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
 		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
 		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
+		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 0, SpringLayout.NORTH, buttonPanel);
+		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
 	}
 }

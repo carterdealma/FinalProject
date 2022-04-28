@@ -24,6 +24,8 @@ public class FinalController
 	
 	public FinalController()
 	{
+		this.cardList = new ArrayList<Card>();
+		fillAndShuffle();
 		this.frame = new FinalFrame(this);
 	}
 	
@@ -32,7 +34,7 @@ public class FinalController
 	 */
 	public void start()
 	{
-		fillAndShuffle();
+		
 	}
 	
 	/**
@@ -41,7 +43,6 @@ public class FinalController
 	 */
 	public void fillAndShuffle()
 	{
-		this.cardList = new ArrayList<Card>();
 		Card aceC = new Card("AC", 1);
 		Card aceD = new Card("AD", 1);
 		Card aceH = new Card("AH", 1);
