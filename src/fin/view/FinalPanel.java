@@ -24,7 +24,9 @@ public class FinalPanel extends JPanel
 	private ImageIcon playerCard2;
 	private ImageIcon houseCard1;
 	private ImageIcon houseCard2;
+	private JButton doubleButton;
 	private JButton hitButton;
+	private JButton standButton;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
 	private int playerScore;
@@ -44,7 +46,9 @@ public class FinalPanel extends JPanel
 		playerPanel.setBackground(new Color(0, 153, 0));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
 		this.scorePanel = new JPanel(new GridLayout(0,1));
+		this.doubleButton = new JButton("Double");
 		this.hitButton = new JButton("Hit");
+		this.standButton = new JButton("Stand");
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.playerScore = 0;
@@ -132,11 +136,10 @@ public class FinalPanel extends JPanel
 		 */
 		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + "red_back" + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
-		controller.cardPlayed();
 		
-		
+		buttonPanel.add(doubleButton);
 		buttonPanel.add(hitButton);
-		
+		buttonPanel.add(standButton);
 		
 		scorePanel.add(houseScoreText);
 		scorePanel.add(playerScoreText);
