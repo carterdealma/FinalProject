@@ -18,12 +18,16 @@ public class FinalPanel extends JPanel
 	private SpringLayout layout;
 	private JLabel houseImageLabel1;
 	private JLabel houseImageLabel2;
+	private JLabel houseImageLabel3;
 	private JLabel playerImageLabel1;
 	private JLabel playerImageLabel2;
+	private JLabel playerImageLabel3;
 	private ImageIcon playerCard1;
 	private ImageIcon playerCard2;
+	private ImageIcon playerCard3;
 	private ImageIcon houseCard1;
 	private ImageIcon houseCard2;
+	private ImageIcon houseCard3;
 	private JButton doubleButton;
 	private JButton hitButton;
 	private JButton standButton;
@@ -31,6 +35,7 @@ public class FinalPanel extends JPanel
 	private JTextArea playerScoreText;
 	private int playerScore;
 	private int houseScore;
+	private int turnNumber;
 	
 	public FinalPanel(FinalController controller)
 	{
@@ -53,6 +58,7 @@ public class FinalPanel extends JPanel
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.playerScore = 0;
 		this.houseScore = 0;
+		this.turnNumber = 0;
 		this.playerImageLabel1 = new JLabel();
 		this.playerImageLabel2 = new JLabel();
 		this.houseImageLabel1 = new JLabel();
@@ -69,13 +75,13 @@ public class FinalPanel extends JPanel
 		this.setBackground(Color.DARK_GRAY);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
-		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
 		housePanel.add(houseImageLabel1);
 		housePanel.add(houseImageLabel2);
+		housePanel.add(houseImageLabel3);
 		cardPanel.add(playerPanel);
-		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
 		playerPanel.add(playerImageLabel1);
 		playerPanel.add(playerImageLabel2);
+		playerPanel.add(playerImageLabel3);
 		this.add(buttonPanel);
 		this.add(scorePanel);
 		
@@ -148,6 +154,9 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
+		hitButton.addActionListener(click -> playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png")));
+		hitButton.addActionListener(click -> playerImageLabel3.setIcon(playerCard3));
+		hitButton.addActionListener(click -> playerScore += controller.sendValue());
 		hitButton.addActionListener(click -> controller.cardPlayed());
 	}
 	
@@ -164,5 +173,7 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 0, SpringLayout.NORTH, buttonPanel);
 		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
+		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
 	}
 }
