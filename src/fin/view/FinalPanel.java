@@ -55,31 +55,41 @@ public class FinalPanel extends JPanel
 		this.setLayout(layout);
 		Color prettyPink = new Color(255, 204, 255);
 		this.setBackground(prettyPink);
-		
 		this.add(cardPanel);
 		cardPanel.add(houseImageLabel1);
-		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		houseImageLabel1.setIcon(houseCard1);
-		controller.cardPlayed();
 		cardPanel.add(playerImageLabel1);
+		this.add(buttonPanel);
+		this.add(scorePanel);
+		
+		/*
+		 * Player receives their first card
+		 */
 		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel1.setIcon(playerCard1);
+		score += controller.sendValue();
 		if (controller.sendName().charAt(0) == "A".charAt(0))
 		{
-			scoreText.setText("Score: " + String.valueOf(score += controller.sendValue()) + " or " + String.valueOf(score + 10));
+			scoreText.setText("Score: " + String.valueOf(score + " or " + String.valueOf(score + 10)));
 		}
 		else
 		{
-			scoreText.setText("Score: " + String.valueOf(score += controller.sendValue()));
+			scoreText.setText("Score: " + String.valueOf(score));
 		}
-		System.out.println(score);
 		controller.cardPlayed();
 		
-		this.add(buttonPanel);
+		/*
+		 * House receives it's first card
+		 */
+		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseImageLabel1.setIcon(houseCard1);
+		controller.cardPlayed();
+		
+		
+		
 		buttonPanel.add(startButton);
 		buttonPanel.add(hitButton);
 		
-		this.add(scorePanel);
+		
 		scorePanel.add(scoreText);
 		scoreText.setEditable(false);
 	}
