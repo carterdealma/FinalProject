@@ -37,6 +37,7 @@ public class FinalPanel extends JPanel
 		this.controller = controller;
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
+		layout.putConstraint(SpringLayout.EAST, cardPanel, -180, SpringLayout.EAST, this);
 		this.housePanel = new JPanel();
 		housePanel.setBackground(new Color(0, 153, 0));
 		this.playerPanel = new JPanel();
@@ -152,7 +153,6 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, cardPanel, -150, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
 		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
 		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
