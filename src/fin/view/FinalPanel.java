@@ -50,7 +50,6 @@ public class FinalPanel extends JPanel
 		this.controller = controller;
 		this.layout = new SpringLayout();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
-		layout.putConstraint(SpringLayout.EAST, cardPanel, -200, SpringLayout.EAST, this);
 		this.housePanel = new JPanel();
 		housePanel.setBackground(new Color(0, 153, 0));
 		this.playerPanel = new JPanel();
@@ -64,7 +63,7 @@ public class FinalPanel extends JPanel
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.playerScore = 0;
 		this.houseScore = 0;
-		this.turnNumber = 0;
+		this.turnNumber = 1;
 		this.playerImageLabel1 = new JLabel();
 		this.playerImageLabel2 = new JLabel();
 		this.playerImageLabel3 = new JLabel();
@@ -165,7 +164,17 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
-		hitButton.addActionListener(click -> turnOneHit());
+		if(turnNumber == 1)
+		{
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				turnOneHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+			}
+		});
+		}
 	}
 	
 	public void setupLayout()
@@ -183,6 +192,7 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
 		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+		layout.putConstraint(SpringLayout.EAST, cardPanel, -200, SpringLayout.EAST, this);
 	}
 	
 	public void turnOneHit()
@@ -208,5 +218,6 @@ public class FinalPanel extends JPanel
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
 		controller.cardPlayed();
+		turnNumber++;
 	}
 }
