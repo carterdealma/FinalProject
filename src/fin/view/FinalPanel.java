@@ -15,6 +15,7 @@ public class FinalPanel extends JPanel
 	private JPanel playerPanel;
 	private JPanel buttonPanel;
 	private JPanel scorePanel;
+	private JPanel chipPanel;
 	private SpringLayout layout;
 	private JLabel houseImageLabel1;
 	private JLabel houseImageLabel2;
@@ -45,14 +46,18 @@ public class FinalPanel extends JPanel
 	private JButton hitButton;
 	private JButton standButton;
 	private JButton playAgainButton;
+	private JButton submitBetButton;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
 	private JTextArea chipNumberText;
+	private JTextArea betSelectorText;
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
 	private int chipNumber = 1000;
-	private int [] chipBetsArray = {5, 10, 25, 50, 100};
+	private int betNumber;
+	private String [] chipBetsArray = {"5 Chips", "10 Chips", "25 Chips", "50 Chips", "100 Chips"};
+	private JComboBox<Integer> betSelectorBox;
 	
 	public FinalPanel(FinalController controller)
 	{
@@ -61,6 +66,7 @@ public class FinalPanel extends JPanel
 		this.controller = controller;
 		addAllElements();
 		setupPanel();
+		setupBet();
 		firstFourCards();
 		setupListeners();
 		setupLayout();
@@ -75,10 +81,14 @@ public class FinalPanel extends JPanel
 		this.playerPanel = new JPanel();
 		playerPanel.setBackground(new Color(0, 153, 0));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 230, SpringLayout.NORTH, this);
 		this.scorePanel = new JPanel(new GridLayout(0,1));
+		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 130, SpringLayout.NORTH, this);
+		this.chipPanel = new JPanel();
 		this.doubleButton = new JButton("Double");
 		this.hitButton = new JButton("Hit");
 		this.standButton = new JButton("Stand");
+		this.submitBetButton = new JButton("Submit Bet");
 		this.playAgainButton = new JButton("Play Again?");
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
@@ -86,6 +96,8 @@ public class FinalPanel extends JPanel
 		this.playerScore = 0;
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
+		this.betSelectorText = new JTextArea("Select your bet: ");
+		this.betSelectorBox = new JComboBox(chipBetsArray);
 		this.playerImageLabel1 = new JLabel();
 		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerCard1Value = controller.sendValue();
@@ -138,8 +150,11 @@ public class FinalPanel extends JPanel
 		playerPanel.add(playerImageLabel4);
 		this.add(buttonPanel);
 		buttonPanel.add(doubleButton);
+		doubleButton.setEnabled(false);
 		buttonPanel.add(hitButton);
+		hitButton.setEnabled(false);
 		buttonPanel.add(standButton);
+		standButton.setEnabled(false);
 		buttonPanel.add(playAgainButton);
 		playAgainButton.setEnabled(false);
 		this.add(scorePanel);
@@ -149,6 +164,14 @@ public class FinalPanel extends JPanel
 		playerScoreText.setEditable(false);
 		scorePanel.add(chipNumberText);
 		chipNumberText.setEditable(false);
+		this.add(chipPanel);
+		chipPanel.add(betSelectorText);
+		betSelectorText.setEditable(false);
+		chipPanel.add(betSelectorBox);
+		chipPanel.add(submitBetButton);
+		playerPanel.setVisible(false);
+		housePanel.setVisible(false);
+		scorePanel.setVisible(false);
 	}
 	
 	public void setupListeners()
@@ -212,6 +235,25 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
+	public void setupBet()
+	{
+		submitBetButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				betSelected();
+				((AbstractButton) mouseClick.getSource()).setEnabled(false);
+				standButton.setEnabled(true);
+				hitButton.setEnabled(true);
+				doubleButton.setEnabled(true);
+				betSelectorBox.setEnabled(false);
+				playerPanel.setVisible(true);
+				housePanel.setVisible(true);
+				scorePanel.setVisible(true);
+			}
+		});
+	}
+	
 	public void setupLayout()
 	{
 		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
@@ -222,12 +264,14 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
-		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 0, SpringLayout.NORTH, buttonPanel);
 		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
 		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
 		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
 		layout.putConstraint(SpringLayout.EAST, cardPanel, -240, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, chipPanel, 0, SpringLayout.SOUTH, scorePanel);
+		layout.putConstraint(SpringLayout.WEST, chipPanel, 0, SpringLayout.WEST, buttonPanel);
+		layout.putConstraint(SpringLayout.SOUTH, chipPanel, 0, SpringLayout.NORTH, buttonPanel);
+		layout.putConstraint(SpringLayout.EAST, chipPanel, 0, SpringLayout.EAST, buttonPanel);
 	}
 		
 	public void firstFourCards()
@@ -690,6 +734,10 @@ public class FinalPanel extends JPanel
 					playerScore += 10;
 					playerWin();
 				}
+				else if (houseScore < playerScore && playerScore <= 21)
+				{
+					playerWin();
+				}
 			}
 		}
 		else if (houseScore > playerScore)
@@ -715,6 +763,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		betWon();
 	}
 	
 	public void playerBust()
@@ -736,6 +785,7 @@ public class FinalPanel extends JPanel
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		betWon();
 	}
 	
 	public void houseWin()
@@ -777,6 +827,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		betReturned();
 	}
 	
 	public void push()
@@ -787,6 +838,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		betReturned();
 	}
 	
 	public void playAgain()
@@ -795,6 +847,7 @@ public class FinalPanel extends JPanel
 		playerPanel.removeAll();
 		buttonPanel.removeAll();
 		scorePanel.removeAll();
+		chipPanel.removeAll();
 		controller.fillAndShuffle();
 		addAllElements();
 		setupPanel();
@@ -803,5 +856,110 @@ public class FinalPanel extends JPanel
 		firstFourCards();
 		revalidate();
 		repaint();
+	}
+	
+	public void betSelected()
+	{
+		if (betSelectorBox.getSelectedIndex() == 0)
+		{
+			chipNumber -= 5;
+			betNumber = 5;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+			
+		}
+		else if (betSelectorBox.getSelectedIndex() == 1)
+		{
+			chipNumber -= 10;
+			betNumber = 10;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 2)
+		{
+			chipNumber -= 25;
+			betNumber = 25;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 3)
+		{
+			chipNumber -= 50;
+			betNumber = 50;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 4)
+		{
+			chipNumber -= 100;
+			betNumber = 100;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+	}
+	
+	public void betWon()
+	{
+		if (betSelectorBox.getSelectedIndex() == 0)
+		{
+			chipNumber += 10;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+			
+		}
+		else if (betSelectorBox.getSelectedIndex() == 1)
+		{
+			chipNumber += 20;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 2)
+		{
+			chipNumber += 50;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 3)
+		{
+			chipNumber += 100;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 4)
+		{
+			chipNumber += 200;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+	}
+	
+	public void betReturned()
+	{
+		if (betSelectorBox.getSelectedIndex() == 0)
+		{
+			chipNumber += 5;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+			
+		}
+		else if (betSelectorBox.getSelectedIndex() == 1)
+		{
+			chipNumber += 10;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 2)
+		{
+			chipNumber += 25;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 3)
+		{
+			chipNumber += 50;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 4)
+		{
+			chipNumber += 100;
+			betNumber = 0;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
 	}
 }
