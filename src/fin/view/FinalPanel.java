@@ -333,6 +333,8 @@ public class FinalPanel extends JPanel
 		 */
 		playerImageLabel3.setIcon(playerCard3);
 		playerScore += playerCard3Value;
+		System.out.println("playerFirstHit: player score: " + playerScore);
+		System.out.println("playerFirstHit: house score: " + houseScore);
 		if (playerScore == 21)
 		{
 			playerWin();
@@ -369,6 +371,8 @@ public class FinalPanel extends JPanel
 	{
 		playerImageLabel4.setIcon(playerCard4);
 		playerScore += playerCard4Value;
+		System.out.println("playerSecondHit: player score: " + playerScore);
+		System.out.println("House: house score: " + houseScore);
 		if (playerScore == 21)
 		{
 			playerWin();
