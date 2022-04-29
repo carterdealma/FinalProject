@@ -362,7 +362,6 @@ public class FinalPanel extends JPanel
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
-		controller.cardPlayed();
 		playerHitNumber++;
 	}
 	
@@ -399,7 +398,6 @@ public class FinalPanel extends JPanel
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
-		controller.cardPlayed();
 		playerHitNumber++;
 	}
 	
@@ -531,7 +529,6 @@ public class FinalPanel extends JPanel
 			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 			houseSecondHit();
 		}
-		controller.cardPlayed();
 	}
 	
 	public void houseSecondHit()
@@ -602,7 +599,6 @@ public class FinalPanel extends JPanel
 			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 			houseThirdHit();
 		}
-		controller.cardPlayed();
 	}
 	
 	public void houseThirdHit()
