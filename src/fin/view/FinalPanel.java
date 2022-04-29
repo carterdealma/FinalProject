@@ -65,11 +65,29 @@ public class FinalPanel extends JPanel
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
 		this.playerImageLabel1 = new JLabel();
+		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard1Value = controller.sendValue();
+		controller.cardPlayed();
 		this.playerImageLabel2 = new JLabel();
+		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard2Value = controller.sendValue();
+		controller.cardPlayed();
 		this.playerImageLabel3 = new JLabel();
+		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard3Value = controller.sendValue();
+		controller.cardPlayed();
 		this.houseImageLabel1 = new JLabel();
+		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard1Value = controller.sendValue();
+		controller.cardPlayed();
 		this.houseImageLabel2 = new JLabel();
+		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard2Value = controller.sendValue();
+		controller.cardPlayed();
 		this.houseImageLabel3 = new JLabel();
+		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard3Value = controller.sendValue();
+		controller.cardPlayed();
 		
 		setupPanel();
 		setupListeners();
@@ -95,9 +113,7 @@ public class FinalPanel extends JPanel
 		/*
 		 * Player receives their first card
 		 */
-		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel1.setIcon(playerCard1);
-		playerCard1Value = controller.sendValue();
 		playerScore += playerCard1Value;
 		if (playerCard1Value == 1)
 		{
@@ -107,14 +123,11 @@ public class FinalPanel extends JPanel
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
-		controller.cardPlayed();
 		
 		/*
 		 * House receives their first card
 		 */
-		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseImageLabel1.setIcon(houseCard1);
-		houseCard1Value = controller.sendValue();
 		houseScore += houseCard1Value;
 		if (houseCard1Value == 1)
 		{
@@ -124,26 +137,20 @@ public class FinalPanel extends JPanel
 		{
 			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 		}
-		controller.cardPlayed();
 		
 		/*
 		 * Player receives their second card
 		 */
-		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel2.setIcon(playerCard2);
-		playerCard2Value = controller.sendValue();
 		playerScore += playerCard2Value;
-		if (playerScore == 21)
+		if (playerCard2Value == 1 || playerCard1Value == 1)
 		{
-			playerBlackjack();
-		}
-		else if (playerScore > 21)
-		{
-			playerBust();
-		}
-		else if (playerCard2Value == 1 && playerCard1Value == 1)
-		{
-			if (playerScore + 10 < 21)
+			if (playerScore + 10 == 21)
+			{
+				playerScore = 21;
+				playerBlackjack();
+			}
+			else if (playerScore + 10 < 21)
 			{
 				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 			}
@@ -152,14 +159,13 @@ public class FinalPanel extends JPanel
 				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 			}
 		}
-		else if (playerCard2Value == 1 || playerCard1Value == 1)
+		else if (playerScore > 21)
 		{
-			if (playerScore + 10 == 21)
-			{
-				playerScore = 21;
-				playerBlackjack();
-			}
-			else if (playerScore + 10 < 21)
+			playerBust();
+		}
+		else if (playerCard2Value == 1 && playerCard1Value == 1)
+		{
+			if (playerScore + 10 < 21)
 			{
 				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 			}
@@ -177,7 +183,15 @@ public class FinalPanel extends JPanel
 		/*
 		 * House receives their second card
 		 */
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + "red_back" + ".png"));
+		houseScore += houseCard2Value;
+		if (houseScore == 21)
+		{
+			houseImageLabel2.setIcon(houseCard2);
+		}
+		else
+		{
+			houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + "red_back" + ".png"));
+		}
 		houseImageLabel2.setIcon(houseCard2);
 		
 		buttonPanel.add(doubleButton);
@@ -208,8 +222,7 @@ public class FinalPanel extends JPanel
 		}
 		else if (playerCard3Value == 1 && playerCard2Value == 1 && playerCard1Value == 1)
 		{
-			playerScore = 21;
-			playerWin();
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
@@ -245,8 +258,6 @@ public class FinalPanel extends JPanel
 	{
 		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
-		houseCard2Value = controller.sendValue();
-		houseScore += houseCard2Value;
 		if ((houseCard1Value == 1 || houseCard2Value == 1) && houseScore + 10 == 21)
 		{
 			houseScore = 21;
@@ -297,14 +308,16 @@ public class FinalPanel extends JPanel
 		houseImageLabel3.setIcon(houseCard3);
 		houseCard3Value = controller.sendValue();
 		houseScore += houseCard3Value;
+		System.out.println("house first hit: player score: " + playerScore);
+		System.out.println("house first hit: house score: " + houseScore);
 		if (houseScore > 21)
 		{
 			houseBust();
 		}
 		else if (houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
 		{
-			houseScore = 21;
-			houseWin();
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+			houseSecondHit();
 		}
 		else if ((houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
 		{
@@ -357,6 +370,8 @@ public class FinalPanel extends JPanel
 	
 	public void houseStand()
 	{
+		System.out.println("house stand: player score: " + playerScore);
+		System.out.println("house stand: house score: " + houseScore);
 		if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
 			if (houseScore > playerScore + 10 && playerScore + 10 <= 21)
@@ -372,9 +387,16 @@ public class FinalPanel extends JPanel
 			{
 				if (houseScore > playerScore + 10 && playerScore + 10 <= 21)
 				{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + 10));
+					houseWin();
 				}
+				else if (houseScore == playerScore + 10 && playerScore + 10 <= 21)
+				{
+					draw();
+				}
+				else
+				{
 				playerWin();
+				}
 			}
 		}
 		else if (houseScore > playerScore)
@@ -393,7 +415,6 @@ public class FinalPanel extends JPanel
 	
 	public void playerWin()
 	{
-		playerScore = playerScore + 10;
 		playerScoreText.setText("Your Score: WIN! (" + playerScore + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
@@ -410,14 +431,11 @@ public class FinalPanel extends JPanel
 	
 	public void playerBlackjack()
 	{
-		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + 10 + ")");
+		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		houseImageLabel2.setIcon(houseCard2);
-		houseCard2Value = controller.sendValue();
-		houseScore += houseCard2Value;
+		houseRevealsSecondCard();
 		if (houseScore == 21)
 		{
 			push();
@@ -442,11 +460,14 @@ public class FinalPanel extends JPanel
 	
 	public void houseBlackjack()
 	{
-		houseScore = houseScore + 10;
 		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
+		if (playerScore == 21)
+		{
+			push();
+		}
 	}
 	
 	public void draw()
