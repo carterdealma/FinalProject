@@ -144,6 +144,7 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
+		System.out.println(playerHitNumber);
 		standButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -166,6 +167,19 @@ public class FinalPanel extends JPanel
 				doubleButton.setEnabled(false);
 			}
 		});
+		}
+		
+		else if(playerHitNumber == 1)
+		{
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerSecondHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+			}
+		});
+		
 		doubleButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -327,9 +341,42 @@ public class FinalPanel extends JPanel
 		{
 			playerBust();
 		}
-		else if (playerCard3Value == 1 && playerCard2Value == 1 && playerCard1Value == 1)
+		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			if (playerScore + 10 == 21 || playerScore + 1 == 21)
+			{
+				playerScore = playerScore + 10;
+				playerWin();
+			}
+			else if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
+			
+		}
+		else
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+		}
+		controller.cardPlayed();
+		playerHitNumber++;
+	}
+	
+	public void playerSecondHit()
+	{
+		playerImageLabel4.setIcon(playerCard4);
+		playerScore += playerCard4Value;
+		if (playerScore == 21)
+		{
+			playerWin();
+		}
+		else if (playerScore > 21)
+		{
+			playerBust();
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
