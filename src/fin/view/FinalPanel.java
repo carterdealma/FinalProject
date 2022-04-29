@@ -393,6 +393,7 @@ public class FinalPanel extends JPanel
 	
 	public void playerWin()
 	{
+		playerScore = playerScore + 10;
 		playerScoreText.setText("Your Score: WIN! (" + playerScore + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
@@ -441,7 +442,8 @@ public class FinalPanel extends JPanel
 	
 	public void houseBlackjack()
 	{
-		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + 10 + ")");
+		houseScore = houseScore + 10;
+		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
