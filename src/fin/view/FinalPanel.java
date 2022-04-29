@@ -188,59 +188,6 @@ public class FinalPanel extends JPanel
 		houseScoreText.setEditable(false);
 	}
 	
-	public void setupListeners()
-	{
-		standButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerStand();
-				standButton.setEnabled(false);
-				hitButton.setEnabled(false);
-				doubleButton.setEnabled(false);
-			}
-		});
-		
-		if(playerHitNumber == 0)
-		{
-		hitButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerFirstHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-				doubleButton.setEnabled(false);
-			}
-		});
-		doubleButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerFirstHit();
-				((AbstractButton) mouseClick.getSource()).setEnabled(false);
-			}
-		});
-		}
-	}
-	
-	public void setupLayout()
-	{
-		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
-		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
-		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
-		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
-		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 0, SpringLayout.NORTH, buttonPanel);
-		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
-		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
-		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
-		layout.putConstraint(SpringLayout.EAST, cardPanel, -200, SpringLayout.EAST, this);
-	}
-	
 	public void playerFirstHit()
 	{
 		/*
@@ -495,5 +442,58 @@ public class FinalPanel extends JPanel
 	{
 		playerScoreText.setText("Your Score: PUSH!");
 		houseScoreText.setText("House Score: PUSH!");
+	}
+	
+	public void setupListeners()
+	{
+		standButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerStand();
+				standButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				doubleButton.setEnabled(false);
+			}
+		});
+		
+		if(playerHitNumber == 0)
+		{
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerFirstHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				doubleButton.setEnabled(false);
+			}
+		});
+		doubleButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerFirstHit();
+				((AbstractButton) mouseClick.getSource()).setEnabled(false);
+			}
+		});
+		}
+	}
+	
+	public void setupLayout()
+	{
+		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
+		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
+		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
+		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 0, SpringLayout.NORTH, buttonPanel);
+		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 100, SpringLayout.NORTH, this);
+		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+		layout.putConstraint(SpringLayout.EAST, cardPanel, -240, SpringLayout.EAST, this);
 	}
 }
