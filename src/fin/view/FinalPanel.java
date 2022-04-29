@@ -47,9 +47,12 @@ public class FinalPanel extends JPanel
 	private JButton playAgainButton;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
+	private JTextArea chipNumberText;
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
+	private int chipNumber = 1000;
+	private int [] chipBetsArray = {5, 10, 25, 50, 100};
 	
 	public FinalPanel(FinalController controller)
 	{
@@ -79,6 +82,7 @@ public class FinalPanel extends JPanel
 		this.playAgainButton = new JButton("Play Again?");
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
+		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
 		this.playerScore = 0;
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
@@ -142,6 +146,9 @@ public class FinalPanel extends JPanel
 		scorePanel.add(houseScoreText);
 		houseScoreText.setEditable(false);
 		scorePanel.add(playerScoreText);
+		playerScoreText.setEditable(false);
+		scorePanel.add(chipNumberText);
+		chipNumberText.setEditable(false);
 	}
 	
 	public void setupListeners()
