@@ -126,10 +126,12 @@ public class FinalPanel extends JPanel
 		housePanel.add(houseImageLabel1);
 		housePanel.add(houseImageLabel2);
 		housePanel.add(houseImageLabel3);
+		housePanel.add(houseImageLabel4);
 		cardPanel.add(playerPanel);
 		playerPanel.add(playerImageLabel1);
 		playerPanel.add(playerImageLabel2);
 		playerPanel.add(playerImageLabel3);
+		playerPanel.add(playerImageLabel4);
 		this.add(buttonPanel);
 		buttonPanel.add(doubleButton);
 		buttonPanel.add(hitButton);
@@ -168,17 +170,21 @@ public class FinalPanel extends JPanel
 			}
 		});
 		}
-		
-		else if(playerHitNumber == 1)
+		else if (playerHitNumber == 1)
 		{
-		hitButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerSecondHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-			}
-		});
+			hitButton.addActionListener(click -> playerSecondHit());
+		}
+//		
+//		else if(playerHitNumber == 1)
+//		{
+//		hitButton.addActionListener(new ActionListener()
+//		{
+//			public void actionPerformed(ActionEvent mouseClick)
+//			{
+//				playerSecondHit();
+//				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+//			}
+//		});
 		
 		doubleButton.addActionListener(new ActionListener()
 		{
@@ -188,7 +194,7 @@ public class FinalPanel extends JPanel
 				((AbstractButton) mouseClick.getSource()).setEnabled(false);
 			}
 		});
-		}
+		
 		playAgainButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -345,7 +351,7 @@ public class FinalPanel extends JPanel
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
-			if (playerScore + 10 == 21 || playerScore + 1 == 21)
+			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
 			{
 				playerScore = playerScore + 10;
 				playerWin();
@@ -365,6 +371,7 @@ public class FinalPanel extends JPanel
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
 		playerHitNumber++;
+		setupListeners();
 	}
 	
 	public void playerSecondHit()
@@ -383,7 +390,7 @@ public class FinalPanel extends JPanel
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
-			if (playerScore + 10 == 21 || playerScore + 1 == 21)
+			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
 			{
 				playerScore = playerScore + 10;
 				playerWin();
@@ -507,7 +514,7 @@ public class FinalPanel extends JPanel
 				houseScore += 10;
 				houseWin();
 			}
-			else if (houseScore + 10 >= 17)
+			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
 			{
 				houseStand();
 			}
@@ -577,7 +584,7 @@ public class FinalPanel extends JPanel
 				houseScore += 10;
 				houseWin();
 			}
-			else if (houseScore + 10 >= 17)
+			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
 			{
 				houseStand();
 			}
@@ -607,7 +614,7 @@ public class FinalPanel extends JPanel
 	
 	public void houseThirdHit()
 	{
-		
+		System.out.println("HOUSE THIRD HIT");
 	}
 	
 	public void houseStand()
