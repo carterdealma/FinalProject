@@ -156,6 +156,7 @@ public class FinalPanel extends JPanel
 		{
 			if (playerScore + 10 == 21)
 			{
+				playerScore = 21;
 				playerBlackjack();
 			}
 			else if (playerScore + 10 < 21)
@@ -207,12 +208,14 @@ public class FinalPanel extends JPanel
 		}
 		else if (playerCard3Value == 1 && playerCard2Value == 1 && playerCard1Value == 1)
 		{
+			playerScore = 21;
 			playerWin();
 		}
 		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 		{
 			if (playerScore + 10 == 21 || playerScore + 1 == 21)
 			{
+				playerScore = playerScore + 10;
 				playerWin();
 			}
 			else if (playerScore + 10 < 21)
@@ -246,6 +249,7 @@ public class FinalPanel extends JPanel
 		houseScore += houseCard2Value;
 		if ((houseCard1Value == 1 || houseCard2Value == 1) && houseScore + 10 == 21)
 		{
+			houseScore = 21;
 			houseBlackjack();
 		}
 		else if ((playerCard2Value == 1 || playerCard1Value == 1) && houseScore > playerScore + 10)
@@ -264,8 +268,6 @@ public class FinalPanel extends JPanel
 			}
 			else if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
 			{
-				System.out.println(houseScore);
-				System.out.println(playerScore);
 				houseScore = houseScore + 10;
 				houseWin();
 			}
@@ -301,6 +303,7 @@ public class FinalPanel extends JPanel
 		}
 		else if (houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
 		{
+			houseScore = 21;
 			houseWin();
 		}
 		else if ((houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
@@ -391,16 +394,22 @@ public class FinalPanel extends JPanel
 	public void playerWin()
 	{
 		playerScoreText.setText("Your Score: WIN! (" + playerScore + ")");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void playerBust()
 	{
-		playerScoreText.setText("Your Score: BUST! " + playerScore + ")");
+		playerScoreText.setText("Your Score: BUST! (" + playerScore + ")");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void playerBlackjack()
 	{
-		playerScoreText.setText("Your Score: BLACKJACK! " + playerScore + ")");
+		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + 10 + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
@@ -417,16 +426,22 @@ public class FinalPanel extends JPanel
 	public void houseWin()
 	{
 		houseScoreText.setText("House Score: WIN! (" + houseScore + ")");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void houseBust()
 	{
 		houseScoreText.setText("House Score: BUST! (" + houseScore + ")");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void houseBlackjack()
 	{
-		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + ")");
+		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + 10 + ")");
 		standButton.setEnabled(false);
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
@@ -436,12 +451,18 @@ public class FinalPanel extends JPanel
 	{
 		playerScoreText.setText("Your Score: DRAW!");
 		houseScoreText.setText("House Score: DRAW!");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void push()
 	{
 		playerScoreText.setText("Your Score: PUSH!");
 		houseScoreText.setText("House Score: PUSH!");
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 	}
 	
 	public void setupListeners()
