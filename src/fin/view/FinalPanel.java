@@ -19,15 +19,19 @@ public class FinalPanel extends JPanel
 	private JLabel houseImageLabel1;
 	private JLabel houseImageLabel2;
 	private JLabel houseImageLabel3;
+	private JLabel houseImageLabel4;
 	private JLabel playerImageLabel1;
 	private JLabel playerImageLabel2;
 	private JLabel playerImageLabel3;
+	private JLabel playerImageLabel4;
 	private ImageIcon playerCard1;
 	private int playerCard1Value;
 	private ImageIcon playerCard2;
 	private int playerCard2Value;
 	private ImageIcon playerCard3;
 	private int playerCard3Value;
+	private ImageIcon playerCard4;
+	private int playerCard4Value;
 	private ImageIcon houseCard1;
 	private int houseCard1Value;
 	private ImageIcon houseCard2;
@@ -35,6 +39,8 @@ public class FinalPanel extends JPanel
 	private int houseCard2Value;
 	private ImageIcon houseCard3;
 	private int houseCard3Value;
+	private ImageIcon houseCard4;
+	private int houseCard4Value;
 	private JButton doubleButton;
 	private JButton hitButton;
 	private JButton standButton;
@@ -55,6 +61,60 @@ public class FinalPanel extends JPanel
 		firstFourCards();
 		setupListeners();
 		setupLayout();
+	}
+	
+	public void addAllElements()
+	{
+		this.layout = new SpringLayout();
+		this.cardPanel = new JPanel(new GridLayout (0,1));
+		this.housePanel = new JPanel();
+		housePanel.setBackground(new Color(0, 153, 0));
+		this.playerPanel = new JPanel();
+		playerPanel.setBackground(new Color(0, 153, 0));
+		this.buttonPanel = new JPanel(new GridLayout (0,1));
+		this.scorePanel = new JPanel(new GridLayout(0,1));
+		this.doubleButton = new JButton("Double");
+		this.hitButton = new JButton("Hit");
+		this.standButton = new JButton("Stand");
+		this.playAgainButton = new JButton("Play Again?");
+		this.houseScoreText = new JTextArea("House Score: ");
+		this.playerScoreText = new JTextArea("Your Score: ");
+		this.playerScore = 0;
+		this.houseScore = 0;
+		this.playerHitNumber = 0;
+		this.playerImageLabel1 = new JLabel();
+		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard1Value = controller.sendValue();
+		controller.cardPlayed();
+		this.playerImageLabel2 = new JLabel();
+		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard2Value = controller.sendValue();
+		controller.cardPlayed();
+		this.playerImageLabel3 = new JLabel();
+		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard3Value = controller.sendValue();
+		controller.cardPlayed();
+		this.playerImageLabel4 = new JLabel();
+		playerCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard4Value = controller.sendValue();
+		controller.cardPlayed();
+		this.houseImageLabel1 = new JLabel();
+		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard1Value = controller.sendValue();
+		controller.cardPlayed();
+		this.houseImageLabel2 = new JLabel();
+		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard2Value = controller.sendValue();
+		houseCard2Name = controller.sendName();
+		controller.cardPlayed();
+		this.houseImageLabel3 = new JLabel();
+		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard3Value = controller.sendValue();
+		controller.cardPlayed();
+		this.houseImageLabel4 = new JLabel();
+		houseCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard4Value = controller.sendValue();
+		controller.cardPlayed();
 	}
 	
 	public void setupPanel()
@@ -257,9 +317,7 @@ public class FinalPanel extends JPanel
 		/*
 		 * Player plays their first "Hit"
 		 */
-		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerImageLabel3.setIcon(playerCard3);
-		playerCard3Value = controller.sendValue();
 		playerScore += playerCard3Value;
 		if (playerScore == 21)
 		{
@@ -335,7 +393,7 @@ public class FinalPanel extends JPanel
 			{
 				houseBlackjack();
 			}
-			else if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
+			else if ((houseScore + 10 > playerScore) && (houseScore + 10 <= 17))
 			{
 				houseScore = houseScore + 10;
 				houseWin();
@@ -362,9 +420,7 @@ public class FinalPanel extends JPanel
 	
 	public void houseFirstHit()
 	{
-		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseImageLabel3.setIcon(houseCard3);
-		houseCard3Value = controller.sendValue();
 		houseScore += houseCard3Value;
 		System.out.println("house first hit: player score: " + playerScore);
 		System.out.println("house first hit: house score: " + houseScore);
@@ -397,12 +453,16 @@ public class FinalPanel extends JPanel
 		}
 		else if (houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
 		{
-			if (houseScore + 10 > playerScore && houseScore >= 17)
+			if (houseScore + 10 > playerScore && houseScore + 10 <= 17)
 			{
 				houseScore += 10;
 				houseWin();
 			}
-			else if (houseScore + 10 < 21)
+			else if (houseScore + 10 >= 17)
+			{
+				houseStand();
+			}
+			else if (houseScore + 10 <= 17)
 			{
 				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
 				houseSecondHit();
@@ -429,7 +489,78 @@ public class FinalPanel extends JPanel
 	
 	public void houseSecondHit()
 	{
-		System.out.println("HOUSE SECOND HIT");
+		System.out.println("house second hit: player score: " + playerScore);
+		System.out.println("house second hit: house score: " + houseScore);
+		houseImageLabel4.setIcon(houseCard4);
+		houseScore += houseCard4Value;
+		System.out.println("house first hit: player score: " + playerScore);
+		System.out.println("house first hit: house score: " + houseScore);
+		if (houseScore > 21)
+		{
+			houseBust();
+		}
+		else if (houseCard4Value == 1 && houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
+		{
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+			houseSecondHit();
+		}
+		else if ((houseCard4Value == 1 && houseCard3Value == 1) || (houseCard4Value == 1 && houseCard2Value == 1) || (houseCard4Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
+		{
+			if (houseScore + 10 < 17)
+			{
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+				houseThirdHit();
+			}
+			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
+			{
+				houseScore = houseScore + 10;
+				houseStand();
+			}
+			else if (houseScore + 10 > 21)
+			{
+				houseScore = houseScore + 10;
+				houseScoreText.setText("House Score: " + houseScore);
+			}
+		}
+		else if (houseCard4Value == 1 || houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
+		{
+			if (houseScore + 10 > playerScore && houseScore + 10 >= 17)
+			{
+				houseScore += 10;
+				houseWin();
+			}
+			else if (houseScore + 10 >= 17)
+			{
+				houseStand();
+			}
+			else if (houseScore + 10 <= 17)
+			{
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+				houseSecondHit();
+			}
+			else
+			{
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+				houseThirdHit();
+			}
+			
+		}
+		else if (houseScore >= 17)
+		{
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+			houseStand();
+		}
+		else
+		{
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+			houseThirdHit();
+		}
+		controller.cardPlayed();
+	}
+	
+	public void houseThirdHit()
+	{
+		
 	}
 	
 	public void houseStand()
@@ -603,6 +734,7 @@ public class FinalPanel extends JPanel
 		playerPanel.removeAll();
 		buttonPanel.removeAll();
 		scorePanel.removeAll();
+		controller.fillAndShuffle();
 		addAllElements();
 		setupPanel();
 		setupListeners();
@@ -610,51 +742,5 @@ public class FinalPanel extends JPanel
 		firstFourCards();
 		revalidate();
 		repaint();
-	}
-	
-	public void addAllElements()
-	{
-		this.layout = new SpringLayout();
-		this.cardPanel = new JPanel(new GridLayout (0,1));
-		this.housePanel = new JPanel();
-		housePanel.setBackground(new Color(0, 153, 0));
-		this.playerPanel = new JPanel();
-		playerPanel.setBackground(new Color(0, 153, 0));
-		this.buttonPanel = new JPanel(new GridLayout (0,1));
-		this.scorePanel = new JPanel(new GridLayout(0,1));
-		this.doubleButton = new JButton("Double");
-		this.hitButton = new JButton("Hit");
-		this.standButton = new JButton("Stand");
-		this.playAgainButton = new JButton("Play Again?");
-		this.houseScoreText = new JTextArea("House Score: ");
-		this.playerScoreText = new JTextArea("Your Score: ");
-		this.playerScore = 0;
-		this.houseScore = 0;
-		this.playerHitNumber = 0;
-		this.playerImageLabel1 = new JLabel();
-		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		playerCard1Value = controller.sendValue();
-		controller.cardPlayed();
-		this.playerImageLabel2 = new JLabel();
-		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		playerCard2Value = controller.sendValue();
-		controller.cardPlayed();
-		this.playerImageLabel3 = new JLabel();
-		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		playerCard3Value = controller.sendValue();
-		controller.cardPlayed();
-		this.houseImageLabel1 = new JLabel();
-		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		houseCard1Value = controller.sendValue();
-		controller.cardPlayed();
-		this.houseImageLabel2 = new JLabel();
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		houseCard2Value = controller.sendValue();
-		houseCard2Name = controller.sendName();
-		controller.cardPlayed();
-		this.houseImageLabel3 = new JLabel();
-		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
-		houseCard3Value = controller.sendValue();
-		controller.cardPlayed();
 	}
 }
