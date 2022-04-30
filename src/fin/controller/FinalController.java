@@ -5,6 +5,9 @@ import fin.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.io.*;
 
 public class FinalController
 {
@@ -18,10 +21,11 @@ public class FinalController
 	 */
 	private ArrayList<Card> cardList;
 	
+	private Hashtable<String, String> userData = new Hashtable<String, String>();
+	
 	/**
 	 * Starts the GUI
 	 */
-	
 	public FinalController()
 	{
 		this.cardList = new ArrayList<Card>();
@@ -151,6 +155,21 @@ public class FinalController
 		Collections.shuffle(cardList);
 	}
 	
+	public void updateUserData(String user, String chips)
+	{
+		userData.put(user, chips);
+		System.out.println("UserData:" + userData);
+		Properties properties = new Properties();
+		File saveFile = new File("blackjack.save");
+		properties.putAll(userData);
+		try {
+			properties.store(new FileOutputStream("blackjack.save"), null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void cardPlayed()
 	{
 		cardList.remove(0);
@@ -165,4 +184,5 @@ public class FinalController
 	{
 		return cardList.get(0).getValue();
 	}
+
 }
