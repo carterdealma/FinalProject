@@ -22,10 +22,12 @@ public class FinalPanel extends JPanel
 	private JLabel houseImageLabel2;
 	private JLabel houseImageLabel3;
 	private JLabel houseImageLabel4;
+	private JLabel houseImageLabel5;
 	private JLabel playerImageLabel1;
 	private JLabel playerImageLabel2;
 	private JLabel playerImageLabel3;
 	private JLabel playerImageLabel4;
+	private JLabel playerImageLabel5;
 	private ImageIcon faceDownCard;
 	private ImageIcon playerCard1;
 	private int playerCard1Value;
@@ -35,6 +37,8 @@ public class FinalPanel extends JPanel
 	private int playerCard3Value;
 	private ImageIcon playerCard4;
 	private int playerCard4Value;
+	private ImageIcon playerCard5;
+	private int playerCard5Value;
 	private ImageIcon houseCard1;
 	private int houseCard1Value;
 	private ImageIcon houseCard2;
@@ -44,6 +48,8 @@ public class FinalPanel extends JPanel
 	private int houseCard3Value;
 	private ImageIcon houseCard4;
 	private int houseCard4Value;
+	private ImageIcon houseCard5;
+	private int houseCard5Value;
 	private JButton doubleButton;
 	private JButton hitButton;
 	private JButton standButton;
@@ -117,6 +123,10 @@ public class FinalPanel extends JPanel
 		playerCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		playerCard4Value = controller.sendValue();
 		controller.cardPlayed();
+		this.playerImageLabel5 = new JLabel();
+		playerCard5 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard5Value = controller.sendValue();
+		controller.cardPlayed();
 		this.houseImageLabel1 = new JLabel();
 		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseCard1Value = controller.sendValue();
@@ -133,6 +143,10 @@ public class FinalPanel extends JPanel
 		this.houseImageLabel4 = new JLabel();
 		houseCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
 		houseCard4Value = controller.sendValue();
+		controller.cardPlayed();
+		this.houseImageLabel5 = new JLabel();
+		houseCard5 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard5Value = controller.sendValue();
 		controller.cardPlayed();
 	}
 	
@@ -256,9 +270,29 @@ public class FinalPanel extends JPanel
 			}
 		});
 		}
-		else if (playerHitNumber == 1)
+		else if(playerHitNumber == 1)
 		{
-			hitButton.addActionListener(click -> playerSecondHit());
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerSecondHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				doubleButton.setEnabled(false);
+			}
+		});
+		}
+		else if(playerHitNumber == 2)
+		{
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerThirdHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				doubleButton.setEnabled(false);
+			}
+		});
 		}
 		
 		if (houseHasBlackjack == true)
@@ -561,6 +595,44 @@ public class FinalPanel extends JPanel
 		playerHitNumber++;
 	}
 	
+	public void playerThirdHit()
+	{
+		playerImageLabel5.setIcon(playerCard4);
+		playerScore += playerCard5Value;
+		System.out.println("playerSecondHit: player score: " + playerScore);
+		System.out.println("House: house score: " + houseScore);
+		if (playerScore == 21)
+		{
+			playerWin();
+		}
+		else if (playerScore > 21)
+		{
+			playerBust();
+		}
+		else if (playerCard5Value == 1 || playerCard4Value == 1 || playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
+		{
+			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
+			{
+				playerScore = playerScore + 10;
+				playerWin();
+			}
+			else if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
+			
+		}
+		else
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+		}
+		playerHitNumber++;
+	}
+	
 	public void playerStand()
 	{
 		houseRevealsSecondCard();
@@ -600,7 +672,7 @@ public class FinalPanel extends JPanel
 			{
 				houseBlackjack();
 			}
-			else if ((houseScore + 10 > playerScore) && (houseScore + 10 <= 17))
+			else if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
 			{
 				houseScore = houseScore + 10;
 				houseWin();
@@ -635,11 +707,6 @@ public class FinalPanel extends JPanel
 		{
 			houseBust();
 		}
-		else if (houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-			houseSecondHit();
-		}
 		else if ((houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
 		{
 			if (houseScore + 10 < 17)
@@ -660,16 +727,17 @@ public class FinalPanel extends JPanel
 		}
 		else if (houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
 		{
-			if (houseScore + 10 > playerScore && houseScore + 10 <= 17)
+			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
 			{
 				houseScore += 10;
 				houseWin();
 			}
 			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
 			{
+				houseScore += 10;
 				houseStand();
 			}
-			else if (houseScore + 10 <= 17)
+			else if (houseScore + 10 < 17)
 			{
 				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
 				houseSecondHit();
@@ -707,44 +775,22 @@ public class FinalPanel extends JPanel
 		{
 			houseWin();
 		}
-		else if (houseCard4Value == 1 && houseCard3Value == 1 && houseCard2Value == 1 && houseCard1Value == 1)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-			houseSecondHit();
-		}
-		else if ((houseCard4Value == 1 && houseCard3Value == 1) || (houseCard4Value == 1 && houseCard2Value == 1) || (houseCard4Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
-		{
-			if (houseScore + 10 < 17)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseThirdHit();
-			}
-			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
-			{
-				houseScore = houseScore + 10;
-				houseStand();
-			}
-			else if (houseScore + 10 > 21)
-			{
-				houseScore = houseScore + 10;
-				houseScoreText.setText("House Score: " + houseScore);
-			}
-		}
 		else if (houseCard4Value == 1 || houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
 		{
-			if (houseScore + 10 > playerScore && houseScore + 10 <= 21)
+			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
 			{
 				houseScore += 10;
 				houseWin();
 			}
 			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
 			{
+				houseScore += 10;
 				houseStand();
 			}
 			else if (houseScore + 10 < 17)
 			{
 				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseSecondHit();
+				houseThirdHit();
 			}
 			else
 			{
@@ -767,7 +813,57 @@ public class FinalPanel extends JPanel
 	
 	public void houseThirdHit()
 	{
-		System.out.println("HOUSE THIRD HIT");
+		houseImageLabel5.setIcon(houseCard5);
+		houseScore += houseCard5Value;
+		System.out.println("house second hit: player score: " + playerScore);
+		System.out.println("house second hit: house score: " + houseScore);
+		if (houseScore > 21)
+		{
+			houseBust();
+		}
+		else if (houseScore > playerScore && houseScore <= 21 && houseScore >= 17)
+		{
+			houseWin();
+		}
+		else if (houseCard4Value == 1 || houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
+		{
+			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
+			{
+				houseScore += 10;
+				houseWin();
+			}
+			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
+			{
+				houseScore += 10;
+				houseStand();
+			}
+			else if (houseScore + 10 < 17)
+			{
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
+				houseFourthHit();
+			}
+			else
+			{
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+				houseFourthHit();
+			}
+			
+		}
+		else if (houseScore >= 17)
+		{
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+			houseStand();
+		}
+		else
+		{
+			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
+			houseFourthHit();
+		}
+	}
+	
+	public void houseFourthHit()
+	{
+		System.out.println("HOUSE FOURTH HIT");
 	}
 	
 	public void houseStand()
