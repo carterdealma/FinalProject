@@ -1,6 +1,6 @@
 package fin.view;
 
-import fin.controller.FinalController;
+import fin.controller.*;
 
 import java.awt.*;
 import javax.swing.*;
@@ -9,7 +9,9 @@ import java.awt.event.*;
 public class FinalPanel extends JPanel
 {
 	private FinalController controller;
+	private IOController ioController;
 	
+	private JPanel startPanel;
 	private JPanel cardPanel;
 	private JPanel housePanel;
 	private JPanel playerPanel;
@@ -55,6 +57,7 @@ public class FinalPanel extends JPanel
 	private JButton standButton;
 	private JButton playAgainButton;
 	private JButton submitBetButton;
+	private JButton exitAndSaveButton;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
 	private JTextArea chipNumberText;
@@ -83,6 +86,7 @@ public class FinalPanel extends JPanel
 	public void addAllElements()
 	{
 		this.layout = new SpringLayout();
+		this.startPanel = new JPanel();
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		this.housePanel = new JPanel();
 		housePanel.setBackground(new Color(0, 153, 0));
@@ -98,6 +102,7 @@ public class FinalPanel extends JPanel
 		this.standButton = new JButton("Stand");
 		this.submitBetButton = new JButton("Submit Bet");
 		this.playAgainButton = new JButton("Play Again?");
+		this.exitAndSaveButton = new JButton("Exit and Save?");
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
@@ -154,6 +159,7 @@ public class FinalPanel extends JPanel
 	{
 		this.setLayout(layout);
 		this.setBackground(Color.DARK_GRAY);
+		this.add(startPanel);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
 		housePanel.add(houseImageLabel1);
@@ -174,6 +180,8 @@ public class FinalPanel extends JPanel
 		standButton.setEnabled(false);
 		buttonPanel.add(playAgainButton);
 		playAgainButton.setEnabled(false);
+		buttonPanel.add(exitAndSaveButton);
+		exitAndSaveButton.setEnabled(false);
 		this.add(tempScorePanel);
 		tempScorePanel.add(scorePanel);
 		scorePanel.add(houseScoreText);
@@ -597,7 +605,7 @@ public class FinalPanel extends JPanel
 	
 	public void playerThirdHit()
 	{
-		playerImageLabel5.setIcon(playerCard4);
+		playerImageLabel5.setIcon(playerCard5);
 		playerScore += playerCard5Value;
 		System.out.println("playerSecondHit: player score: " + playerScore);
 		System.out.println("House: house score: " + houseScore);
@@ -656,6 +664,7 @@ public class FinalPanel extends JPanel
 			hitButton.setEnabled(false);
 			doubleButton.setEnabled(false);
 			playAgainButton.setEnabled(true);
+			exitAndSaveButton.setEnabled(true);
 			betWon();
 		}
 		else if ((playerCard2Value == 1 || playerCard1Value == 1) && houseScore > playerScore + 10)
@@ -960,6 +969,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		betWon();
 	}
 	
@@ -973,6 +983,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 	}
 	
 	public void playerBlackjack()
@@ -983,6 +994,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		betWon();
 	}
 	
@@ -993,6 +1005,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 	}
 	
 	public void houseBust()
@@ -1002,6 +1015,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		betWon();
 	}
 	
@@ -1012,6 +1026,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		if (playerScore == 21)
 		{
 			push();
@@ -1026,6 +1041,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		betReturned();
 	}
 	
@@ -1037,6 +1053,7 @@ public class FinalPanel extends JPanel
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 		betReturned();
 	}
 	
