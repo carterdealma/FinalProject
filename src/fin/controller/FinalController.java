@@ -5,6 +5,10 @@ import fin.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Properties;
+import java.io.*;
+import java.nio.file.Files;
 
 public class FinalController
 {
@@ -18,12 +22,17 @@ public class FinalController
 	 */
 	private ArrayList<Card> cardList;
 	
+	private HashMap<String, String> userData;
+	
+	private File saveFile;
+	
 	/**
 	 * Starts the GUI
 	 */
-	
 	public FinalController()
 	{
+		this.saveFile = new File("blackjack.save");
+		this.userData = new HashMap<String, String>();
 		this.cardList = new ArrayList<Card>();
 		fillAndShuffle();
 		this.frame = new FinalFrame(this);
@@ -151,6 +160,62 @@ public class FinalController
 		Collections.shuffle(cardList);
 	}
 	
+	public void updateUserData(String user, String chips)
+	{
+		userData.put(user, chips);
+		Properties properties = new Properties();
+		properties.putAll(userData);
+		try 
+		{
+			properties.store(new FileOutputStream(saveFile), null);
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public int readUserData(String userKey)
+	{
+		System.out.println("saveFile is:" + saveFile);
+		if (saveFile.exists())
+		{
+			Properties properties = new Properties();
+			try 
+			{
+				properties.load(new FileInputStream(saveFile));
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			for (String key : properties.stringPropertyNames())
+			{
+				userData.put(key, properties.get(key).toString());
+			}
+			System.out.println("Read userData: " + userData);
+			int chipAmount = Integer.parseInt(userData.get(userKey));
+			System.out.println("Chip Amount:" + chipAmount);
+			return chipAmount;
+		}
+		else
+		{
+			try 
+			{
+				saveFile.createNewFile();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			return 1000;
+		}
+	}
+	
 	public void cardPlayed()
 	{
 		cardList.remove(0);
@@ -165,4 +230,5 @@ public class FinalController
 	{
 		return cardList.get(0).getValue();
 	}
+
 }

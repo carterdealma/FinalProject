@@ -1,18 +1,27 @@
 package fin.controller;
 
-import java.io.*;
 import fin.view.FinalFrame;
+import fin.view.FinalPanel;
+
+import java.util.*;
 
 public class IOController 
 {
-	public static String[] loadData(String userid, String userChips)
+	private FinalPanel panel;
+	private Hashtable<String, Integer> userData = new Hashtable<String, Integer>();
+	
+	public void updateUserData(String user, int chips)
 	{
-		String [] userData = {userid, userChips};
-		
-		return userData;
+		userData.put(user, chips);
+		System.out.println("UserData:" + userData);
 	}
 	
-	public static void saveData()
+	public void sayGoodbye()
+	{
+		System.out.println("Goodbye!");
+	}
+	
+	public static void saveData(String userid, String userChips)
 	{
 		
 	}

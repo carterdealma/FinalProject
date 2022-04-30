@@ -8,8 +8,10 @@ import java.awt.event.*;
 
 public class FinalPanel extends JPanel
 {
+	private int chipNumber = 1000;
+	private String userid = "carter";
+	
 	private FinalController controller;
-	private IOController ioController;
 	
 	private JPanel startPanel;
 	private JPanel cardPanel;
@@ -52,6 +54,7 @@ public class FinalPanel extends JPanel
 	private int houseCard4Value;
 	private ImageIcon houseCard5;
 	private int houseCard5Value;
+	private JButton loginButton;
 	private JButton doubleButton;
 	private JButton hitButton;
 	private JButton standButton;
@@ -65,7 +68,6 @@ public class FinalPanel extends JPanel
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
-	private int chipNumber = 1000;
 	private String [] chipBetsArray = {"5 Chips", "10 Chips", "25 Chips", "50 Chips", "100 Chips"};
 	private JComboBox<Integer> betSelectorBox;
 	boolean houseHasBlackjack = false;
@@ -75,6 +77,7 @@ public class FinalPanel extends JPanel
 		super();
 		
 		this.controller = controller;
+		this.chipNumber = this.controller.readUserData(userid);
 		addAllElements();
 		setupPanel();
 		setupBet();
@@ -97,6 +100,7 @@ public class FinalPanel extends JPanel
 		this.scorePanel = new JPanel(new GridLayout(0,1));
 		this.tempScorePanel = new JPanel(new GridLayout(0,1));
 		this.chipPanel = new JPanel();
+		this.loginButton = new JButton("Login");
 		this.doubleButton = new JButton("Double");
 		this.hitButton = new JButton("Hit");
 		this.standButton = new JButton("Stand");
@@ -160,6 +164,8 @@ public class FinalPanel extends JPanel
 		this.setLayout(layout);
 		this.setBackground(Color.DARK_GRAY);
 		this.add(startPanel);
+		startPanel.add(loginButton);
+		this.startPanel.setVisible(false);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
 		housePanel.add(houseImageLabel1);
@@ -200,24 +206,32 @@ public class FinalPanel extends JPanel
 		scorePanel.setVisible(false);
 	}
 	
+	public void setupLogin()
+	{
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				playerThirdHit();
+				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				doubleButton.setEnabled(false);
+			}
+		});
+	}
+	
 	public void setupListeners()
 	{
 		System.out.println(playerHitNumber);
-		if(houseHasBlackjack == true)
+		
+		exitAndSaveButton.addActionListener(new ActionListener()
 		{
-			standButton.addActionListener(new ActionListener()
+			public void actionPerformed(ActionEvent mouseClick)
 			{
-				public void actionPerformed(ActionEvent mouseClick)
-				{
-					playerStand();
-					standButton.setEnabled(false);
-					hitButton.setEnabled(false);
-					doubleButton.setEnabled(false);
-					houseBlackjack();
-				}
-			});
-		}
-		else
+				controller.updateUserData(userid, String.valueOf(chipNumber));
+				System.exit(0);
+			}
+		});
+
 		{
 			standButton.addActionListener(new ActionListener()
 			{
