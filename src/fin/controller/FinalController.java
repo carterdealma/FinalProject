@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Properties;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.*; 
 
 public class FinalController
 {
@@ -24,14 +23,20 @@ public class FinalController
 	
 	private HashMap<String, String> userData;
 	
+	private HashMap<String, String> userPasswd;
+	
 	private File saveFile;
+	
+	private File passwdFile;
 	
 	/**
 	 * Starts the GUI
 	 */
 	public FinalController()
 	{
+		this.passwdFile = new File("blackjack.passwd");
 		this.saveFile = new File("blackjack.save");
+		this.userPasswd = new HashMap<String, String>();
 		this.userData = new HashMap<String, String>();
 		this.cardList = new ArrayList<Card>();
 		fillAndShuffle();
@@ -198,9 +203,17 @@ public class FinalController
 				userData.put(key, properties.get(key).toString());
 			}
 			System.out.println("Read userData: " + userData);
-			int chipAmount = Integer.parseInt(userData.get(userKey));
-			System.out.println("Chip Amount:" + chipAmount);
-			return chipAmount;
+			if (userData.get(userKey) == null)
+			{
+				int chipAmount = 1000;
+				return chipAmount;
+			}
+			else
+			{
+				int chipAmount = Integer.parseInt(userData.get(userKey));
+				System.out.println("Chip Amount:" + chipAmount);
+				return chipAmount;
+			}
 		}
 		else
 		{
@@ -213,6 +226,95 @@ public class FinalController
 				e.printStackTrace();
 			}
 			return 1000;
+		}
+	}
+	
+	public void updatePasswdData(String userid, String encryptedPasswd)
+	{
+		userPasswd.put(userid, encryptedPasswd);
+		Properties properties = new Properties();
+		properties.putAll(userPasswd);
+		try 
+		{
+			properties.store(new FileOutputStream(passwdFile), null);
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean authenticateUser(String userid, String passwd)
+	{
+		String saltValue = EncryptPassword.getSaltvalue(27);
+		System.out.println("Salt: " + saltValue);
+		String encryptedPassword = EncryptPassword.generateSecurePassword(passwd, saltValue);
+		String saltEncryptedPassword = saltValue + encryptedPassword;
+		System.out.println("User id:" + userid);
+		System.out.println("password:" + passwd);
+		System.out.println("encrypted password:" + encryptedPassword);
+		System.out.println("salt encrypted password:" + saltEncryptedPassword);
+		if (passwdFile.exists())
+		{
+			Properties properties = new Properties();
+			try 
+			{
+				properties.load(new FileInputStream(passwdFile));
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			for (String key : properties.stringPropertyNames())
+			{
+				userPasswd.put(key, properties.get(key).toString());
+			}
+			System.out.println("Read userData: " + userPasswd);
+			if (userPasswd.get(userid) == null)
+			{
+				updatePasswdData(userid, saltEncryptedPassword);
+				return true;
+			}
+			else
+			{
+				System.out.println("password entered: " + passwd);
+				System.out.println("password encrypted: " + encryptedPassword);
+				System.out.println("password stored: " + userPasswd.get(userid));
+				String storedHash = userPasswd.get(userid);
+				String storedSaltValue = storedHash.substring(0, 27);
+				System.out.println("stored salt value: " + storedSaltValue);
+				String storedEncryptedPassword = storedHash.substring(27, storedHash.length());
+				System.out.println("Stored encrypted password:" + storedEncryptedPassword);
+				encryptedPassword = EncryptPassword.generateSecurePassword(passwd, storedSaltValue);
+				if (encryptedPassword.equals(storedEncryptedPassword))
+				{
+					System.out.println("Password match");
+					return true;
+				}
+				else
+				{
+					System.out.println("Password incorrect");
+					return false;
+				}
+			}
+		}
+		else
+		{
+			try 
+			{
+				passwdFile.createNewFile();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			updatePasswdData(userid, passwd);
+			System.out.println("user did not exist, created");
+			return true;
 		}
 	}
 	
