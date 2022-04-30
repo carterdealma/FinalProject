@@ -77,6 +77,7 @@ public class FinalPanel extends JPanel
 		super();
 		
 		this.controller = controller;
+		this.chipNumber = this.controller.readUserData(userid);
 		addAllElements();
 		setupPanel();
 		setupBet();
