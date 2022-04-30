@@ -8,12 +8,14 @@ import java.awt.event.*;
 
 public class FinalPanel extends JPanel
 {
-	private int chipNumber = 1000;
-	private String userid = "carter";
+	private int chipNumber;
+	private String userid;
+	private String passwd;
 	
 	private FinalController controller;
 	
 	private JPanel startPanel;
+	private JPanel loginPanel;
 	private JPanel cardPanel;
 	private JPanel housePanel;
 	private JPanel playerPanel;
@@ -65,21 +67,38 @@ public class FinalPanel extends JPanel
 	private JTextArea playerScoreText;
 	private JTextArea chipNumberText;
 	private JTextArea betSelectorText;
+	private JTextField loginField;
+	private JPasswordField passwdField;
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
 	private String [] chipBetsArray = {"5 Chips", "10 Chips", "25 Chips", "50 Chips", "100 Chips"};
 	private JComboBox<Integer> betSelectorBox;
 	boolean houseHasBlackjack = false;
+	boolean betDoubled = false;
 	
 	public FinalPanel(FinalController controller)
 	{
 		super();
 		
 		this.controller = controller;
-		this.chipNumber = this.controller.readUserData(userid);
 		addAllElements();
+		this.add(loginPanel);
+		loginPanel.add(loginField);
+		loginPanel.add(passwdField);
+		loginPanel.add(loginButton);
+		this.add(startPanel);
+		doubleButton.setVisible(false);
+		hitButton.setVisible(false);
+		standButton.setVisible(false);
+		playAgainButton.setVisible(false);
+		playAgainButton.setEnabled(false);
+		exitAndSaveButton.setVisible(false);
+		exitAndSaveButton.setEnabled(false);
+		betSelectorText.setVisible(false);
+		submitBetButton.setVisible(false);
 		setupPanel();
+		setupLogin();
 		setupBet();
 		firstFourCards();
 		setupListeners();
@@ -90,13 +109,14 @@ public class FinalPanel extends JPanel
 	{
 		this.layout = new SpringLayout();
 		this.startPanel = new JPanel();
+		this.loginPanel = new JPanel(new GridLayout (0,1));
 		this.cardPanel = new JPanel(new GridLayout (0,1));
+		cardPanel.setBackground(new Color(0, 153, 0));
 		this.housePanel = new JPanel();
 		housePanel.setBackground(new Color(0, 153, 0));
 		this.playerPanel = new JPanel();
 		playerPanel.setBackground(new Color(0, 153, 0));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
 		this.scorePanel = new JPanel(new GridLayout(0,1));
 		this.tempScorePanel = new JPanel(new GridLayout(0,1));
 		this.chipPanel = new JPanel();
@@ -110,6 +130,8 @@ public class FinalPanel extends JPanel
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
+		this.loginField = new JTextField("");
+		this.passwdField = new JPasswordField("");
 		this.playerScore = 0;
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
@@ -163,20 +185,19 @@ public class FinalPanel extends JPanel
 	{
 		this.setLayout(layout);
 		this.setBackground(Color.DARK_GRAY);
-		this.add(startPanel);
-		startPanel.add(loginButton);
-		this.startPanel.setVisible(false);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
 		housePanel.add(houseImageLabel1);
 		housePanel.add(houseImageLabel2);
 		housePanel.add(houseImageLabel3);
 		housePanel.add(houseImageLabel4);
+		housePanel.add(houseImageLabel5);
 		cardPanel.add(playerPanel);
 		playerPanel.add(playerImageLabel1);
 		playerPanel.add(playerImageLabel2);
 		playerPanel.add(playerImageLabel3);
 		playerPanel.add(playerImageLabel4);
+		playerPanel.add(playerImageLabel5);
 		this.add(buttonPanel);
 		buttonPanel.add(doubleButton);
 		doubleButton.setEnabled(false);
@@ -208,20 +229,62 @@ public class FinalPanel extends JPanel
 	
 	public void setupLogin()
 	{
-		hitButton.addActionListener(new ActionListener()
+		loginButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
 			{
-				playerThirdHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-				doubleButton.setEnabled(false);
+				userid = loginField.getText().trim().toLowerCase();
+				passwd = new String(passwdField.getPassword());
+				if (controller.authenticateUser(userid, passwd))
+				{
+					chipNumber = readUserData(userid);
+					System.out.println("chipNumber after login is: " + chipNumber);
+					chipNumberText.setText("Your Chips: " + chipNumber);
+					startPanel.setVisible(false);
+					loginPanel.setVisible(false);
+					doubleButton.setVisible(true);
+					hitButton.setVisible(true);
+					standButton.setVisible(true);
+					playAgainButton.setVisible(true);
+					playAgainButton.setEnabled(false);
+					exitAndSaveButton.setVisible(true);
+					exitAndSaveButton.setEnabled(false);
+					betSelectorText.setVisible(true);
+					submitBetButton.setVisible(true);
+				}
+				else
+				{
+					loginField.setText("");
+					passwdField.setText("");
+				}
+			}
+		});
+	}
+	
+	public void setupBet()
+	{
+		submitBetButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				System.out.println("chipNumber after bet is: " + chipNumber);
+				betSelected();
+				System.out.println("chipNumber after bet is selected: " + chipNumber);
+				((AbstractButton) mouseClick.getSource()).setEnabled(false);
+				standButton.setEnabled(true);
+				hitButton.setEnabled(true);
+				doubleButton.setEnabled(true);
+				betSelectorBox.setEnabled(false);
+				playerPanel.setVisible(true);
+				housePanel.setVisible(true);
+				scorePanel.setVisible(true);
 			}
 		});
 	}
 	
 	public void setupListeners()
 	{
-		System.out.println(playerHitNumber);
+		System.out.println("playerHitNumber: " + playerHitNumber);
 		
 		exitAndSaveButton.addActionListener(new ActionListener()
 		{
@@ -280,7 +343,7 @@ public class FinalPanel extends JPanel
 				}
 			});
 		}
-		else if(playerHitNumber == 0)
+		else if(playerHitNumber == 0 && houseHasBlackjack == false)
 		{
 		hitButton.addActionListener(new ActionListener()
 		{
@@ -328,26 +391,26 @@ public class FinalPanel extends JPanel
 					playerScore += playerCard3Value;
 					if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
 					{
-						if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
+						if (playerScore + 10 == 21)
 						{
-							playerScore = playerScore + 10;
-							playerWin();
+							push();
 						}
 						else if (playerScore + 10 < 21)
 						{
 							playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+							houseBlackjack();
 						}
 						else
 						{
 							playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+							houseBlackjack();
 						}
-						
 					}
 					else
 					{
 						playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+						houseBlackjack();
 					}
-					houseBlackjack();
 					((AbstractButton) mouseClick.getSource()).setEnabled(false);
 				}
 			});
@@ -355,7 +418,7 @@ public class FinalPanel extends JPanel
 		else
 		{
 			doubleButton.addActionListener(new ActionListener()
-			{
+			{ 
 				public void actionPerformed(ActionEvent mouseClick)
 				{
 					betDoubled();
@@ -371,25 +434,6 @@ public class FinalPanel extends JPanel
 			{
 				playAgain();
 				((AbstractButton) mouseClick.getSource()).setEnabled(false);
-			}
-		});
-	}
-	
-	public void setupBet()
-	{
-		submitBetButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				betSelected();
-				((AbstractButton) mouseClick.getSource()).setEnabled(false);
-				standButton.setEnabled(true);
-				hitButton.setEnabled(true);
-				doubleButton.setEnabled(true);
-				betSelectorBox.setEnabled(false);
-				playerPanel.setVisible(true);
-				housePanel.setVisible(true);
-				scorePanel.setVisible(true);
 			}
 		});
 	}
@@ -417,6 +461,15 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.WEST, tempScorePanel, 0, SpringLayout.WEST, scorePanel);
 		layout.putConstraint(SpringLayout.SOUTH, tempScorePanel, 0, SpringLayout.SOUTH, scorePanel);
 		layout.putConstraint(SpringLayout.EAST, tempScorePanel, 0, SpringLayout.EAST, scorePanel);
+		layout.putConstraint(SpringLayout.NORTH, loginPanel, 240, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, loginPanel, 520, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -240, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, loginPanel, -520, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, startPanel, 0, SpringLayout.NORTH, cardPanel);
+		layout.putConstraint(SpringLayout.WEST, startPanel, 0, SpringLayout.WEST, cardPanel);
+		layout.putConstraint(SpringLayout.SOUTH, startPanel, 0, SpringLayout.SOUTH, cardPanel);
+		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
 	}
 		
 	public void firstFourCards()
@@ -465,19 +518,6 @@ public class FinalPanel extends JPanel
 			if ((playerCard2Value == 1 || playerCard1Value == 1) && playerScore + 10 == 21)
 			{
 				playerScore = 21;
-				houseScore += houseCard2Value;
-				houseImageLabel2.setIcon(houseCard2);
-				if (houseScore + 10 == 21 && (houseCard1Value == 1 || houseCard2Value == 1))
-				{
-					if (playerScore == 21)
-					{
-						push();
-					}
-					else
-					{
-						houseImageLabel2.setIcon(houseCard2);
-					}
-				}
 				playerBlackjack();
 			}
 			else if (playerScore + 10 < 21)
@@ -534,7 +574,10 @@ public class FinalPanel extends JPanel
 			houseImageLabel2.setIcon(houseCard2);
 			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 		}
+		else
+		{
 		houseImageLabel2.setIcon(faceDownCard);
+		}
 	}
 	
 	public void playerFirstHit()
@@ -546,6 +589,40 @@ public class FinalPanel extends JPanel
 		playerScore += playerCard3Value;
 		System.out.println("playerFirstHit: player score: " + playerScore);
 		System.out.println("playerFirstHit: house score: " + houseScore);
+		if (playerScore == 21)
+		{
+			playerWin();
+		}
+		else if (playerScore > 21)
+		{
+			playerBust();
+		}
+		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
+		{
+			if (playerScore + 10 < 21)
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+			}
+			
+		}
+		else
+		{
+			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
+		}
+		playerHitNumber++;
+		setupListeners();
+	}
+	
+	public void playerSecondHit()
+	{
+		playerImageLabel4.setIcon(playerCard4);
+		playerScore += playerCard4Value;
+		System.out.println("playerSecondHit: player score: " + playerScore);
+		System.out.println("playerSecondHit: house score: " + houseScore);
 		if (playerScore == 21)
 		{
 			playerWin();
@@ -579,50 +656,12 @@ public class FinalPanel extends JPanel
 		setupListeners();
 	}
 	
-	public void playerSecondHit()
-	{
-		playerImageLabel4.setIcon(playerCard4);
-		playerScore += playerCard4Value;
-		System.out.println("playerSecondHit: player score: " + playerScore);
-		System.out.println("House: house score: " + houseScore);
-		if (playerScore == 21)
-		{
-			playerWin();
-		}
-		else if (playerScore > 21)
-		{
-			playerBust();
-		}
-		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-		{
-			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
-			{
-				playerScore = playerScore + 10;
-				playerWin();
-			}
-			else if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-			}
-			
-		}
-		else
-		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		playerHitNumber++;
-	}
-	
 	public void playerThirdHit()
 	{
 		playerImageLabel5.setIcon(playerCard5);
 		playerScore += playerCard5Value;
-		System.out.println("playerSecondHit: player score: " + playerScore);
-		System.out.println("House: house score: " + houseScore);
+		System.out.println("playerThirdHit: player score: " + playerScore);
+		System.out.println("playerThirdHit: house score: " + houseScore);
 		if (playerScore == 21)
 		{
 			playerWin();
@@ -653,6 +692,7 @@ public class FinalPanel extends JPanel
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
 		playerHitNumber++;
+		setupListeners();
 	}
 	
 	public void playerStand()
@@ -671,16 +711,16 @@ public class FinalPanel extends JPanel
 			houseScore = 21;
 			houseBlackjack();
 		}
-		else if (playerScore == 21 && houseScore != 21)
-		{
-			playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
-			standButton.setEnabled(false);
-			hitButton.setEnabled(false);
-			doubleButton.setEnabled(false);
-			playAgainButton.setEnabled(true);
-			exitAndSaveButton.setEnabled(true);
-			betWon();
-		}
+//		else if (playerScore == 21 && houseScore != 21)
+//		{
+//			playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
+//			standButton.setEnabled(false);
+//			hitButton.setEnabled(false);
+//			doubleButton.setEnabled(false);
+//			playAgainButton.setEnabled(true);
+//			exitAndSaveButton.setEnabled(true);
+//			betWon();
+//		}
 		else if ((playerCard2Value == 1 || playerCard1Value == 1) && houseScore > playerScore + 10)
 		{
 			houseWin();
@@ -691,17 +731,15 @@ public class FinalPanel extends JPanel
 		}
 		else if (houseCard2Value == 1 || houseCard1Value == 1)
 		{
-			if (houseScore + 10 == 21)
-			{
-				houseBlackjack();
-			}
-			else if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
+			if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
 			{
 				houseScore = houseScore + 10;
 				houseWin();
 			}
 			else if (houseScore + 10 >= 17)
 			{
+				houseScore = houseScore + 10;
+				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
 				houseStand();
 			}
 			else
@@ -1001,7 +1039,8 @@ public class FinalPanel extends JPanel
 	}
 	
 	public void playerBlackjack()
-	{	houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
+	{	
+		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
 		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
 		standButton.setEnabled(false);
@@ -1121,6 +1160,8 @@ public class FinalPanel extends JPanel
 	
 	public void betDoubled()
 	{
+		betDoubled = true;
+		
 		if (betSelectorBox.getSelectedIndex() == 0)
 		{
 			chipNumber -= 5;
@@ -1151,7 +1192,11 @@ public class FinalPanel extends JPanel
 	
 	public void betWon()
 	{
-		if (betSelectorBox.getSelectedIndex() == 0)
+		if (betDoubled == true)
+		{
+			betWonDouble();
+		}
+		else if (betSelectorBox.getSelectedIndex() == 0)
 		{
 			chipNumber += 10;
 			chipNumberText.setText("Your Chips: " + chipNumber);
@@ -1179,6 +1224,36 @@ public class FinalPanel extends JPanel
 		}
 	}
 	
+	public void betWonDouble()
+	{
+		if (betSelectorBox.getSelectedIndex() == 0)
+		{
+			chipNumber += 20;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+			
+		}
+		else if (betSelectorBox.getSelectedIndex() == 1)
+		{
+			chipNumber += 40;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 2)
+		{
+			chipNumber += 100;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 3)
+		{
+			chipNumber += 200;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+		else if (betSelectorBox.getSelectedIndex() == 4)
+		{
+			chipNumber += 400;
+			chipNumberText.setText("Your Chips: " + chipNumber);
+		}
+	}
+	
 	public void betReturned()
 	{
 		if (betSelectorBox.getSelectedIndex() == 0)
@@ -1202,5 +1277,10 @@ public class FinalPanel extends JPanel
 		{
 			chipNumberText.setText("Your Chips: " + chipNumber);
 		}
+	}
+	
+	public int readUserData(String userid)
+	{
+		return this.controller.readUserData(userid);
 	}
 }
