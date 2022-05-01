@@ -16,6 +16,10 @@ public class FinalController
 	 */
 	private FinalFrame frame;
 	
+	private Card defaultCard;
+	
+	private DeadpoolCard deadpoolCard;
+	
 	/**
 	 * The ArrayList of Card values that make up Blackjack.
 	 */
@@ -39,7 +43,7 @@ public class FinalController
 		this.userPasswd = new HashMap<String, String>();
 		this.userData = new HashMap<String, String>();
 		this.cardList = new ArrayList<Card>();
-		fillAndShuffle();
+		fillAndShuffle("default");
 		this.frame = new FinalFrame(this);
 	}
 	
@@ -55,60 +59,60 @@ public class FinalController
 	 * Adds all 52 cards to the Blackjack cardList and shuffles them and returns the shuffled deck
 	 * @return A shuffled deck of Cards
 	 */
-	public void fillAndShuffle()
+	public void fillAndShuffle(String theme)
 	{
-		Card aceC = new Card("AC", 1);
-		Card aceD = new Card("AD", 1);
-		Card aceH = new Card("AH", 1);
-		Card aceS = new Card("AS", 1);
-		Card twoC = new Card("2C", 2);
-		Card twoD = new Card("2D", 2);
-		Card twoH = new Card("2H", 2);
-		Card twoS = new Card("2S", 2);
-		Card threeC = new Card("3C", 3);
-		Card threeD = new Card("3D", 3);
-		Card threeH = new Card("3H", 3);
-		Card threeS = new Card("3S", 3);
-		Card fourC = new Card("4C", 4);
-		Card fourD = new Card("4D", 4);
-		Card fourH = new Card("4H", 4);
-		Card fourS = new Card("4S", 4);
-		Card fiveC = new Card("5C", 5);
-		Card fiveD = new Card("5D", 5);
-		Card fiveH = new Card("5H", 5);
-		Card fiveS = new Card("5S", 5);
-		Card sixC = new Card("6C", 6);
-		Card sixD = new Card("6D", 6);
-		Card sixH = new Card("6H", 6);
-		Card sixS = new Card("6S", 6);
-		Card sevenC = new Card("7C", 7);
-		Card sevenD = new Card("7D", 7);
-		Card sevenH = new Card("7H", 7);
-		Card sevenS = new Card("7S", 7);
-		Card eightC = new Card("8C", 8);
-		Card eightD = new Card("8D", 8);
-		Card eightH = new Card("8H", 8);
-		Card eightS = new Card("8S", 8);
-		Card nineC = new Card("9C", 9);
-		Card nineD = new Card("9D", 9);
-		Card nineH = new Card("9H", 9);
-		Card nineS = new Card("9S", 9);
-		Card tenC = new Card("10C", 10);
-		Card tenD = new Card("10D", 10);
-		Card tenH = new Card("10H", 10);
-		Card tenS = new Card("10S", 10);
-		Card kingC = new Card("KC", 10);
-		Card kingD = new Card("KD", 10);
-		Card kingH = new Card("KH", 10);
-		Card kingS = new Card("KS", 10);
-		Card queenC = new Card("QC", 10);
-		Card queenD = new Card("QD", 10);
-		Card queenH = new Card("QH", 10);
-		Card queenS = new Card("QS", 10);
-		Card jokerC = new Card("JC", 10);
-		Card jokerD = new Card("JD", 10);
-		Card jokerH = new Card("JH", 10);
-		Card jokerS = new Card("JS", 10);
+		Card aceC = new Card("AC", 1, theme);
+		Card aceD = new Card("AD", 1, theme);
+		Card aceH = new Card("AH", 1, theme);
+		Card aceS = new Card("AS", 1, theme);
+		Card twoC = new Card("2C", 2, theme);
+		Card twoD = new Card("2D", 2, theme);
+		Card twoH = new Card("2H", 2, theme);
+		Card twoS = new Card("2S", 2, theme);
+		Card threeC = new Card("3C", 3, theme);
+		Card threeD = new Card("3D", 3, theme);
+		Card threeH = new Card("3H", 3, theme);
+		Card threeS = new Card("3S", 3, theme);
+		Card fourC = new Card("4C", 4, theme);
+		Card fourD = new Card("4D", 4, theme);
+		Card fourH = new Card("4H", 4, theme);
+		Card fourS = new Card("4S", 4, theme);
+		Card fiveC = new Card("5C", 5, theme);
+		Card fiveD = new Card("5D", 5, theme);
+		Card fiveH = new Card("5H", 5, theme);
+		Card fiveS = new Card("5S", 5, theme);
+		Card sixC = new Card("6C", 6, theme);
+		Card sixD = new Card("6D", 6, theme);
+		Card sixH = new Card("6H", 6, theme);
+		Card sixS = new Card("6S", 6, theme);
+		Card sevenC = new Card("7C", 7, theme);
+		Card sevenD = new Card("7D", 7, theme);
+		Card sevenH = new Card("7H", 7, theme);
+		Card sevenS = new Card("7S", 7, theme);
+		Card eightC = new Card("8C", 8, theme);
+		Card eightD = new Card("8D", 8, theme);
+		Card eightH = new Card("8H", 8, theme);
+		Card eightS = new Card("8S", 8, theme);
+		Card nineC = new Card("9C", 9, theme);
+		Card nineD = new Card("9D", 9, theme);
+		Card nineH = new Card("9H", 9, theme);
+		Card nineS = new Card("9S", 9, theme);
+		Card tenC = new Card("10C", 10, theme);
+		Card tenD = new Card("10D", 10, theme);
+		Card tenH = new Card("10H", 10, theme);
+		Card tenS = new Card("10S", 10, theme);
+		Card kingC = new Card("KC", 10, theme);
+		Card kingD = new Card("KD", 10, theme);
+		Card kingH = new Card("KH", 10, theme);
+		Card kingS = new Card("KS", 10, theme);
+		Card queenC = new Card("QC", 10, theme);
+		Card queenD = new Card("QD", 10, theme);
+		Card queenH = new Card("QH", 10, theme);
+		Card queenS = new Card("QS", 10, theme);
+		Card jokerC = new Card("JC", 10, theme);
+		Card jokerD = new Card("JD", 10, theme);
+		Card jokerH = new Card("JH", 10, theme);
+		Card jokerS = new Card("JS", 10, theme);
 		cardList.add(aceC);
 		cardList.add(aceD);
 		cardList.add(aceH);
@@ -331,6 +335,23 @@ public class FinalController
 	public int sendValue()
 	{
 		return cardList.get(0).getValue();
+	}
+	
+	public void originalCardChosen()
+	{
+		Card defaultCard = new Card("Card", 99, "default");
+		fillAndShuffle(defaultCard.getTheme());
+	}
+	
+	public void deadpoolCardChosen()
+	{
+		DeadpoolCard deadpoolCard = new DeadpoolCard("DeadpoolCard", 200, "deadpool");
+		fillAndShuffle(deadpoolCard.getTheme());
+	}
+	
+	public String deadpoolCardPath()
+	{
+		return "/fin/view/deadpool/";
 	}
 
 }

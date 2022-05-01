@@ -5,6 +5,7 @@ import fin.controller.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Enumeration;
 
 public class FinalPanel extends JPanel
 {
@@ -16,6 +17,7 @@ public class FinalPanel extends JPanel
 	
 	private JPanel startPanel;
 	private JPanel loginPanel;
+	private JPanel themePanel;
 	private JPanel cardPanel;
 	private JPanel housePanel;
 	private JPanel playerPanel;
@@ -63,10 +65,16 @@ public class FinalPanel extends JPanel
 	private JButton playAgainButton;
 	private JButton submitBetButton;
 	private JButton exitAndSaveButton;
+	private JButton confirmThemeButton;
+	private String [] themeArray = {"default", "deadpool"};
+	private JComboBox<String> themeSelectorBox;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
 	private JTextArea chipNumberText;
 	private JTextArea betSelectorText;
+	private JTextArea themeText;
+	private JTextArea loginText;
+	private JTextArea passwordText;
 	private JTextField loginField;
 	private JPasswordField passwdField;
 	private int playerScore;
@@ -76,31 +84,17 @@ public class FinalPanel extends JPanel
 	private JComboBox<Integer> betSelectorBox;
 	boolean houseHasBlackjack = false;
 	boolean betDoubled = false;
+	private String cardPath;
 	
 	public FinalPanel(FinalController controller)
 	{
 		super();
 		
 		this.controller = controller;
+		this.controller.fillAndShuffle("default");
 		addAllElements();
-		this.add(loginPanel);
-		loginPanel.add(loginField);
-		loginPanel.add(passwdField);
-		loginPanel.add(loginButton);
-		this.add(startPanel);
-		doubleButton.setVisible(false);
-		hitButton.setVisible(false);
-		standButton.setVisible(false);
-		playAgainButton.setVisible(false);
-		playAgainButton.setEnabled(false);
-		exitAndSaveButton.setVisible(false);
-		exitAndSaveButton.setEnabled(false);
-		betSelectorText.setVisible(false);
-		submitBetButton.setVisible(false);
-		setupPanel();
 		setupLogin();
-		setupBet();
-		firstFourCards();
+		setupPanel();
 		setupListeners();
 		setupLayout();
 	}
@@ -110,6 +104,9 @@ public class FinalPanel extends JPanel
 		this.layout = new SpringLayout();
 		this.startPanel = new JPanel();
 		this.loginPanel = new JPanel(new GridLayout (0,1));
+		layout.putConstraint(SpringLayout.NORTH, loginPanel, 210, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -210, SpringLayout.SOUTH, this);
+		this.themePanel = new JPanel(new GridLayout(0,1));
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		cardPanel.setBackground(new Color(0, 153, 0));
 		this.housePanel = new JPanel();
@@ -127,9 +124,14 @@ public class FinalPanel extends JPanel
 		this.submitBetButton = new JButton("Submit Bet");
 		this.playAgainButton = new JButton("Play Again?");
 		this.exitAndSaveButton = new JButton("Exit and Save?");
+		this.confirmThemeButton = new JButton("Confirm Theme");
+		this.themeSelectorBox = new JComboBox(themeArray);
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
+		this.themeText = new JTextArea("Choose your theme:");
+		this.loginText = new JTextArea("Username: ");
+		this.passwordText = new JTextArea("Password : ");
 		this.loginField = new JTextField("");
 		this.passwdField = new JPasswordField("");
 		this.playerScore = 0;
@@ -137,50 +139,114 @@ public class FinalPanel extends JPanel
 		this.playerHitNumber = 0;
 		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.betSelectorBox = new JComboBox(chipBetsArray);
-		this.faceDownCard = new ImageIcon(getClass().getResource("/fin/view/images/" + "red_back" + ".png"));
 		this.playerImageLabel1 = new JLabel();
-		playerCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		this.playerImageLabel2 = new JLabel();
+		this.playerImageLabel3 = new JLabel();
+		this.playerImageLabel4 = new JLabel();
+		this.playerImageLabel5 = new JLabel();
+		this.houseImageLabel1 = new JLabel();
+		this.houseImageLabel2 = new JLabel();
+		this.houseImageLabel3 = new JLabel();
+		this.houseImageLabel4 = new JLabel();
+		this.houseImageLabel5 = new JLabel();
+		
+	}
+	
+	public void setupLogin()
+	{
+		this.add(loginPanel);
+		loginPanel.add(themeText);
+		loginPanel.add(themeSelectorBox);
+		loginPanel.add(confirmThemeButton);
+		loginPanel.add(loginText);
+		loginPanel.add(loginField);
+		loginPanel.add(passwordText);
+		loginPanel.add(passwdField);
+		loginPanel.add(loginButton);
+		this.add(themePanel);
+		this.add(startPanel);
+		loginText.setEditable(false);
+		passwordText.setEditable(false);
+		doubleButton.setVisible(false);
+		hitButton.setVisible(false);
+		standButton.setVisible(false);
+		playAgainButton.setVisible(false);
+		playAgainButton.setEnabled(false);
+		exitAndSaveButton.setVisible(false);
+		exitAndSaveButton.setEnabled(false);
+		betSelectorText.setVisible(false);
+		betSelectorBox.setEnabled(false);
+		submitBetButton.setVisible(false);
+		loginButton.setEnabled(false);
+		confirmThemeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				if (themeSelectorBox.getSelectedIndex() == 0)
+				{
+					System.out.println("Cards are default");
+					cardPath = "/fin/view/images/";
+					setupCards();
+					setupLoginListeners();
+					setupBet();
+					firstFourCards();
+					loginButton.setEnabled(true);
+					confirmThemeButton.setEnabled(false);
+				}
+				else if (themeSelectorBox.getSelectedIndex() == 1)
+				{
+					System.out.println("Cards are deadpool");
+					cardPath = "/fin/view/deadpool/";
+					setupCards();
+					setupLoginListeners();
+					setupBet();
+					firstFourCards();
+					setupListeners();
+					setupLayout();
+					loginButton.setEnabled(true);
+					confirmThemeButton.setEnabled(false);
+				}
+			}
+		});
+	}
+	
+	public void setupCards()
+	{
+		System.out.println("cardPath in setupCards: " + cardPath);
+		this.faceDownCard = new ImageIcon(getClass().getResource(cardPath + "face_down" + ".png"));
+		playerCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		playerCard1Value = controller.sendValue();
 		controller.cardPlayed();
-		this.playerImageLabel2 = new JLabel();
-		playerCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		playerCard2Value = controller.sendValue();
 		controller.cardPlayed();
-		this.playerImageLabel3 = new JLabel();
-		playerCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		playerCard3Value = controller.sendValue();
 		controller.cardPlayed();
-		this.playerImageLabel4 = new JLabel();
-		playerCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		playerCard4Value = controller.sendValue();
 		controller.cardPlayed();
-		this.playerImageLabel5 = new JLabel();
-		playerCard5 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		playerCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		playerCard5Value = controller.sendValue();
 		controller.cardPlayed();
-		this.houseImageLabel1 = new JLabel();
-		houseCard1 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		houseCard1Value = controller.sendValue();
 		controller.cardPlayed();
-		this.houseImageLabel2 = new JLabel();
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		houseCard2Value = controller.sendValue();
 		houseCard2Name = controller.sendName();
 		controller.cardPlayed();
-		this.houseImageLabel3 = new JLabel();
-		houseCard3 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		houseCard3Value = controller.sendValue();
 		controller.cardPlayed();
-		this.houseImageLabel4 = new JLabel();
-		houseCard4 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		houseCard4Value = controller.sendValue();
 		controller.cardPlayed();
-		this.houseImageLabel5 = new JLabel();
-		houseCard5 = new ImageIcon(getClass().getResource("/fin/view/images/" + controller.sendName() + ".png"));
+		houseCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
 		houseCard5Value = controller.sendValue();
 		controller.cardPlayed();
 	}
-	
+
 	public void setupPanel()
 	{
 		this.setLayout(layout);
@@ -227,30 +293,39 @@ public class FinalPanel extends JPanel
 		scorePanel.setVisible(false);
 	}
 	
-	public void setupLogin()
+	public void setupLoginListeners()
 	{
 		loginButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
 			{
-				userid = loginField.getText().trim().toLowerCase();
-				passwd = new String(passwdField.getPassword());
-				if (controller.authenticateUser(userid, passwd))
+				if (!loginField.getText().equals(""))
 				{
-					chipNumber = readUserData(userid);
-					System.out.println("chipNumber after login is: " + chipNumber);
-					chipNumberText.setText("Your Chips: " + chipNumber);
-					startPanel.setVisible(false);
-					loginPanel.setVisible(false);
-					doubleButton.setVisible(true);
-					hitButton.setVisible(true);
-					standButton.setVisible(true);
-					playAgainButton.setVisible(true);
-					playAgainButton.setEnabled(false);
-					exitAndSaveButton.setVisible(true);
-					exitAndSaveButton.setEnabled(false);
-					betSelectorText.setVisible(true);
-					submitBetButton.setVisible(true);
+					userid = loginField.getText().trim().toLowerCase();
+					passwd = new String(passwdField.getPassword());
+					if (controller.authenticateUser(userid, passwd))
+					{
+						chipNumber = readUserData(userid);
+						System.out.println("chipNumber after login is: " + chipNumber);
+						chipNumberText.setText("Your Chips: " + chipNumber);
+						startPanel.setVisible(false);
+						loginPanel.setVisible(false);
+						doubleButton.setVisible(true);
+						hitButton.setVisible(true);
+						standButton.setVisible(true);
+						playAgainButton.setVisible(true);
+						playAgainButton.setEnabled(false);
+						exitAndSaveButton.setVisible(true);
+						exitAndSaveButton.setEnabled(false);
+						betSelectorText.setVisible(true);
+						betSelectorBox.setEnabled(true);
+						submitBetButton.setVisible(true);
+					}
+					else
+					{
+						loginField.setText("");
+						passwdField.setText("");
+					}
 				}
 				else
 				{
@@ -461,9 +536,7 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.WEST, tempScorePanel, 0, SpringLayout.WEST, scorePanel);
 		layout.putConstraint(SpringLayout.SOUTH, tempScorePanel, 0, SpringLayout.SOUTH, scorePanel);
 		layout.putConstraint(SpringLayout.EAST, tempScorePanel, 0, SpringLayout.EAST, scorePanel);
-		layout.putConstraint(SpringLayout.NORTH, loginPanel, 240, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, loginPanel, 520, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -240, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, loginPanel, -520, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.NORTH, startPanel, 0, SpringLayout.NORTH, cardPanel);
 		layout.putConstraint(SpringLayout.WEST, startPanel, 0, SpringLayout.WEST, cardPanel);
@@ -702,7 +775,7 @@ public class FinalPanel extends JPanel
 	
 	public void houseRevealsSecondCard()
 	{
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
+		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
 		System.out.println("house reveals 2nd: player score: " + playerScore);
 		System.out.println("house reveals 2nd: house score: " + houseScore);
@@ -1014,7 +1087,7 @@ public class FinalPanel extends JPanel
 	
 	public void playerWin()
 	{
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
+		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
 		playerScoreText.setText("Your Score: WIN! (" + playerScore + ")");
 		standButton.setEnabled(false);
@@ -1027,7 +1100,7 @@ public class FinalPanel extends JPanel
 	
 	public void playerBust()
 	{
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
+		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
 		houseScoreText.setText("House Score: " + houseScore);
 		playerScoreText.setText("Your Score: BUST! (" + playerScore + ")");
@@ -1040,7 +1113,7 @@ public class FinalPanel extends JPanel
 	
 	public void playerBlackjack()
 	{	
-		houseCard2 = new ImageIcon(getClass().getResource("/fin/view/images/" + houseCard2Name + ".png"));
+		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
 		houseImageLabel2.setIcon(houseCard2);
 		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
 		standButton.setEnabled(false);
@@ -1117,9 +1190,18 @@ public class FinalPanel extends JPanel
 		buttonPanel.removeAll();
 		scorePanel.removeAll();
 		chipPanel.removeAll();
-		controller.fillAndShuffle();
+		if (cardPath.equals("/fin/view/deadpool/"))
+		{
+			controller.deadpoolCardChosen();
+		}
+		else if (cardPath.equals("/fin/view/images/"))
+		{
+			controller.originalCardChosen();
+		}
+		
 		addAllElements();
 		setupPanel();
+		setupCards();
 		setupBet();
 		setupListeners();
 		setupLayout();
