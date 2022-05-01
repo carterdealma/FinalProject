@@ -61,6 +61,7 @@ public class FinalController
 	 */
 	public void fillAndShuffle(String theme)
 	{
+		
 		Card aceC = new Card("AC", 1, theme);
 		Card aceD = new Card("AD", 1, theme);
 		Card aceH = new Card("AH", 1, theme);
@@ -109,10 +110,10 @@ public class FinalController
 		Card queenD = new Card("QD", 10, theme);
 		Card queenH = new Card("QH", 10, theme);
 		Card queenS = new Card("QS", 10, theme);
-		Card jokerC = new Card("JC", 10, theme);
-		Card jokerD = new Card("JD", 10, theme);
-		Card jokerH = new Card("JH", 10, theme);
-		Card jokerS = new Card("JS", 10, theme);
+		Card jackC = new Card("JC", 10, theme);
+		Card jackD = new Card("JD", 10, theme);
+		Card jackH = new Card("JH", 10, theme);
+		Card jackS = new Card("JS", 10, theme);
 		cardList.add(aceC);
 		cardList.add(aceD);
 		cardList.add(aceH);
@@ -161,10 +162,10 @@ public class FinalController
 		cardList.add(queenD);
 		cardList.add(queenH);
 		cardList.add(queenS);
-		cardList.add(jokerC);
-		cardList.add(jokerD);
-		cardList.add(jokerH);
-		cardList.add(jokerS);
+		cardList.add(jackC);
+		cardList.add(jackD);
+		cardList.add(jackH);
+		cardList.add(jackS);
 		
 		Collections.shuffle(cardList);
 	}

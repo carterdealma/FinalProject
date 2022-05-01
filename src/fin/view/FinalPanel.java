@@ -66,7 +66,7 @@ public class FinalPanel extends JPanel
 	private JButton submitBetButton;
 	private JButton exitAndSaveButton;
 	private JButton confirmThemeButton;
-	private String [] themeArray = {"default", "deadpool"};
+	private String [] themeArray = {"Default", "Deadpool"};
 	private JComboBox<String> themeSelectorBox;
 	private JTextArea houseScoreText;
 	private JTextArea playerScoreText;
