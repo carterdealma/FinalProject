@@ -12,15 +12,18 @@ public class Card
 	 */
 	private int value;
 	
+	private String theme;
+	
 	/**
 	 * Creates a Card instance with the supplied name and value.
 	 * @param name
 	 * @param value
 	 */
-	public Card(String name, int value)
+	public Card(String name, int value, String theme)
 	{
 		this.name = name;
 		this.value = value;
+		setTheme("default");
 	}
 	
 	/**
@@ -41,6 +44,11 @@ public class Card
 		return this.value;
 	}
 	
+	public String getTheme()
+	{
+		return this.theme;
+	}
+	
 	/**
 	 * Updates the name to the provided String.
 	 * @param name
@@ -57,6 +65,11 @@ public class Card
 	public void setValue(int value)
 	{
 		this.value = value;
+	}
+	
+	public void setTheme(String theme)
+	{
+		this.theme = theme;
 	}
 	
 	/**
