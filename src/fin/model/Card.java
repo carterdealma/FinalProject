@@ -12,18 +12,18 @@ public class Card
 	 */
 	private int value;
 	
-	private String theme;
+	private String path;
 	
 	/**
 	 * Creates a Card instance with the supplied name and value.
 	 * @param name
 	 * @param value
 	 */
-	public Card(String name, int value, String theme)
+	public Card(String name, int value, String path)
 	{
 		this.name = name;
 		this.value = value;
-		setTheme("default");
+		setPath("/fin/view/images/");
 	}
 	
 	/**
@@ -44,9 +44,9 @@ public class Card
 		return this.value;
 	}
 	
-	public String getTheme()
+	public String getPath()
 	{
-		return this.theme;
+		return this.path;
 	}
 	
 	/**
@@ -67,9 +67,9 @@ public class Card
 		this.value = value;
 	}
 	
-	public void setTheme(String theme)
+	public void setPath(String path)
 	{
-		this.theme = theme;
+		this.path = path;
 	}
 	
 	/**

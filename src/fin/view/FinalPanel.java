@@ -112,8 +112,6 @@ public class FinalPanel extends JPanel
 		this.layout = new SpringLayout();
 		this.startPanel = new JPanel();
 		this.loginPanel = new JPanel(new GridLayout (0,1));
-		layout.putConstraint(SpringLayout.NORTH, loginPanel, 210, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -210, SpringLayout.SOUTH, this);
 		this.themePanel = new JPanel(new GridLayout(0,1));
 		this.cardPanel = new JPanel(new GridLayout (0,1));
 		cardPanel.setBackground(new Color(0, 153, 0));
@@ -574,6 +572,8 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, startPanel, 0, SpringLayout.SOUTH, cardPanel);
 		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.NORTH, loginPanel, 210, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -210, SpringLayout.SOUTH, this);
 	}
 	
 	public void calculateScore(boolean firstDeal)
@@ -655,7 +655,7 @@ public class FinalPanel extends JPanel
 	}
 		
 	public void firstFourCards()
-	{
+	{ 
 		/*
 		 * Player receives their first card
 		 */
