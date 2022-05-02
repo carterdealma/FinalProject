@@ -401,7 +401,8 @@ public class FinalController
 			dealtCard.setName(dpCardList.get(0).getName());
 			dealtCard.setValue(dpCardList.get(0).getValue());
 			dealtCard.setImage(dpCardList.get(0).getPath(), dpCardList.get(0).getName());
-			cardList.remove(0);
+			System.out.println("dpCardList.get(0)'s path: " + dpCardList.get(0).getPath());
+			dpCardList.remove(0);
 			if (playerOrHouse == "player")
 			{
 				playerCardList.add(dealtCard);
