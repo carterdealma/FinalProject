@@ -485,10 +485,5 @@ public class FinalController
 			return houseCardList.get(houseCardList.size() - 1).getImage();
 		}
 	}
-	
-	public String deadpoolCardPath()
-	{
-		return "/fin/view/deadpool/";
-	}
 
 }
