@@ -5,10 +5,14 @@ import fin.controller.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.Enumeration;
+import java.util.*;
 
 public class FinalPanel extends JPanel
 {
+	private boolean ifFirstDeal;
+	private ArrayList<Integer> cardValues;
+	private String playerOrHouse;
+	private boolean isThemed;
 	private int chipNumber;
 	private String userid;
 	private String passwd;
@@ -36,7 +40,12 @@ public class FinalPanel extends JPanel
 	private JLabel playerImageLabel3;
 	private JLabel playerImageLabel4;
 	private JLabel playerImageLabel5;
-	private ImageIcon faceDownCard;
+	private JLabel playerImageLabel;
+	private JLabel houseImageLabel;
+	private ArrayList<JLabel> playerLabelList;
+	private ArrayList<JLabel> houseLabelList;
+	private JLabel faceDownCard;
+	private ImageIcon faceDownCardIcon;
 	private ImageIcon playerCard1;
 	private int playerCard1Value;
 	private ImageIcon playerCard2;
@@ -91,7 +100,6 @@ public class FinalPanel extends JPanel
 		super();
 		
 		this.controller = controller;
-		this.controller.fillAndShuffle("default");
 		addAllElements();
 		setupLogin();
 		setupPanel();
@@ -139,16 +147,22 @@ public class FinalPanel extends JPanel
 		this.playerHitNumber = 0;
 		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.betSelectorBox = new JComboBox(chipBetsArray);
-		this.playerImageLabel1 = new JLabel();
-		this.playerImageLabel2 = new JLabel();
-		this.playerImageLabel3 = new JLabel();
-		this.playerImageLabel4 = new JLabel();
-		this.playerImageLabel5 = new JLabel();
-		this.houseImageLabel1 = new JLabel();
-		this.houseImageLabel2 = new JLabel();
-		this.houseImageLabel3 = new JLabel();
-		this.houseImageLabel4 = new JLabel();
-		this.houseImageLabel5 = new JLabel();
+		this.playerLabelList = new ArrayList<JLabel>();
+		this.houseLabelList = new ArrayList<JLabel>();
+		this.faceDownCard = new JLabel();
+		this.playerImageLabel = new JLabel();
+		this.houseImageLabel = new JLabel();
+		this.cardValues = new ArrayList<Integer>();
+//		this.playerImageLabel1 = new JLabel();
+//		this.playerImageLabel2 = new JLabel();
+//		this.playerImageLabel3 = new JLabel();
+//		this.playerImageLabel4 = new JLabel();
+//		this.playerImageLabel5 = new JLabel();
+//		this.houseImageLabel1 = new JLabel();
+//		this.houseImageLabel2 = new JLabel();
+//		this.houseImageLabel3 = new JLabel();
+//		this.houseImageLabel4 = new JLabel();
+//		this.houseImageLabel5 = new JLabel();
 		
 	}
 	
@@ -184,23 +198,40 @@ public class FinalPanel extends JPanel
 			{
 				if (themeSelectorBox.getSelectedIndex() == 0)
 				{
-					System.out.println("Cards are default");
-					cardPath = "/fin/view/images/";
-					setupCards();
 					setupLoginListeners();
+					isThemed = false;
+					controller.createDeck(isThemed);
+					controller.shuffleCards(isThemed);
+					faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/images/" + "face_down" + ".png"));
+					faceDownCard.setIcon(faceDownCardIcon);
+//					cardPath = controller.sendPath(isThemed);
 					setupBet();
-					firstFourCards();
+					firstDeal();
+					ifFirstDeal = true;
+					calculateScore(ifFirstDeal);
+					ifFirstDeal = false;
+//					setupCards();
+//					firstFourCards();
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
 				}
 				else if (themeSelectorBox.getSelectedIndex() == 1)
 				{
-					System.out.println("Cards are deadpool");
-					cardPath = "/fin/view/deadpool/";
-					setupCards();
 					setupLoginListeners();
+					System.out.println("Cards are deadpool");
+					isThemed = true;
+					controller.createDeck(isThemed);
+					controller.shuffleCards(isThemed);
+					faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/deadpool/" + "face_down" + ".png"));
+					faceDownCard.setIcon(faceDownCardIcon);
+//					cardPath = controller.sendPath(isThemed);
 					setupBet();
-					firstFourCards();
+					firstDeal();
+					ifFirstDeal = true;
+					calculateScore(ifFirstDeal);
+					ifFirstDeal = false;
+//					setupCards();
+//					firstFourCards();
 					setupListeners();
 					setupLayout();
 					loginButton.setEnabled(true);
@@ -210,42 +241,42 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
-	public void setupCards()
-	{
-		System.out.println("cardPath in setupCards: " + cardPath);
-		this.faceDownCard = new ImageIcon(getClass().getResource(cardPath + "face_down" + ".png"));
-		playerCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		playerCard1Value = controller.sendValue();
-		controller.cardPlayed();
-		playerCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		playerCard2Value = controller.sendValue();
-		controller.cardPlayed();
-		playerCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		playerCard3Value = controller.sendValue();
-		controller.cardPlayed();
-		playerCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		playerCard4Value = controller.sendValue();
-		controller.cardPlayed();
-		playerCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		playerCard5Value = controller.sendValue();
-		controller.cardPlayed();
-		houseCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		houseCard1Value = controller.sendValue();
-		controller.cardPlayed();
-		houseCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		houseCard2Value = controller.sendValue();
-		houseCard2Name = controller.sendName();
-		controller.cardPlayed();
-		houseCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		houseCard3Value = controller.sendValue();
-		controller.cardPlayed();
-		houseCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		houseCard4Value = controller.sendValue();
-		controller.cardPlayed();
-		houseCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName() + ".png"));
-		houseCard5Value = controller.sendValue();
-		controller.cardPlayed();
-	}
+//	public void setupCards()
+//	{
+//		System.out.println("cardPath in setupCards: " + cardPath);
+//		this.faceDownCard = new ImageIcon(getClass().getResource(cardPath + "face_down" + ".png"));
+//		playerCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		playerCard1Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed); 
+//		playerCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		playerCard2Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		playerCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		playerCard3Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		playerCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		playerCard4Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		playerCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		playerCard5Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		houseCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		houseCard1Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		houseCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		houseCard2Value = controller.sendValue(isThemed);
+//		houseCard2Name = controller.sendName(isThemed);
+//		controller.cardPlayed(isThemed);
+//		houseCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		houseCard3Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		houseCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		houseCard4Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//		houseCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
+//		houseCard5Value = controller.sendValue(isThemed);
+//		controller.cardPlayed(isThemed);
+//	}
 
 	public void setupPanel()
 	{
@@ -253,17 +284,17 @@ public class FinalPanel extends JPanel
 		this.setBackground(Color.DARK_GRAY);
 		this.add(cardPanel);
 		cardPanel.add(housePanel);
-		housePanel.add(houseImageLabel1);
-		housePanel.add(houseImageLabel2);
-		housePanel.add(houseImageLabel3);
-		housePanel.add(houseImageLabel4);
-		housePanel.add(houseImageLabel5);
+//		housePanel.add(houseImageLabel1);
+//		housePanel.add(houseImageLabel2);
+//		housePanel.add(houseImageLabel3);
+//		housePanel.add(houseImageLabel4);
+//		housePanel.add(houseImageLabel5);
 		cardPanel.add(playerPanel);
-		playerPanel.add(playerImageLabel1);
-		playerPanel.add(playerImageLabel2);
-		playerPanel.add(playerImageLabel3);
-		playerPanel.add(playerImageLabel4);
-		playerPanel.add(playerImageLabel5);
+//		playerPanel.add(playerImageLabel1);
+//		playerPanel.add(playerImageLabel2);
+//		playerPanel.add(playerImageLabel3);
+//		playerPanel.add(playerImageLabel4);
+//		playerPanel.add(playerImageLabel5);
 		this.add(buttonPanel);
 		buttonPanel.add(doubleButton);
 		doubleButton.setEnabled(false);
@@ -544,6 +575,84 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
 	}
+	
+	public void calculateScore(boolean firstDeal)
+	{
+		int totalScore = 0;
+		int playerAces = 0;
+		cardValues = controller.sendCardValues("player");
+		for (int value : cardValues)
+		{
+			totalScore += value;
+			if (value == 11)
+			{
+				playerAces++;
+			}
+		}
+		playerScore = totalScore;
+		if (playerAces == 0 || playerScore > 21)
+		{
+			playerScoreText.setText("Your Score: " + playerScore);
+		}
+		else
+		{
+			playerScoreText.setText("Your Score: " + (playerScore - 10) + " or " + playerScore);
+		}
+		
+		int houseAces = 0;
+		totalScore = 0;
+		cardValues = controller.sendCardValues("house");
+		if (firstDeal)
+		{
+			totalScore = cardValues.get(0);
+		}
+		else
+		{
+			for (int value : cardValues)
+			{
+				totalScore += value;
+				if (value == 11)
+				{
+					houseAces++;
+				}
+			}
+		}
+		houseScore = totalScore;
+		if (houseAces == 0 || houseScore > 21)
+		{
+			houseScoreText.setText("Your Score: " + houseScore);
+		}
+		else
+		{
+			houseScoreText.setText("Your Score: " + (houseScore - 10) + " or " + houseScore);
+		}
+	}
+	
+	public void firstDeal()
+	{
+		for (int index = 0; index < 2; index++)
+		{
+			controller.dealCard(isThemed, "player");
+			playerLabelList.add(controller.sendImage("player"));
+			playerPanel.add(playerLabelList.get(index));
+			System.out.println("player card name: " + controller.sendName("player"));
+			
+			controller.dealCard(isThemed, "house");
+			houseLabelList.add(controller.sendImage("house"));
+			if (index == 0)
+			{
+				housePanel.add(houseLabelList.get(index));
+			}
+			else
+			{
+				housePanel.add(faceDownCard);
+			}
+			System.out.println("house card name: " + controller.sendName("house"));
+		}
+		System.out.println("size of player label list: " + playerLabelList.size());
+		System.out.println("size of house label list: " + houseLabelList.size());
+		
+	}
 		
 	public void firstFourCards()
 	{
@@ -622,7 +731,6 @@ public class FinalPanel extends JPanel
 		{
 			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
 		}
-		controller.cardPlayed();
 		
 		/*
 		 * House receives their second card
@@ -649,7 +757,7 @@ public class FinalPanel extends JPanel
 		}
 		else
 		{
-		houseImageLabel2.setIcon(faceDownCard);
+//		houseImageLabel2.setIcon(faceDownCard);
 		}
 	}
 	
@@ -1190,18 +1298,10 @@ public class FinalPanel extends JPanel
 		buttonPanel.removeAll();
 		scorePanel.removeAll();
 		chipPanel.removeAll();
-		if (cardPath.equals("/fin/view/deadpool/"))
-		{
-			controller.deadpoolCardChosen();
-		}
-		else if (cardPath.equals("/fin/view/images/"))
-		{
-			controller.originalCardChosen();
-		}
-		
+		controller.createDeck(isThemed);
 		addAllElements();
 		setupPanel();
-		setupCards();
+//		setupCards();
 		setupBet();
 		setupListeners();
 		setupLayout();
