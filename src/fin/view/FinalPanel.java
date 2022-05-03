@@ -9,6 +9,8 @@ import java.util.*;
 
 public class FinalPanel extends JPanel
 {
+	private int realHouseScore;
+	private int houseAces;
 	private int playerAces;
 	private boolean ifFirstHand;
 	private boolean ifPlayerTurn;
@@ -89,6 +91,7 @@ public class FinalPanel extends JPanel
 	private JTextArea passwordText;
 	private JTextField loginField;
 	private JPasswordField passwdField;
+	private JTextArea incorrectPasswordText;
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
@@ -143,11 +146,14 @@ public class FinalPanel extends JPanel
 		this.passwordText = new JTextArea("Password : ");
 		this.loginField = new JTextField("");
 		this.passwdField = new JPasswordField("");
+		this.incorrectPasswordText = new JTextArea("Incorrect Password!");
 		this.playerScore = 0;
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
 		this.chipBet = 0;
 		this.playerAces = 0;
+		this.houseAces = 0;
+		this.realHouseScore = 0;
 		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.betSelectorBox = new JComboBox(chipBetsArray);
 		this.playerLabelList = new ArrayList<JLabel>();
@@ -180,10 +186,13 @@ public class FinalPanel extends JPanel
 		loginPanel.add(passwordText);
 		loginPanel.add(passwdField);
 		loginPanel.add(loginButton);
+		loginPanel.add(incorrectPasswordText);
 		this.add(themePanel);
 		this.add(startPanel);
 		loginText.setEditable(false);
 		passwordText.setEditable(false);
+		incorrectPasswordText.setEditable(false);
+		incorrectPasswordText.setVisible(false);
 		doubleButton.setVisible(false);
 		hitButton.setVisible(false);
 		standButton.setVisible(false);
@@ -193,8 +202,10 @@ public class FinalPanel extends JPanel
 		exitAndSaveButton.setEnabled(false);
 		betSelectorText.setVisible(false);
 		betSelectorBox.setEnabled(false);
+		betSelectorBox.setVisible(false);
 		submitBetButton.setVisible(false);
 		loginButton.setEnabled(false);
+		chipNumberText.setVisible(false);
 		confirmThemeButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -348,11 +359,12 @@ public class FinalPanel extends JPanel
 						betSelectorText.setVisible(true);
 						betSelectorBox.setEnabled(true);
 						submitBetButton.setVisible(true);
+						chipNumberText.setVisible(true);
 					}
 					else
 					{
-						loginField.setText("");
 						passwdField.setText("");
+						incorrectPasswordText.setVisible(true);
 					}
 				}
 				else
@@ -424,8 +436,6 @@ public class FinalPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent mouseClick)
 			{
-				ifPlayerTurn = false;
-				ifFirstHand = false;
 				betSelected();
 				dealNextCard("player");
 				calculateScore(ifPlayerTurn, ifFirstHand);
@@ -487,93 +497,119 @@ public class FinalPanel extends JPanel
 		System.out.println("ifPlayerTurn: " + ifPlayerTurn);
 		//Calculate score for the player
 		int gameStatus = 0; //0 = Game is NOT over, 1 = House wins, 2 = Player wins, 3 = Push
-		int realHouseScore = 0;
+		realHouseScore = 0;
 		boolean playerBlackjack = false;
 		boolean houseBlackjack = false;
 		boolean playerBust = false;
 		boolean houseBust = false;
 		playerScore = 0;
+		playerAces = 0;
+		int playerAcesSubtracted = 0;
+		int houseAcesSubtracted = 0;
 		houseScore = 0;
+		houseAces = 0;
 		cardValues = controller.sendCardValues("player");
 		for (int value : cardValues)
 		{
 			playerScore += value;
-		}
-		
-		for (int card : cardValues)
-		{
-			System.out.println("Player card: " + card);
-		}
-		//Player's ace logic
-		if (ifFirstHand == true)
-		{
-			for (int value : cardValues)
-			{
-				if (value == 11)
-				{
-					playerAces++;
-				}
-			}
-			System.out.println("1playerAces: " + playerAces);
-		}
-		else
-		{
-			System.out.println("last card: " + cardValues.get(cardValues.size() - 1));
-			if (cardValues.get(cardValues.size() - 1) == 11)
+			if (value == 11)
 			{
 				playerAces++;
 			}
-			System.out.println("2playerAces: " + playerAces);
+		}
+		//Player ace logic
+		for (int card : cardValues)
+		{
+			System.out.println("Player card: " + card);
 		}
 		for (int index = 0; index < playerAces; index++)
 		{
 			if (playerScore > 21)
 			{
 				playerScore -= 10;
-				for (int inner = 0; inner < cardValues.size() - 1; inner++)
-				{
-					if (cardValues.get(inner) == 11)
-					{
-						cardValues.set(inner, 1);
-						break;
-					}
-				}
-				controller.updateCardValues("player", cardValues);
-				playerAces--;
+				playerAcesSubtracted++;
 			}
-			System.out.println("3playerAces: " + playerAces);
 		}
-		for (int card : cardValues)
-		{
-			System.out.println("Player card AAL: " + card);
-		};
-		
 		//Printing the player's score
-		if (playerAces > 0)
+		if (playerAces > playerAcesSubtracted)
 		{
-			if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + playerScore + " or " + playerScore + 10);
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + (playerScore - 10) + " or " + playerScore);
-			}
+			playerScoreText.setText("Your Score: " + (playerScore - 10) + " or " + playerScore);
 		}
 		else
 		{
 			playerScoreText.setText("Your Score: " + playerScore);
 		}
+		//Player's ace logic
+		
+//		if (ifFirstHand == true)
+//		{
+//			for (int value : cardValues)
+//			{
+//				if (value == 11)
+//				{
+//					playerAces++;
+//				}
+//			}
+//			System.out.println("1playerAces: " + playerAces);
+//		}
+//		else
+//		{
+//			System.out.println("last card: " + cardValues.get(cardValues.size() - 1));
+//			if (cardValues.get(cardValues.size() - 1) == 11)
+//			{
+//				playerAces++;
+//			}
+//			System.out.println("2playerAces: " + playerAces);
+//		}
+//		for (int index = 0; index < playerAces; index++)
+//		{
+//			if (playerScore > 21)
+//			{
+//				playerScore -= 10;
+//				for (int inner = 0; inner < cardValues.size() - 1; inner++)
+//				{
+//					if (cardValues.get(inner) == 11)
+//					{
+//						cardValues.set(inner, 1);
+//						break;
+//					}
+//				}
+//				controller.updateCardValues("player", cardValues);
+//				playerAces--;
+//			}
+//			System.out.println("3playerAces: " + playerAces);
+//		}
+//		for (int card : cardValues)
+//		{
+//			System.out.println("Player card AAL: " + card);
+//		};
+		
+		//Printing the player's score
+//		if (playerAces > 0)
+//		{
+//			if (playerScore + 10 < 21)
+//			{
+//				playerScoreText.setText("Your Score: " + playerScore + " or " + playerScore + 10);
+//			}
+//			else
+//			{
+//				playerScoreText.setText("Your Score: " + (playerScore - 10) + " or " + playerScore);
+//			}
+//		}
+//		else
+//		{
+//			playerScoreText.setText("Your Score: " + playerScore);
+//		}
 		
 		//Calculate score for the House
 		int houseAces = 0; 
 		cardValues = controller.sendCardValues("house");
+		for (int value : cardValues)
+		{
+			realHouseScore += value;
+		}
 		if (ifPlayerTurn == true)
 		{
-			for (int value : cardValues)
-			{
-				realHouseScore += value;
-			}
 			houseScore = cardValues.get(0);
 		}
 		else
@@ -581,56 +617,76 @@ public class FinalPanel extends JPanel
 			for (int value : cardValues)
 			{
 				houseScore += value;
-			}
-			housePanel.remove(faceDownCard);
-			housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
-		}
-		
-		for (int card : cardValues)
-		{
-			System.out.println("House card: " + card);
-		}
-		//House ace logic
-		if (ifFirstHand == true)
-		{
-			for (int value : cardValues)
-			{
 				if (value == 11)
 				{
 					houseAces++;
 				}
 			}
 		}
-		else
+
+		//House ace logic
+		for (int card : cardValues)
 		{
-			if (cardValues.get(cardValues.size() - 1) == 11)
-			{
-				houseAces++;
-			}
+			System.out.println("house card: " + card);
 		}
 		for (int index = 0; index < houseAces; index++)
 		{
 			if (houseScore > 21)
 			{
 				houseScore -= 10;
-				for (int inner = 0; inner < cardValues.size() - 1; inner++)
-				{
-					if (cardValues.get(inner) == 11)
-					{
-						cardValues.set(inner, 1);
-						break;
-					}
-				}
-				controller.updateCardValues("house", cardValues);
-				houseAces--;
+				houseAcesSubtracted++;
 			}
 		}
-		
-		//Printing House's score
-		houseScoreText.setText("House Score: " + houseScore);
-		
-		System.out.println("calculated player score start: " + playerScore);
-		System.out.println("calculated house score start: " + houseScore);
+		//Printing the house's score
+		if (houseAces > houseAcesSubtracted)
+		{
+			houseScoreText.setText("House Score: " + (houseScore - 10) + " or " + houseScore);
+		}
+		else
+		{
+			houseScoreText.setText("House Score: " + houseScore);
+		}
+//		//House ace logic
+//		if (ifFirstHand == true)
+//		{
+//			for (int value : cardValues)
+//			{
+//				if (value == 11)
+//				{
+//					houseAces++;
+//				}
+//			}
+//		}
+//		else
+//		{
+//			if (cardValues.get(cardValues.size() - 1) == 11)
+//			{
+//				houseAces++;
+//			}
+//		}
+//		for (int index = 0; index < houseAces; index++)
+//		{
+//			if (houseScore > 21)
+//			{
+//				houseScore -= 10;
+//				for (int inner = 0; inner < cardValues.size() - 1; inner++)
+//				{
+//					if (cardValues.get(inner) == 11)
+//					{
+//						cardValues.set(inner, 1);
+//						break;
+//					}
+//				}
+//				controller.updateCardValues("house", cardValues);
+//				houseAces--;
+//			}
+//		}
+//		
+//		//Printing House's score
+//		houseScoreText.setText("House Score: " + houseScore);
+//		
+//		System.out.println("calculated player score start: " + playerScore);
+//		System.out.println("calculated house score start: " + houseScore);
 		//Check for blackjack
 		if (realHouseScore == 21 && ifFirstHand == true)
 		{
@@ -657,7 +713,6 @@ public class FinalPanel extends JPanel
 		{
 			gameStatus = 1;
 			playerBust = true;
-			houseScore = realHouseScore;
 		}
 		else if (houseScore > 21)
 		{
@@ -668,10 +723,23 @@ public class FinalPanel extends JPanel
 		else if (playerScore == 21 && gameStatus == 0)
 		{
 			houseScore = realHouseScore;
-			System.out.println("House score (player21): " + houseScore);
-			housePanel.remove(faceDownCard);
-			housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
-			houseTurn();
+			if (houseScore < 17)
+			{
+				houseTurn();
+				doubleButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				standButton.setEnabled(false);
+				playAgainButton.setEnabled(true);
+				exitAndSaveButton.setEnabled(true);
+			}
+			else if (houseScore == 21)
+			{
+				gameStatus = 3;
+			}
+			else
+			{
+				gameStatus = 2;
+			}
 		}
 		//Checking for push, player win, or house win after no more cards can be dealt
 		else if (houseScore >= 17)
@@ -689,6 +757,15 @@ public class FinalPanel extends JPanel
 				gameStatus = 1;
 			}
 		}
+		if (playerBust == true && houseScore < 17)
+		{
+			houseTurn();
+			doubleButton.setEnabled(false);
+			hitButton.setEnabled(false);
+			standButton.setEnabled(false);
+			playAgainButton.setEnabled(true);
+			exitAndSaveButton.setEnabled(true);
+		}
 		//Checks if game is over. Resets buttons and reveals house's second card.
 		System.out.println("gameStatus BBR: " + gameStatus);
 		if (gameStatus > 0)
@@ -699,22 +776,22 @@ public class FinalPanel extends JPanel
 			standButton.setEnabled(false);
 			playAgainButton.setEnabled(true);
 			exitAndSaveButton.setEnabled(true);
-			housePanel.remove(faceDownCard);
 			housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
 		}
+		System.out.println("realHouseScore is: " + realHouseScore);
 		switch (gameStatus)
 		{
 		case 1: //House wins
 		{
 			if (playerBust == true)
 			{
-				houseScore = realHouseScore;
 				playerScoreText.setText("Your Score: BUST! " + "(" + playerScore + ")");
 			}
 			if (houseBlackjack == true)
 			{
 				houseScore = realHouseScore;
 				houseScoreText.setText("House Score: BLACKJACK! " + "(" + houseScore + ")");
+				housePanel.remove(faceDownCard);
 			}
 			else
 			{
@@ -804,6 +881,8 @@ public class FinalPanel extends JPanel
 	
 	public void houseTurn()
 	{
+		housePanel.remove(faceDownCard);
+		housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
 		ifPlayerTurn = false;
 		ifFirstHand = false;
 		System.out.println("outside house turn: " + houseScore);
