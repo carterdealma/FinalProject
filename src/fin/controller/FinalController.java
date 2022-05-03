@@ -243,7 +243,7 @@ public class FinalController
 		}
 	}
 	
-	public int readUserData(String userKey)
+	public double readUserData(String userKey)
 	{
 		System.out.println("saveFile is:" + saveFile);
 		if (saveFile.exists())
@@ -268,12 +268,12 @@ public class FinalController
 			System.out.println("Read userData: " + userData);
 			if (userData.get(userKey) == null)
 			{
-				int chipAmount = 1000;
+				double chipAmount = 1000;
 				return chipAmount;
 			}
 			else
 			{
-				int chipAmount = Integer.parseInt(userData.get(userKey));
+				double chipAmount = Double.parseDouble(userData.get(userKey));
 				System.out.println("Chip Amount:" + chipAmount);
 				return chipAmount;
 			}
@@ -448,6 +448,68 @@ public class FinalController
 			}
 		}
 		return cardValues;
+	}
+	
+	public void updateCardValues(String playerOrHouse, ArrayList<Integer> newCardValues)
+	{
+		if (playerOrHouse == "player")
+		{
+			for (int index = 0; index < newCardValues.size() - 1; index++)
+			{
+				playerCardList.get(index).setValue(newCardValues.get(index));
+			}
+		}
+		else
+		{
+			for (int index = 0; index < newCardValues.size() - 1; index++)
+			{
+				houseCardList.get(index).setValue(newCardValues.get(index));
+			}
+		}
+	}
+	
+	public int sendLastCardValue(String playerOrHouse)
+	{
+		int lastCardValue = 0;
+		if (playerOrHouse == "player")
+		{
+			lastCardValue = playerCardList.get(playerCardList.size() - 1).getValue();
+		}
+		else
+		{
+			lastCardValue = houseCardList.get(houseCardList.size() - 1).getValue();
+		}
+		return lastCardValue;
+	}
+	
+	public void setCardValues (String playerOrHouse, ArrayList<Integer> newCardValues)
+	{
+		for (int card : newCardValues)
+		{
+			
+		}
+	}
+	
+	public void resetGame(boolean isThemed)
+	{
+		if (isThemed)
+		{
+			if (dpCardList.size() < 15)
+			{
+				createDeck(isThemed);
+				shuffleCards(isThemed);
+			}
+		}
+		else
+		{
+			if (cardList.size() < 15)
+			{
+				createDeck(isThemed);
+				shuffleCards(isThemed);
+			}
+		}
+		playerCardList.clear();
+		houseCardList.clear();
 	}
 	
 	public String sendName(String playerOrHouse)
