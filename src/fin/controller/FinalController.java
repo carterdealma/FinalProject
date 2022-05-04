@@ -67,7 +67,7 @@ public class FinalController
 	}
 	
 	/**
-	 * Prepares the game of Blackjack by re-initializing the cardList
+	 * Called by the runner to start the game of Blackjack
 	 */
 	public void start()
 	{
@@ -75,8 +75,8 @@ public class FinalController
 	}
 	
 	/**
-	 * Adds all 52 cards to the Blackjack cardList and shuffles them and returns the shuffled deck
-	 * @return A shuffled deck of Cards
+	 * Adds all 52 cards to the correctly themed Blackjack deck
+	 * @Param isThemed: Checks if the game is themed
 	 */
 	public void createDeck(boolean isThemed)
 	{
@@ -104,6 +104,10 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Shuffles all 52 cards in the correctly themed Blackjack deck
+	 * @param isThemed: Checks if the game is themed
+	 */
 	public void shuffleCards(boolean isThemed)
 	{
 		if (isThemed)
@@ -116,118 +120,12 @@ public class FinalController
 		}
 	}
 	
-	
-//	public void fillAndShuffle(String theme)
-//	{
-//		
-//		Card aceC = new Card("AC", 1, theme);
-//		Card aceD = new Card("AD", 1, theme);
-//		Card aceH = new Card("AH", 1, theme);
-//		Card aceS = new Card("AS", 1, theme);
-//		Card twoC = new Card("2C", 2, theme);
-//		Card twoD = new Card("2D", 2, theme);
-//		Card twoH = new Card("2H", 2, theme);
-//		Card twoS = new Card("2S", 2, theme);
-//		Card threeC = new Card("3C", 3, theme);
-//		Card threeD = new Card("3D", 3, theme);
-//		Card threeH = new Card("3H", 3, theme);
-//		Card threeS = new Card("3S", 3, theme);
-//		Card fourC = new Card("4C", 4, theme);
-//		Card fourD = new Card("4D", 4, theme);
-//		Card fourH = new Card("4H", 4, theme);
-//		Card fourS = new Card("4S", 4, theme);
-//		Card fiveC = new Card("5C", 5, theme);
-//		Card fiveD = new Card("5D", 5, theme);
-//		Card fiveH = new Card("5H", 5, theme);
-//		Card fiveS = new Card("5S", 5, theme);
-//		Card sixC = new Card("6C", 6, theme);
-//		Card sixD = new Card("6D", 6, theme);
-//		Card sixH = new Card("6H", 6, theme);
-//		Card sixS = new Card("6S", 6, theme);
-//		Card sevenC = new Card("7C", 7, theme);
-//		Card sevenD = new Card("7D", 7, theme);
-//		Card sevenH = new Card("7H", 7, theme);
-//		Card sevenS = new Card("7S", 7, theme);
-//		Card eightC = new Card("8C", 8, theme);
-//		Card eightD = new Card("8D", 8, theme);
-//		Card eightH = new Card("8H", 8, theme);
-//		Card eightS = new Card("8S", 8, theme);
-//		Card nineC = new Card("9C", 9, theme);
-//		Card nineD = new Card("9D", 9, theme);
-//		Card nineH = new Card("9H", 9, theme);
-//		Card nineS = new Card("9S", 9, theme);
-//		Card tenC = new Card("10C", 10, theme);
-//		Card tenD = new Card("10D", 10, theme);
-//		Card tenH = new Card("10H", 10, theme);
-//		Card tenS = new Card("10S", 10, theme);
-//		Card kingC = new Card("KC", 10, theme);
-//		Card kingD = new Card("KD", 10, theme);
-//		Card kingH = new Card("KH", 10, theme);
-//		Card kingS = new Card("KS", 10, theme);
-//		Card queenC = new Card("QC", 10, theme);
-//		Card queenD = new Card("QD", 10, theme);
-//		Card queenH = new Card("QH", 10, theme);
-//		Card queenS = new Card("QS", 10, theme);
-//		Card jackC = new Card("JC", 10, theme);
-//		Card jackD = new Card("JD", 10, theme);
-//		Card jackH = new Card("JH", 10, theme);
-//		Card jackS = new Card("JS", 10, theme);
-//		cardList.add(aceC);
-//		cardList.add(aceD);
-//		cardList.add(aceH);
-//		cardList.add(aceS);
-//		cardList.add(twoC);
-//		cardList.add(twoD);
-//		cardList.add(twoH);
-//		cardList.add(twoS);
-//		cardList.add(threeC);
-//		cardList.add(threeD);
-//		cardList.add(threeH);
-//		cardList.add(threeS);
-//		cardList.add(fourC);
-//		cardList.add(fourD);
-//		cardList.add(fourH);
-//		cardList.add(fourS);
-//		cardList.add(fiveC);
-//		cardList.add(fiveD);
-//		cardList.add(fiveH);
-//		cardList.add(fiveS); 
-//		cardList.add(sixC);
-//		cardList.add(sixD);
-//		cardList.add(sixH);
-//		cardList.add(sixS);
-//		cardList.add(sevenC);
-//		cardList.add(sevenD);
-//		cardList.add(sevenH);
-//		cardList.add(sevenS);
-//		cardList.add(eightC);
-//		cardList.add(eightD);
-//		cardList.add(eightH);
-//		cardList.add(eightS);
-//		cardList.add(nineC);
-//		cardList.add(nineD);
-//		cardList.add(nineH);
-//		cardList.add(nineS);
-//		cardList.add(tenC);
-//		cardList.add(tenD);
-//		cardList.add(tenH);
-//		cardList.add(tenS);
-//		cardList.add(kingC);
-//		cardList.add(kingD);
-//		cardList.add(kingH);
-//		cardList.add(kingS);
-//		cardList.add(queenC);
-//		cardList.add(queenD);
-//		cardList.add(queenH);
-//		cardList.add(queenS);
-//		cardList.add(jackC);
-//		cardList.add(jackD);
-//		cardList.add(jackH);
-//		cardList.add(jackS);
-//		
-//		Collections.shuffle(cardList);
-//	}
-	
+	/**
+	 * 
+	 * Updates the userData HashMap and saves the HashMap to a file after user has saved and quit the game
+	 * @param user: Username that the player entered
+	 * @param chips: Amount of chips the player has
+	 */
 	public void updateUserData(String user, String chips)
 	{
 		userData.put(user, chips);
@@ -243,7 +141,12 @@ public class FinalController
 		}
 	}
 	
-	public int readUserData(String userKey)
+	/**
+	 * Adds the user's data to a HashMap if it's the user's first time playing. Otherwise, it retrieves the user's amount of chips.
+	 * @param userKey: Username that the player entered
+	 * @return returns the amount of chips the user has
+	 */
+	public double readUserData(String userKey)
 	{
 		System.out.println("saveFile is:" + saveFile);
 		if (saveFile.exists())
@@ -268,12 +171,12 @@ public class FinalController
 			System.out.println("Read userData: " + userData);
 			if (userData.get(userKey) == null)
 			{
-				int chipAmount = 1000;
+				double chipAmount = 1000;
 				return chipAmount;
 			}
 			else
 			{
-				int chipAmount = Integer.parseInt(userData.get(userKey));
+				double chipAmount = Double.parseDouble(userData.get(userKey));
 				System.out.println("Chip Amount:" + chipAmount);
 				return chipAmount;
 			}
@@ -292,6 +195,11 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Updates the user's username and password via HashMap to a file
+	 * @param userid: The username the user input
+	 * @param encryptedPasswd: The encrypted password created in authenticateUser
+	 */
 	public void updatePasswdData(String userid, String encryptedPasswd)
 	{
 		userPasswd.put(userid, encryptedPasswd);
@@ -401,7 +309,8 @@ public class FinalController
 			dealtCard.setName(dpCardList.get(0).getName());
 			dealtCard.setValue(dpCardList.get(0).getValue());
 			dealtCard.setImage(dpCardList.get(0).getPath(), dpCardList.get(0).getName());
-			cardList.remove(0);
+			System.out.println("dpCardList.get(0)'s path: " + dpCardList.get(0).getPath());
+			dpCardList.remove(0);
 			if (playerOrHouse == "player")
 			{
 				playerCardList.add(dealtCard);
@@ -449,6 +358,68 @@ public class FinalController
 		return cardValues;
 	}
 	
+	public void updateCardValues(String playerOrHouse, ArrayList<Integer> newCardValues)
+	{
+		if (playerOrHouse == "player")
+		{
+			for (int index = 0; index < newCardValues.size() - 1; index++)
+			{
+				playerCardList.get(index).setValue(newCardValues.get(index));
+			}
+		}
+		else
+		{
+			for (int index = 0; index < newCardValues.size() - 1; index++)
+			{
+				houseCardList.get(index).setValue(newCardValues.get(index));
+			}
+		}
+	}
+	
+	public int sendLastCardValue(String playerOrHouse)
+	{
+		int lastCardValue = 0;
+		if (playerOrHouse == "player")
+		{
+			lastCardValue = playerCardList.get(playerCardList.size() - 1).getValue();
+		}
+		else
+		{
+			lastCardValue = houseCardList.get(houseCardList.size() - 1).getValue();
+		}
+		return lastCardValue;
+	}
+	
+	public void setCardValues (String playerOrHouse, ArrayList<Integer> newCardValues)
+	{
+		for (int card : newCardValues)
+		{
+			
+		}
+	}
+	
+	public void resetGame(boolean isThemed)
+	{
+		if (isThemed)
+		{
+			if (dpCardList.size() < 15)
+			{
+				createDeck(isThemed);
+				shuffleCards(isThemed);
+			}
+		}
+		else
+		{
+			if (cardList.size() < 15)
+			{
+				createDeck(isThemed);
+				shuffleCards(isThemed);
+			}
+		}
+		playerCardList.clear();
+		houseCardList.clear();
+	}
+	
 	public String sendName(String playerOrHouse)
 	{
 		if (playerOrHouse == "player")
@@ -483,11 +454,6 @@ public class FinalController
 		{
 			return houseCardList.get(houseCardList.size() - 1).getImage();
 		}
-	}
-	
-	public String deadpoolCardPath()
-	{
-		return "/fin/view/deadpool/";
 	}
 
 }

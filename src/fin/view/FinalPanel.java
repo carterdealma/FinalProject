@@ -9,11 +9,17 @@ import java.util.*;
 
 public class FinalPanel extends JPanel
 {
-	private boolean ifFirstDeal;
+	private int gameStatus;
+	private int realHouseScore;
+	private int houseAces;
+	private int playerAces;
+	private boolean ifFirstHand;
+	private boolean ifPlayerTurn;
 	private ArrayList<Integer> cardValues;
 	private String playerOrHouse;
 	private boolean isThemed;
-	private int chipNumber;
+	private double chipNumber;
+	private double chipBet;
 	private String userid;
 	private String passwd;
 	
@@ -86,6 +92,7 @@ public class FinalPanel extends JPanel
 	private JTextArea passwordText;
 	private JTextField loginField;
 	private JPasswordField passwdField;
+	private JTextArea incorrectPasswordText;
 	private int playerScore;
 	private int houseScore;
 	private int playerHitNumber;
@@ -140,9 +147,15 @@ public class FinalPanel extends JPanel
 		this.passwordText = new JTextArea("Password : ");
 		this.loginField = new JTextField("");
 		this.passwdField = new JPasswordField("");
+		this.incorrectPasswordText = new JTextArea("Incorrect Password!");
 		this.playerScore = 0;
 		this.houseScore = 0;
 		this.playerHitNumber = 0;
+		this.chipBet = 0;
+		this.playerAces = 0;
+		this.houseAces = 0;
+		this.realHouseScore = 0;
+		this.gameStatus = 0;
 		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.betSelectorBox = new JComboBox(chipBetsArray);
 		this.playerLabelList = new ArrayList<JLabel>();
@@ -175,10 +188,13 @@ public class FinalPanel extends JPanel
 		loginPanel.add(passwordText);
 		loginPanel.add(passwdField);
 		loginPanel.add(loginButton);
+		loginPanel.add(incorrectPasswordText);
 		this.add(themePanel);
 		this.add(startPanel);
 		loginText.setEditable(false);
 		passwordText.setEditable(false);
+		incorrectPasswordText.setEditable(false);
+		incorrectPasswordText.setVisible(false);
 		doubleButton.setVisible(false);
 		hitButton.setVisible(false);
 		standButton.setVisible(false);
@@ -188,8 +204,11 @@ public class FinalPanel extends JPanel
 		exitAndSaveButton.setEnabled(false);
 		betSelectorText.setVisible(false);
 		betSelectorBox.setEnabled(false);
+		betSelectorBox.setVisible(false);
 		submitBetButton.setVisible(false);
 		loginButton.setEnabled(false);
+		chipNumberText.setVisible(false);
+		themeText.setEditable(false);
 		confirmThemeButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -198,18 +217,13 @@ public class FinalPanel extends JPanel
 				{
 					setupLoginListeners();
 					isThemed = false;
-					controller.createDeck(isThemed);
-					controller.shuffleCards(isThemed);
-					faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/images/" + "face_down" + ".png"));
-					faceDownCard.setIcon(faceDownCardIcon);
-//					cardPath = controller.sendPath(isThemed);
-					setupBet();
-					firstDeal();
-					ifFirstDeal = true;
-					calculateScore(ifFirstDeal);
-					ifFirstDeal = false;
-//					setupCards();
-//					firstFourCards();
+//					controller.createDeck(isThemed);
+//					controller.shuffleCards(isThemed);
+////					cardPath = controller.sendPath(isThemed);
+//					setupBet();
+//					firstDeal(isThemed);
+//					calculateScore(ifPlayerTurn, ifFirstHand);
+//					ifFirstHand = false;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
 				}
@@ -218,20 +232,13 @@ public class FinalPanel extends JPanel
 					setupLoginListeners();
 					System.out.println("Cards are deadpool");
 					isThemed = true;
-					controller.createDeck(isThemed);
-					controller.shuffleCards(isThemed);
-					faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/deadpool/" + "face_down" + ".png"));
-					faceDownCard.setIcon(faceDownCardIcon);
-//					cardPath = controller.sendPath(isThemed);
-					setupBet();
-					firstDeal();
-					ifFirstDeal = true;
-					calculateScore(ifFirstDeal);
-					ifFirstDeal = false;
-//					setupCards();
-//					firstFourCards();
-					setupListeners();
-					setupLayout();
+//					controller.createDeck(isThemed);
+//					controller.shuffleCards(isThemed);
+////					cardPath = controller.sendPath(isThemed);
+//					setupBet();
+//					firstDeal(isThemed);
+//					calculateScore(ifPlayerTurn, ifFirstHand);
+//					ifFirstHand = false;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
 				}
@@ -332,11 +339,17 @@ public class FinalPanel extends JPanel
 				{
 					userid = loginField.getText().trim().toLowerCase();
 					passwd = new String(passwdField.getPassword());
-					if (controller.authenticateUser(userid, passwd))
+					if (controller.authenticateUser(userid, passwd) == true)
 					{
-						chipNumber = readUserData(userid);
+						chipNumber = controller.readUserData(userid);
 						System.out.println("chipNumber after login is: " + chipNumber);
 						chipNumberText.setText("Your Chips: " + chipNumber);
+						controller.createDeck(isThemed);
+						controller.shuffleCards(isThemed);
+						setupBet();
+						firstDeal(isThemed);
+						calculateScore(ifPlayerTurn, ifFirstHand);
+						ifFirstHand = false;
 						startPanel.setVisible(false);
 						loginPanel.setVisible(false);
 						doubleButton.setVisible(true);
@@ -349,11 +362,13 @@ public class FinalPanel extends JPanel
 						betSelectorText.setVisible(true);
 						betSelectorBox.setEnabled(true);
 						submitBetButton.setVisible(true);
+						chipNumberText.setVisible(true);
+						betSelectorBox.setVisible(true);
 					}
 					else
 					{
-						loginField.setText("");
 						passwdField.setText("");
+						incorrectPasswordText.setVisible(true);
 					}
 				}
 				else
@@ -388,8 +403,6 @@ public class FinalPanel extends JPanel
 	
 	public void setupListeners()
 	{
-		System.out.println("playerHitNumber: " + playerHitNumber);
-		
 		exitAndSaveButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
@@ -399,138 +412,42 @@ public class FinalPanel extends JPanel
 			}
 		});
 
+		standButton.addActionListener(new ActionListener()
 		{
-			standButton.addActionListener(new ActionListener()
+			public void actionPerformed(ActionEvent mouseClick)
 			{
-				public void actionPerformed(ActionEvent mouseClick)
-				{
-					playerStand();
-					standButton.setEnabled(false);
-					hitButton.setEnabled(false);
-					doubleButton.setEnabled(false);
-				}
-			});
-		}
+				ifPlayerTurn = false;
+				playerStand();
+				houseTurn();
+			}
+		});
+
+		hitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent mouseClick)
+			{
+				ifFirstHand = false;
+				dealNextCard("player");
+				doubleButton.setEnabled(false);
+				calculateScore(ifPlayerTurn, ifFirstHand);
+			}
+		});
 		
-		if (playerHitNumber == 0 && houseHasBlackjack == true)
-		{
-			hitButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent mouseClick)
-				{
-					playerImageLabel3.setIcon(playerCard3);
-					playerScore += playerCard3Value;
-					if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-					{
-						if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
-						{
-							playerScore = playerScore + 10;
-							playerWin();
-						}
-						else if (playerScore + 10 < 21)
-						{
-							playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-						}
-						else
-						{
-							playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-						}
-						
-					}
-					else
-					{
-						playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-					}
-					((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-					doubleButton.setEnabled(false);
-					houseBlackjack();
-				}
-			});
-		}
-		else if(playerHitNumber == 0 && houseHasBlackjack == false)
-		{
-		hitButton.addActionListener(new ActionListener()
+		doubleButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent mouseClick)
 			{
-				playerFirstHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
+				betSelected();
+				dealNextCard("player");
+				calculateScore(ifPlayerTurn, ifFirstHand);
+				houseTurn();
 				doubleButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				standButton.setEnabled(false);
+				playAgainButton.setEnabled(true);
+				exitAndSaveButton.setEnabled(true);
 			}
 		});
-		}
-		else if(playerHitNumber == 1)
-		{
-		hitButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerSecondHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-				doubleButton.setEnabled(false);
-			}
-		});
-		}
-		else if(playerHitNumber == 2)
-		{
-		hitButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent mouseClick)
-			{
-				playerThirdHit();
-				((AbstractButton) mouseClick.getSource()).removeActionListener(this);
-				doubleButton.setEnabled(false);
-			}
-		});
-		}
-		
-		if (houseHasBlackjack == true)
-		{
-			doubleButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent mouseClick)
-				{
-					betDoubled();
-					playerImageLabel3.setIcon(playerCard3);
-					playerScore += playerCard3Value;
-					if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-					{
-						if (playerScore + 10 == 21)
-						{
-							push();
-						}
-						else if (playerScore + 10 < 21)
-						{
-							playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-							houseBlackjack();
-						}
-						else
-						{
-							playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-							houseBlackjack();
-						}
-					}
-					else
-					{
-						playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-						houseBlackjack();
-					}
-					((AbstractButton) mouseClick.getSource()).setEnabled(false);
-				}
-			});
-		}
-		else
-		{
-			doubleButton.addActionListener(new ActionListener()
-			{ 
-				public void actionPerformed(ActionEvent mouseClick)
-				{
-					betDoubled();
-					playerFirstHit();
-					((AbstractButton) mouseClick.getSource()).setEnabled(false);
-				}
-			});
-		}
 		
 		playAgainButton.addActionListener(new ActionListener()
 		{
@@ -576,66 +493,236 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -210, SpringLayout.SOUTH, this);
 	}
 	
-	public void calculateScore(boolean firstDeal)
+	public void calculateScore(boolean ifPlayerTurn, boolean ifFirstHand)
 	{
-		int totalScore = 0;
-		int playerAces = 0;
+		System.out.println("calculate Score chipBet: " + chipBet);
+		System.out.println("calculate Score chipNumber: " + chipNumber);
+		System.out.println("ifPlayerTurn: " + ifPlayerTurn);
+		//Calculate score for the player
+		gameStatus = 0; //0 = Game is NOT over, 1 = House wins, 2 = Player wins, 3 = Push
+		realHouseScore = 0;
+		boolean playerBlackjack = false;
+		boolean houseBlackjack = false;
+		boolean playerBust = false;
+		boolean houseBust = false;
+		playerScore = 0;
+		playerAces = 0;
+		int playerAcesSubtracted = 0;
+		int houseAcesSubtracted = 0;
+		houseScore = 0;
+		houseAces = 0;
 		cardValues = controller.sendCardValues("player");
 		for (int value : cardValues)
 		{
-			totalScore += value;
+			playerScore += value;
 			if (value == 11)
 			{
 				playerAces++;
 			}
 		}
-		playerScore = totalScore;
-		if (playerAces == 0 || playerScore > 21)
+		
+		//Player ace logic
+		for (int card : cardValues)
 		{
-			playerScoreText.setText("Your Score: " + playerScore);
+			System.out.println("Player card: " + card);
 		}
-		else
+		for (int index = 0; index < playerAces; index++)
+		{
+			if (playerScore > 21)
+			{
+				playerScore -= 10;
+				playerAcesSubtracted++;
+			}
+		}
+		
+		//Printing the player's score
+		if (playerAces > playerAcesSubtracted)
 		{
 			playerScoreText.setText("Your Score: " + (playerScore - 10) + " or " + playerScore);
 		}
-		
-		int houseAces = 0;
-		totalScore = 0;
-		cardValues = controller.sendCardValues("house");
-		if (firstDeal)
+		else
 		{
-			totalScore = cardValues.get(0);
+			playerScoreText.setText("Your Score: " + playerScore);
+		}
+		
+		//Calculate score for the House
+		int houseAces = 0; 
+		cardValues = controller.sendCardValues("house");
+		for (int value : cardValues)
+		{
+			realHouseScore += value;
+		}
+		if (ifPlayerTurn == true)
+		{
+			houseScore = cardValues.get(0);
 		}
 		else
 		{
 			for (int value : cardValues)
 			{
-				totalScore += value;
+				houseScore += value;
 				if (value == 11)
 				{
 					houseAces++;
 				}
 			}
 		}
-		houseScore = totalScore;
-		if (houseAces == 0 || houseScore > 21)
+
+		//House ace logic
+		for (int card : cardValues)
 		{
-			houseScoreText.setText("Your Score: " + houseScore);
+			System.out.println("house card: " + card);
+		}
+		for (int index = 0; index < houseAces; index++)
+		{
+			if (houseScore > 21)
+			{
+				houseScore -= 10;
+				realHouseScore -= 10;
+				houseAcesSubtracted++;
+			}
+		}
+		//Printing the house's score
+		if (houseAces > houseAcesSubtracted)
+		{
+			houseScoreText.setText("House Score: " + (houseScore - 10) + " or " + houseScore);
 		}
 		else
 		{
-			houseScoreText.setText("Your Score: " + (houseScore - 10) + " or " + houseScore);
+			houseScoreText.setText("House Score: " + houseScore);
 		}
+		//Check for blackjack
+		if (realHouseScore == 21 && ifFirstHand == true)
+		{
+			houseBlackjack = true;
+		}
+		if (playerScore == 21 && ifFirstHand == true)
+		{
+			playerBlackjack = true;
+		}
+		if (playerBlackjack == true && houseBlackjack == true)
+		{
+			gameStatus = 3;
+		}
+		else if (playerBlackjack == true)
+		{
+			gameStatus = 2;
+		}
+		else if (houseBlackjack == true)
+		{
+			gameStatus = 1;
+		}
+		//Check for bust
+		if (playerScore > 21)
+		{
+			houseScore = realHouseScore;
+			gameStatus = 1;
+			playerBust = true;
+			playerStand();
+		}
+		else if (houseScore > 21)
+		{
+			gameStatus = 2;
+			houseBust = true;
+		}
+		//Check for player hitting and getting 21
+		else if (playerScore == 21 && gameStatus == 0 && houseScore < 17)
+		{
+			houseScore = realHouseScore;
+			playerStand();
+			houseTurn();
+		}
+		//Checking for push, player win, or house win after no more cards can be dealt
+		if (houseScore >= 17 && ifPlayerTurn == false && gameStatus == 0 && houseBust == false && playerBust == false)
+		{
+			if (houseScore == playerScore)
+			{
+				gameStatus = 3;
+			}
+			else if (playerScore > houseScore)
+			{
+				gameStatus = 2;
+			}
+			else
+			{
+				gameStatus = 1;
+			}
+		}
+		//Checks if game is over. Resets buttons and reveals house's second card.
+		System.out.println("gameStatus BBR: " + gameStatus);
+		if (gameStatus > 0)
+		{
+			System.out.println("inside gameStatus BBR: " + gameStatus);
+			playerStand();
+			System.out.println("hit button enabled?: " + hitButton.isEnabled());
+			housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
+		}
+		System.out.println("realHouseScore is: " + realHouseScore);
+		switch (gameStatus)
+		{
+		case 1: //House wins
+			if (playerBust == true)
+			{
+				playerScoreText.setText("Your Score: BUST! " + "(" + playerScore + ")");
+			}
+			if (houseBlackjack == true)
+			{
+				houseScore = realHouseScore;
+				houseScoreText.setText("House Score: BLACKJACK! " + "(" + houseScore + ")");
+				housePanel.remove(faceDownCard);
+			}
+			else
+			{
+				houseScoreText.setText("House Score: WINS! " + "(" + houseScore + ")");
+			}
+			settleBet(gameStatus, playerBlackjack);
+			break;
+		case 2: //Player wins
+			if (houseBust == true)
+			{
+				houseScoreText.setText("House Score: BUST! " + "(" + houseScore + ")");
+			}
+			if (playerBlackjack == true)
+			{
+				houseScore = realHouseScore;
+				playerScoreText.setText("Your Score: BLACKJACK! " + "(" + playerScore + ")");
+				houseScoreText.setText("House Score: " + houseScore);
+			}
+			else
+			{
+				playerScoreText.setText("Your Score: WINS! " + "(" + playerScore + ")");
+			}
+			settleBet(gameStatus, playerBlackjack);
+			break;
+		case 3: //Push
+			houseScoreText.setText("House Score: PUSH! " + "(" + houseScore + ")");
+			playerScoreText.setText("Your Score: PUSH! " + "(" + playerScore + ")");
+			settleBet(gameStatus, playerBlackjack);
+			break;
+		}
+		System.out.println("calculated player score end: " + playerScore);
+		System.out.println("calculated house score end: " + houseScore);
 	}
 	
-	public void firstDeal()
+	public void firstDeal(boolean isThemed)
 	{
+		if (isThemed == true)
+		{
+			faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/deadpool/" + "face_down" + ".png"));
+			faceDownCard.setIcon(faceDownCardIcon);
+		}
+		else
+		{
+			faceDownCardIcon = new ImageIcon(getClass().getResource("/fin/view/images/" + "face_down" + ".png"));
+			faceDownCard.setIcon(faceDownCardIcon);
+		}
+		ifFirstHand = true;
+		ifPlayerTurn = true;
 		for (int index = 0; index < 2; index++)
 		{
 			controller.dealCard(isThemed, "player");
 			playerLabelList.add(controller.sendImage("player"));
 			playerPanel.add(playerLabelList.get(index));
-			System.out.println("player card name: " + controller.sendName("player"));
 			
 			controller.dealCard(isThemed, "house");
 			houseLabelList.add(controller.sendImage("house"));
@@ -647,650 +734,84 @@ public class FinalPanel extends JPanel
 			{
 				housePanel.add(faceDownCard);
 			}
-			System.out.println("house card name: " + controller.sendName("house"));
 		}
-		System.out.println("size of player label list: " + playerLabelList.size());
-		System.out.println("size of house label list: " + houseLabelList.size());
 		
 	}
-		
-	public void firstFourCards()
-	{ 
-		/*
-		 * Player receives their first card
-		 */
-		playerImageLabel1.setIcon(playerCard1);
-		playerScore += playerCard1Value;
-		System.out.println("player receives 1st: player score: " + playerScore);
-		System.out.println("player receives 1st: house score: " + houseScore);
-		if (playerCard1Value == 1)
+	
+	public void dealNextCard(String playerOrHouse)
+	{
+		controller.dealCard(isThemed, playerOrHouse);
+		if (playerOrHouse == "player")
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
+			playerLabelList.add(controller.sendImage(playerOrHouse));
+			playerPanel.add(playerLabelList.get(playerLabelList.size() - 1));
 		}
 		else
 		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		
-		/*
-		 * House receives their first card
-		 */
-		houseImageLabel1.setIcon(houseCard1);
-		houseScore += houseCard1Value;
-		System.out.println("house receives 1st: player score: " + playerScore);
-		System.out.println("house receives 1st: house score: " + houseScore);
-		if (houseCard1Value == 1)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-		}
-		else
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-		}
-		
-		/*
-		 * Player receives their second card
-		 */
-		playerImageLabel2.setIcon(playerCard2);
-		playerScore += playerCard2Value;
-		System.out.println("player receives 2nd: player score: " + playerScore);
-		System.out.println("player receives 2nd: house score: " + houseScore);
-		if (playerCard2Value == 1 || playerCard1Value == 1)
-		{
-			if ((playerCard2Value == 1 || playerCard1Value == 1) && playerScore + 10 == 21)
-			{
-				playerScore = 21;
-				playerBlackjack();
-			}
-			else if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-			}
-		}
-		else if (playerScore > 21)
-		{
-			playerBust();
-		}
-		else if (playerCard2Value == 1 && playerCard1Value == 1)
-		{
-			if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-				houseHasBlackjack = true;
-			}
-		}
-		else
-		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		
-		/*
-		 * House receives their second card
-		 */
-		houseScore += houseCard2Value;
-		System.out.println("house receives 2nd: player score: " + playerScore);
-		System.out.println("house receives 2nd: house score: " + houseScore);
-		System.out.println("house receives 2nd: houseCard2Value: " + houseCard2Value);
-		if (houseScore + 10 == 21 && (houseCard1Value == 1 || houseCard2Value == 1))
-		{
-			if (playerScore == 21)
-			{
-				push();
-			}
-			else
-			{
-				houseImageLabel2.setIcon(houseCard2);
-			}
-		}
-		else if (playerScore == 21)
-		{
-			houseImageLabel2.setIcon(houseCard2);
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-		}
-		else
-		{
-//		houseImageLabel2.setIcon(faceDownCard);
+			houseLabelList.add(controller.sendImage(playerOrHouse));
+			housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
 		}
 	}
 	
-	public void playerFirstHit()
+	public void houseTurn()
 	{
-		/*
-		 * Player plays their first "Hit"
-		 */
-		playerImageLabel3.setIcon(playerCard3);
-		playerScore += playerCard3Value;
-		System.out.println("playerFirstHit: player score: " + playerScore);
-		System.out.println("playerFirstHit: house score: " + houseScore);
-		if (playerScore == 21)
+		housePanel.remove(faceDownCard);
+		housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
+		ifPlayerTurn = false;
+		ifFirstHand = false;
+		System.out.println("outside house turn: " + houseScore);
+		while (houseScore < 17 && gameStatus == 0)
 		{
-			playerWin();
+			System.out.println("inside house turn: " + houseScore);
+			dealNextCard("house");
+			calculateScore(ifPlayerTurn, ifFirstHand);
 		}
-		else if (playerScore > 21)
+		if (houseScore >= 17 && gameStatus == 0)
 		{
-			playerBust();
+			calculateScore(ifPlayerTurn, ifFirstHand);
 		}
-		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-		{
-			if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-			}
-			
-		}
-		else
-		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		playerHitNumber++;
-		setupListeners();
-	}
-	
-	public void playerSecondHit()
-	{
-		playerImageLabel4.setIcon(playerCard4);
-		playerScore += playerCard4Value;
-		System.out.println("playerSecondHit: player score: " + playerScore);
-		System.out.println("playerSecondHit: house score: " + houseScore);
-		if (playerScore == 21)
-		{
-			playerWin();
-		}
-		else if (playerScore > 21)
-		{
-			playerBust();
-		}
-		else if (playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-		{
-			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
-			{
-				playerScore = playerScore + 10;
-				playerWin();
-			}
-			else if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-			}
-			
-		}
-		else
-		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		playerHitNumber++;
-		setupListeners();
-	}
-	
-	public void playerThirdHit()
-	{
-		playerImageLabel5.setIcon(playerCard5);
-		playerScore += playerCard5Value;
-		System.out.println("playerThirdHit: player score: " + playerScore);
-		System.out.println("playerThirdHit: house score: " + houseScore);
-		if (playerScore == 21)
-		{
-			playerWin();
-		}
-		else if (playerScore > 21)
-		{
-			playerBust();
-		}
-		else if (playerCard5Value == 1 || playerCard4Value == 1 || playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1)
-		{
-			if (playerScore + 10 > houseScore && playerScore + 10 <= 21)
-			{
-				playerScore = playerScore + 10;
-				playerWin();
-			}
-			else if (playerScore + 10 < 21)
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore + " or " + String.valueOf(playerScore + 10)));
-			}
-			else
-			{
-				playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-			}
-			
-		}
-		else
-		{
-			playerScoreText.setText("Your Score: " + String.valueOf(playerScore));
-		}
-		playerHitNumber++;
-		setupListeners();
 	}
 	
 	public void playerStand()
 	{
-		houseRevealsSecondCard();
+		ifPlayerTurn = false;
+		houseScore = realHouseScore;
+		housePanel.remove(faceDownCard);
+		standButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
+		playAgainButton.setEnabled(true);
+		exitAndSaveButton.setEnabled(true);
 	}
 	
-	public void houseRevealsSecondCard()
+	public void settleBet(int gameStatus, boolean playerBlackjack)
 	{
-		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
-		houseImageLabel2.setIcon(houseCard2);
-		System.out.println("house reveals 2nd: player score: " + playerScore);
-		System.out.println("house reveals 2nd: house score: " + houseScore);
-		if ((houseCard1Value == 1 || houseCard2Value == 1) && houseScore + 10 == 21)
+		System.out.println("settle chipBet: " + chipBet);
+		System.out.println("settle chipNumber: " + chipNumber);
+		switch(gameStatus)
 		{
-			houseScore = 21;
-			houseBlackjack();
-		}
-//		else if (playerScore == 21 && houseScore != 21)
-//		{
-//			playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
-//			standButton.setEnabled(false);
-//			hitButton.setEnabled(false);
-//			doubleButton.setEnabled(false);
-//			playAgainButton.setEnabled(true);
-//			exitAndSaveButton.setEnabled(true);
-//			betWon();
-//		}
-		else if ((playerCard2Value == 1 || playerCard1Value == 1) && houseScore > playerScore + 10)
-		{
-			houseWin();
-		}
-		else if (houseScore > 21)
-		{
-			houseBust();
-		}
-		else if (houseCard2Value == 1 || houseCard1Value == 1)
-		{
-			if ((houseScore + 10 > playerScore) && (houseScore + 10 >= 17))
+		case 2: //Player wins
+			if (playerBlackjack == true)
 			{
-				houseScore = houseScore + 10;
-				houseWin();
-			}
-			else if (houseScore + 10 >= 17)
-			{
-				houseScore = houseScore + 10;
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-				houseStand();
+				chipNumber += (2 * chipBet) + (0.5 * chipBet);
 			}
 			else
 			{
-				houseFirstHit();
+				chipNumber += 2 * chipBet;
 			}
+			break;
+		case 3: //Push
+			chipNumber += chipBet;
+			break;
 		}
-		else if (houseScore >= 17)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseStand();
-		}
-		else
-		{
-			houseFirstHit();
-		}
-	}
-	
-	public void houseFirstHit()
-	{
-		houseImageLabel3.setIcon(houseCard3);
-		houseScore += houseCard3Value;
-		System.out.println("house first hit: player score: " + playerScore);
-		System.out.println("house first hit: house score: " + houseScore);
-		if (houseScore > 21)
-		{
-			houseBust();
-		}
-		else if ((houseCard3Value == 1 && houseCard2Value == 1) || (houseCard2Value == 1 && houseCard1Value == 1) || (houseCard3Value == 1 && houseCard1Value == 1))
-		{
-			if (houseScore + 10 < 17)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseSecondHit();
-			}
-			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
-			{
-				houseScore = houseScore + 10;
-				houseStand();
-			}
-			else if (houseScore + 10 > 21)
-			{
-				houseScore = houseScore + 10;
-				houseScoreText.setText("House Score: " + houseScore);
-			}
-		}
-		else if (houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
-		{
-			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
-			{
-				houseScore += 10;
-				houseWin();
-			}
-			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
-			{
-				houseScore += 10;
-				houseStand();
-			}
-			else if (houseScore + 10 < 17)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseSecondHit();
-			}
-			else
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-				houseSecondHit();
-			}
-			
-		}
-		else if (houseScore >= 17)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseStand();
-		}
-		else
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseSecondHit();
-		}
-	}
-	
-	public void houseSecondHit()
-	{
-		houseImageLabel4.setIcon(houseCard4);
-		houseScore += houseCard4Value;
-		System.out.println("house second hit: player score: " + playerScore);
-		System.out.println("house second hit: house score: " + houseScore);
-		if (houseScore > 21)
-		{
-			houseBust();
-		}
-		else if (houseScore > playerScore && houseScore <= 21 && houseScore >= 17)
-		{
-			houseWin();
-		}
-		else if (houseCard4Value == 1 || houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
-		{
-			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
-			{
-				houseScore += 10;
-				houseWin();
-			}
-			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
-			{
-				houseScore += 10;
-				houseStand();
-			}
-			else if (houseScore + 10 < 17)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseThirdHit();
-			}
-			else
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-				houseThirdHit();
-			}
-			
-		}
-		else if (houseScore >= 17)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseStand();
-		}
-		else
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseThirdHit();
-		}
-	}
-	
-	public void houseThirdHit()
-	{
-		houseImageLabel5.setIcon(houseCard5);
-		houseScore += houseCard5Value;
-		System.out.println("house second hit: player score: " + playerScore);
-		System.out.println("house second hit: house score: " + houseScore);
-		if (houseScore > 21)
-		{
-			houseBust();
-		}
-		else if (houseScore > playerScore && houseScore <= 21 && houseScore >= 17)
-		{
-			houseWin();
-		}
-		else if (houseCard4Value == 1 || houseCard3Value == 1 || houseCard2Value == 1 || houseCard1Value == 1)
-		{
-			if (houseScore + 10 > playerScore && houseScore + 10 <= 21 && houseScore + 10 < 17)
-			{
-				houseScore += 10;
-				houseWin();
-			}
-			else if (houseScore + 10 >= 17 && houseScore + 10 <= 21)
-			{
-				houseScore += 10;
-				houseStand();
-			}
-			else if (houseScore + 10 < 17)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + " or " + String.valueOf(houseScore + 10)));
-				houseFourthHit();
-			}
-			else
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-				houseFourthHit();
-			}
-			
-		}
-		else if (houseScore >= 17)
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseStand();
-		}
-		else
-		{
-			houseScoreText.setText("House Score: " + String.valueOf(houseScore));
-			houseFourthHit();
-		}
-	}
-	
-	public void houseFourthHit()
-	{
-		System.out.println("HOUSE FOURTH HIT");
-	}
-	
-	public void houseStand()
-	{
-		System.out.println("house stand: player score: " + playerScore);
-		System.out.println("house stand: house score: " + houseScore);
-		if ((playerCard2Value == 1 || playerCard1Value == 1) && playerHitNumber == 0)
-		{
-			if (houseScore > playerScore + 10 && playerScore + 10 <= 21)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + 10));
-				houseWin();
-			}
-			else if (houseScore == playerScore + 10 && playerScore + 10 <= 21)
-			{
-				draw();
-			}
-			else
-			{
-				if (houseScore > playerScore + 10 && playerScore + 10 <= 21)
-				{
-					houseWin();
-				}
-				else if (houseScore > playerScore && playerScore + 10 > 21)
-				{
-					houseWin();
-				}
-				else if (houseScore == playerScore + 10 && playerScore + 10 <= 21)
-				{
-					draw();
-				}
-				else if (houseScore < playerScore && playerScore + 10 <= 21)
-				{
-					playerScore += 10;
-					playerWin();
-				}
-			}
-		}
-		else if ((playerCard3Value == 1 || playerCard2Value == 1 || playerCard1Value == 1) && playerHitNumber == 1)
-		{
-			if (houseScore > playerScore + 10 && playerScore + 10 <= 21)
-			{
-				houseScoreText.setText("House Score: " + String.valueOf(houseScore + 10));
-				houseWin();
-			}
-			else if (houseScore == playerScore + 10 && playerScore + 10 <= 21)
-			{
-				draw();
-			}
-			else
-			{
-				if (houseScore > playerScore && playerScore + 10 > 21)
-				{
-					houseWin();
-				}
-				else if (houseScore + 10 > playerScore && houseScore + 10 <= 21)
-				{
-					houseScore += 10;
-					houseScoreText.setText("House Score: " + String.valueOf(houseScore + 10));
-					houseWin();
-				}
-				else if (houseScore < playerScore && playerScore + 10 <= 21)
-				{
-					playerScore += 10;
-					playerScoreText.setText("Your Score: " + String.valueOf(playerScore + 10));
-					playerWin();
-				}
-				else if (houseScore < playerScore && playerScore <= 21)
-				{
-					playerWin();
-				}
-			}
-		}
-		else if (houseScore > playerScore)
-		{
-			houseWin();
-		}
-		else if (houseScore == playerScore)
-		{
-			draw();
-		}
-		else
-		{
-			playerWin();
-		}
-	}
-	
-	public void playerWin()
-	{
-		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
-		houseImageLabel2.setIcon(houseCard2);
-		playerScoreText.setText("Your Score: WIN! (" + playerScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
+		chipNumberText.setText("Your Chips: " + chipNumber);
 		doubleButton.setEnabled(false);
+		hitButton.setEnabled(false);
+		standButton.setEnabled(false);
 		playAgainButton.setEnabled(true);
 		exitAndSaveButton.setEnabled(true);
-		betWon();
+		System.out.println("hit button enabled2?: " + hitButton.isEnabled());
 	}
-	
-	public void playerBust()
-	{
-		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
-		houseImageLabel2.setIcon(houseCard2);
-		houseScoreText.setText("House Score: " + houseScore);
-		playerScoreText.setText("Your Score: BUST! (" + playerScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-	}
-	
-	public void playerBlackjack()
-	{	
-		houseCard2 = new ImageIcon(getClass().getResource(cardPath + houseCard2Name + ".png"));
-		houseImageLabel2.setIcon(houseCard2);
-		playerScoreText.setText("Your Score: BLACKJACK! (" + playerScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-		betWon();
-	}
-	
-	public void houseWin()
-	{
-		houseScoreText.setText("House Score: WIN! (" + houseScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-	}
-	
-	public void houseBust()
-	{
-		houseScoreText.setText("House Score: BUST! (" + houseScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-		betWon();
-	}
-	
-	public void houseBlackjack()
-	{
-		houseScoreText.setText("House Score: BLACKJACK! (" + houseScore + ")");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-		if (playerScore == 21)
-		{
-			push();
-		}
-	}
-	
-	public void draw()
-	{
-		playerScoreText.setText("Your Score: DRAW!");
-		houseScoreText.setText("House Score: DRAW!");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-		betReturned();
-	}
-	
-	public void push()
-	{
-		playerScoreText.setText("Your Score: PUSH!");
-		houseScoreText.setText("House Score: PUSH!");
-		standButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		doubleButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
-		betReturned();
-	}
-	
 	public void playAgain()
 	{
 		housePanel.removeAll();
@@ -1301,168 +822,41 @@ public class FinalPanel extends JPanel
 		controller.createDeck(isThemed);
 		addAllElements();
 		setupPanel();
-//		setupCards();
 		setupBet();
 		setupListeners();
 		setupLayout();
-		firstFourCards();
+		controller.resetGame(isThemed);
+		firstDeal(isThemed);
+		calculateScore(ifPlayerTurn, ifFirstHand);
 		revalidate();
 		repaint();
 	}
 	
 	public void betSelected()
 	{
-		if (betSelectorBox.getSelectedIndex() == 0)
+		switch (betSelectorBox.getSelectedIndex())
 		{
+		case 0: //Player bets 5 chips
+			chipBet += 5;
 			chipNumber -= 5;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-			
-		}
-		else if (betSelectorBox.getSelectedIndex() == 1)
-		{
+			break;
+		case 1: //Player bets 10 chips
+			chipBet += 10;
 			chipNumber -= 10;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 2)
-		{
+			break;
+		case 2: //Player bets 25 chips
+			chipBet += 25;
 			chipNumber -= 25;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 3)
-		{
+			break;
+		case 3: //Player bets 50 chips
+			chipBet += 50;
 			chipNumber -= 50;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 4)
-		{
+			break;
+		case 4: //Player bets 100 chips
+			chipBet += 100;
 			chipNumber -= 100;
-			chipNumberText.setText("Your Chips: " + chipNumber);
+			break;
 		}
-	}
-	
-	public void betDoubled()
-	{
-		betDoubled = true;
-		
-		if (betSelectorBox.getSelectedIndex() == 0)
-		{
-			chipNumber -= 5;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-			
-		}
-		else if (betSelectorBox.getSelectedIndex() == 1)
-		{
-			chipNumber -= 10;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 2)
-		{
-			chipNumber -= 25;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 3)
-		{
-			chipNumber -= 50;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 4)
-		{
-			chipNumber -= 100;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-	}
-	
-	public void betWon()
-	{
-		if (betDoubled == true)
-		{
-			betWonDouble();
-		}
-		else if (betSelectorBox.getSelectedIndex() == 0)
-		{
-			chipNumber += 10;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-			
-		}
-		else if (betSelectorBox.getSelectedIndex() == 1)
-		{
-			chipNumber += 20;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 2)
-		{
-			chipNumber += 50;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 3)
-		{
-			chipNumber += 100;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 4)
-		{
-			chipNumber += 200;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-	}
-	
-	public void betWonDouble()
-	{
-		if (betSelectorBox.getSelectedIndex() == 0)
-		{
-			chipNumber += 20;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-			
-		}
-		else if (betSelectorBox.getSelectedIndex() == 1)
-		{
-			chipNumber += 40;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 2)
-		{
-			chipNumber += 100;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 3)
-		{
-			chipNumber += 200;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 4)
-		{
-			chipNumber += 400;
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-	}
-	
-	public void betReturned()
-	{
-		if (betSelectorBox.getSelectedIndex() == 0)
-		{
-			chipNumberText.setText("Your Chips: " + chipNumber);
-			
-		}
-		else if (betSelectorBox.getSelectedIndex() == 1)
-		{
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 2)
-		{
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 3)
-		{
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-		else if (betSelectorBox.getSelectedIndex() == 4)
-		{
-			chipNumberText.setText("Your Chips: " + chipNumber);
-		}
-	}
-	
-	public int readUserData(String userid)
-	{
-		return this.controller.readUserData(userid);
+		chipNumberText.setText("Your Chips: " + chipNumber);
 	}
 }
