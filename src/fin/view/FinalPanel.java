@@ -9,6 +9,8 @@ import java.util.*;
 
 public class FinalPanel extends JPanel
 {
+	private boolean playerBlackjack;
+	private boolean houseBlackjack;
 	private int gameStatus;
 	private int realHouseScore;
 	private int houseAces;
@@ -156,6 +158,8 @@ public class FinalPanel extends JPanel
 		this.houseAces = 0;
 		this.realHouseScore = 0;
 		this.gameStatus = 0;
+		this.playerBlackjack = false;
+		this.houseBlackjack = false;
 		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.betSelectorBox = new JComboBox(chipBetsArray);
 		this.playerLabelList = new ArrayList<JLabel>();
@@ -390,13 +394,29 @@ public class FinalPanel extends JPanel
 				betSelected();
 				System.out.println("chipNumber after bet is selected: " + chipNumber);
 				((AbstractButton) mouseClick.getSource()).setEnabled(false);
-				standButton.setEnabled(true);
-				hitButton.setEnabled(true);
-				doubleButton.setEnabled(true);
-				betSelectorBox.setEnabled(false);
-				playerPanel.setVisible(true);
-				housePanel.setVisible(true);
-				scorePanel.setVisible(true);
+				if (houseBlackjack == true || playerBlackjack == true)
+				{
+					standButton.setEnabled(false);
+					hitButton.setEnabled(false);
+					doubleButton.setEnabled(false);
+					betSelectorBox.setEnabled(false);
+					playAgainButton.setEnabled(true);
+					exitAndSaveButton.setEnabled(true);
+					playerPanel.setVisible(true);
+					housePanel.setVisible(true);
+					scorePanel.setVisible(true);
+					
+				}
+				else
+				{
+					standButton.setEnabled(true);
+					hitButton.setEnabled(true);
+					doubleButton.setEnabled(true);
+					betSelectorBox.setEnabled(false);
+					playerPanel.setVisible(true);
+					housePanel.setVisible(true);
+					scorePanel.setVisible(true);
+				}
 			}
 		});
 	}
@@ -501,8 +521,8 @@ public class FinalPanel extends JPanel
 		//Calculate score for the player
 		gameStatus = 0; //0 = Game is NOT over, 1 = House wins, 2 = Player wins, 3 = Push
 		realHouseScore = 0;
-		boolean playerBlackjack = false;
-		boolean houseBlackjack = false;
+		playerBlackjack = false;
+		houseBlackjack = false;
 		boolean playerBust = false;
 		boolean houseBust = false;
 		playerScore = 0;

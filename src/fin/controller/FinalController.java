@@ -417,6 +417,10 @@ public class FinalController
 		return cardValues;
 	}
 	
+	/**
+	 * 
+	 * @param isThemed
+	 */
 	public void resetGame(boolean isThemed)
 	{
 		if (isThemed)
