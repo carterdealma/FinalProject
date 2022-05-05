@@ -1,5 +1,10 @@
 package fin.model;
 
+/**
+ * Card base class for the Blackjack game.
+ * @author Carter Ma
+ *
+ */
 public class Card
 {
 	/**
@@ -12,6 +17,9 @@ public class Card
 	 */
 	private int value;
 	
+	/**
+	 * The path to the card in src.
+	 */
 	private String path;
 	
 	/**
@@ -44,6 +52,10 @@ public class Card
 		return this.value;
 	}
 	
+	/**
+	 * Supplies the path of the Card.
+	 * @return
+	 */
 	public String getPath()
 	{
 		return this.path;

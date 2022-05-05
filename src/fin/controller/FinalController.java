@@ -418,8 +418,8 @@ public class FinalController
 	}
 	
 	/**
-	 * 
-	 * @param isThemed
+	 * Recreates and reshuffles the deck when called.
+	 * @param isThemed: Checks if the game is themed.
 	 */
 	public void resetGame(boolean isThemed)
 	{
@@ -443,6 +443,11 @@ public class FinalController
 		houseCardList.clear();
 	}
 	
+	/**
+	 * Sends the name of the last card in the player or house card list.
+	 * @param playerOrHouse: Checks whether to send a player or house card.
+	 * @return Returns the name of the last card.
+	 */
 	public String sendName(String playerOrHouse)
 	{
 		if (playerOrHouse == "player")
@@ -455,6 +460,11 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Sends the value of the last card in the player or house card list.
+	 * @param playerOrHouse: Checks whether to send a player or house card.
+	 * @return Returns the value of the last card.
+	 */
 	public int sendValue(String playerOrHouse)
 	{
 		if (playerOrHouse == "player")
@@ -467,6 +477,11 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Sends the image of the last card in the player or house card list.
+	 * @param playerOrHouse: Checks whether to send a player or house card.
+	 * @return Returns the image of the last card.
+	 */
 	public JLabel sendImage(String playerOrHouse)
 	{
 		if (playerOrHouse == "player")

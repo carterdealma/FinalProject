@@ -9,14 +9,11 @@ import java.util.*;
 
 public class FinalPanel extends JPanel
 {
-	private boolean playerBlackjack;
-	private boolean houseBlackjack;
+	
 	private int gameStatus;
 	private int realHouseScore;
 	private int houseAces;
 	private int playerAces;
-	private boolean ifFirstHand;
-	private boolean ifPlayerTurn;
 	private ArrayList<Integer> cardValues;
 	private String playerOrHouse;
 	private boolean isThemed;
@@ -103,6 +100,10 @@ public class FinalPanel extends JPanel
 	boolean houseHasBlackjack = false;
 	boolean betDoubled = false;
 	private String cardPath;
+	private boolean playerBlackjack;
+	private boolean houseBlackjack;
+	private boolean ifFirstHand;
+	private boolean ifPlayerTurn;
 	
 	public FinalPanel(FinalController controller)
 	{
