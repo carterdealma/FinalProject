@@ -489,8 +489,8 @@ public class FinalPanel extends JPanel
 		layout.putConstraint(SpringLayout.SOUTH, startPanel, 0, SpringLayout.SOUTH, cardPanel);
 		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
 		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.NORTH, loginPanel, 210, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -210, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.NORTH, loginPanel, 200, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -200, SpringLayout.SOUTH, this);
 	}
 	
 	public void calculateScore(boolean ifPlayerTurn, boolean ifFirstHand)

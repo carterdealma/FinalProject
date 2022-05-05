@@ -13,44 +13,83 @@ import javax.swing.*;
 public class FinalController
 {
 	/**
-	 * The GUI frame for the game of Blackjack.
+	 * Instance of the "Card" object from the model.
 	 */
-	
 	private Card card;
 	
+	/**
+	 * Instance of the "DeadpoolCard" object from the model.
+	 */
 	private DeadpoolCard dpCard;
 	
+	/**
+	 * Instance of the "DealtCard" object from the model. Used to create an ArrayList of dealt cards.
+	 */
 	private DealtCard dealtCard;
 	
+	/**
+	 * The array of card faces used to create the deck
+	 */
 	String [] cardFace = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 	
+	/**
+	 * The array of card suits used to create the deck
+	 */
 	String [] cardSuit = {"C", "D", "H", "S"};
 	
+	/**
+	 * The array of card values used to create the deck
+	 */
 	int [] cardValue = {11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
 	
 	/**
-	 * The ArrayList of Card values that make up Blackjack.
+	 * The ArrayList of Card values that make up Blackjack if the player selects the default theme.
 	 */
 	private ArrayList<Card> cardList;
 	
+	/**
+	 * The ArrayList of DeadpoolCard values that make up Blackjack if the player selects the Deadpool theme.
+	 */
 	private ArrayList<DeadpoolCard> dpCardList;
 	
+	
+	/**
+	 * The ArrayList of DealtCard values that make up the cards that have been dealt to the player.
+	 */
 	private ArrayList<DealtCard> playerCardList;
 	
+	/**
+	 * The ArrayList of DealtCard values that make up the cards that have been dealt to the house.
+	 */
 	private ArrayList<DealtCard> houseCardList;
 	
+	/**
+	 * The HashMap which holds the user's username, (as the key) and amount of chips (as the value).
+	 */
 	private HashMap<String, String> userData;
 	
+	/**
+	 * The HashMap which holds the user's username, (as the key) and encrypted password (as the value).
+	 */
 	private HashMap<String, String> userPasswd;
 	
+	/**
+	 * File that the userData HashMap writes to. Keeps saved usernames and chip amounts.
+	 */
 	private File saveFile;
 	
+	/**
+	 * File that the userPasswd HashMap writes to. Keeps saved usernames and encrypted passwords.
+	 */
 	private File passwdFile;
 	
+	/**
+	 * The GUI frame for the game of Blackjack.
+	 */
 	private FinalFrame frame;
 	
 	/**
-	 * Starts the GUI
+	 * Starts the GUI and initializes data structures and files.
 	 */
 	public FinalController()
 	{
@@ -67,7 +106,7 @@ public class FinalController
 	}
 	
 	/**
-	 * Called by the runner to start the game of Blackjack
+	 * Called by the runner to start the game of Blackjack.
 	 */
 	public void start()
 	{
@@ -75,8 +114,8 @@ public class FinalController
 	}
 	
 	/**
-	 * Adds all 52 cards to the correctly themed Blackjack deck
-	 * @Param isThemed: Checks if the game is themed
+	 * Adds all 52 cards to the correctly themed Blackjack deck.
+	 * @Param isThemed: Checks if the game is themed.
 	 */
 	public void createDeck(boolean isThemed)
 	{
@@ -105,8 +144,8 @@ public class FinalController
 	}
 	
 	/**
-	 * Shuffles all 52 cards in the correctly themed Blackjack deck
-	 * @param isThemed: Checks if the game is themed
+	 * Shuffles all 52 cards in the correctly themed Blackjack deck.
+	 * @param isThemed: Checks if the game is themed.
 	 */
 	public void shuffleCards(boolean isThemed)
 	{
@@ -122,9 +161,9 @@ public class FinalController
 	
 	/**
 	 * 
-	 * Updates the userData HashMap and saves the HashMap to a file after user has saved and quit the game
-	 * @param user: Username that the player entered
-	 * @param chips: Amount of chips the player has
+	 * Updates the userData HashMap and saves the HashMap to a file after user has saved and quit the game.
+	 * @param user: Username that the player entered.
+	 * @param chips: Amount of chips the player has.
 	 */
 	public void updateUserData(String user, String chips)
 	{
@@ -143,8 +182,8 @@ public class FinalController
 	
 	/**
 	 * Adds the user's data to a HashMap if it's the user's first time playing. Otherwise, it retrieves the user's amount of chips.
-	 * @param userKey: Username that the player entered
-	 * @return returns the amount of chips the user has
+	 * @param userKey: Username that the player entered.
+	 * @return returns the amount of chips the user has.
 	 */
 	public double readUserData(String userKey)
 	{
@@ -196,9 +235,9 @@ public class FinalController
 	}
 	
 	/**
-	 * Updates the user's username and password via HashMap to a file
-	 * @param userid: The username the user input
-	 * @param encryptedPasswd: The encrypted password created in authenticateUser
+	 * Updates the user's username and password via HashMap to a file.
+	 * @param userid: The username the user input.
+	 * @param encryptedPasswd: The encrypted password created in authenticateUser.
 	 */
 	public void updatePasswdData(String userid, String encryptedPasswd)
 	{
@@ -215,6 +254,12 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Encrypts the user's password and checks it against the encrypted password which was previously saved to blackjack.passwd unless it is the user's first time.
+	 * @param userid: The username the user input.
+	 * @param passwd: The password the user input.
+	 * @return
+	 */
 	public boolean authenticateUser(String userid, String passwd)
 	{
 		String saltValue = EncryptPassword.getSaltvalue(27);
@@ -289,6 +334,10 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Removes a card from the deck when a card is played.
+	 * @param isThemed: Checks if the game is themed.
+	 */
 	public void cardPlayed(boolean isThemed)
 	{
 		if (isThemed)
@@ -301,6 +350,11 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Deals a card to the player or house.
+	 * @param isThemed: Checks if the game is themed.
+	 * @param playerOrHouse Checks who to deal the card to.
+	 */
 	public void dealCard(boolean isThemed, String playerOrHouse)
 	{
 		DealtCard dealtCard = new DealtCard("a", 1);
@@ -338,6 +392,11 @@ public class FinalController
 		}
 	}
 	
+	/**
+	 * Sends the card values in the player or house's hand when called.
+	 * @param playerOrHouse: Checks whether to send the player or house's hand.
+	 * @return Returns the player or house's card values.
+	 */
 	public ArrayList<Integer> sendCardValues(String playerOrHouse)
 	{
 		ArrayList<Integer> cardValues = new ArrayList<Integer>();
@@ -358,46 +417,10 @@ public class FinalController
 		return cardValues;
 	}
 	
-	public void updateCardValues(String playerOrHouse, ArrayList<Integer> newCardValues)
-	{
-		if (playerOrHouse == "player")
-		{
-			for (int index = 0; index < newCardValues.size() - 1; index++)
-			{
-				playerCardList.get(index).setValue(newCardValues.get(index));
-			}
-		}
-		else
-		{
-			for (int index = 0; index < newCardValues.size() - 1; index++)
-			{
-				houseCardList.get(index).setValue(newCardValues.get(index));
-			}
-		}
-	}
-	
-	public int sendLastCardValue(String playerOrHouse)
-	{
-		int lastCardValue = 0;
-		if (playerOrHouse == "player")
-		{
-			lastCardValue = playerCardList.get(playerCardList.size() - 1).getValue();
-		}
-		else
-		{
-			lastCardValue = houseCardList.get(houseCardList.size() - 1).getValue();
-		}
-		return lastCardValue;
-	}
-	
-	public void setCardValues (String playerOrHouse, ArrayList<Integer> newCardValues)
-	{
-		for (int card : newCardValues)
-		{
-			
-		}
-	}
-	
+	/**
+	 * 
+	 * @param isThemed
+	 */
 	public void resetGame(boolean isThemed)
 	{
 		if (isThemed)
