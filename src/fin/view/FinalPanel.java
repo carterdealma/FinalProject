@@ -402,6 +402,7 @@ public class FinalPanel extends JPanel
 					isThemed = false;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
+					themeSelectorBox.setEnabled(false);
 				}
 				else if (themeSelectorBox.getSelectedIndex() == 1)
 				{
@@ -410,6 +411,7 @@ public class FinalPanel extends JPanel
 					isThemed = true;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
+					themeSelectorBox.setEnabled(false);
 				}
 			}
 		});
@@ -484,16 +486,36 @@ public class FinalPanel extends JPanel
 				((AbstractButton) mouseClick.getSource()).setEnabled(false);
 				if (houseBlackjack == true || playerBlackjack == true)
 				{
+					ifPlayerTurn = true;
+					ifFirstHand = true;
 					standButton.setEnabled(false);
 					hitButton.setEnabled(false);
 					doubleButton.setEnabled(false);
 					betSelectorBox.setEnabled(false);
-					playAgainButton.setEnabled(true);
-					exitAndSaveButton.setEnabled(true);
+					playAgainButton.setEnabled(false);
+					exitAndSaveButton.setEnabled(false);
 					playerPanel.setVisible(true);
 					housePanel.setVisible(true);
 					scorePanel.setVisible(true);
-					
+					playerStand();
+					if(playerBlackjack == true && houseBlackjack == true)
+					{
+						chipNumber += chipBet;
+						chipNumberText.setText("Your Chips: " + chipNumber);
+					}
+					else if(playerBlackjack == true && houseBlackjack != true)
+					{
+						if (playerBlackjack == true)
+						{
+							chipNumber += (2 * chipBet) + (0.5 * chipBet);
+						}
+						else
+						{
+							chipNumber += 2 * chipBet;
+						}
+						chipNumber += chipBet;
+						chipNumberText.setText("Your Chips: " + chipNumber);
+					}
 				}
 				else
 				{
@@ -757,6 +779,11 @@ public class FinalPanel extends JPanel
 				houseScore = realHouseScore;
 				houseScoreText.setText("House Score: BLACKJACK! " + "(" + houseScore + ")");
 				housePanel.remove(faceDownCard);
+				standButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				doubleButton.setEnabled(false);
+				playAgainButton.setEnabled(false);
+				exitAndSaveButton.setEnabled(false);
 			}
 			else
 			{
@@ -774,6 +801,11 @@ public class FinalPanel extends JPanel
 				houseScore = realHouseScore;
 				playerScoreText.setText("Your Score: BLACKJACK! " + "(" + playerScore + ")");
 				houseScoreText.setText("House Score: " + houseScore);
+				standButton.setEnabled(false);
+				hitButton.setEnabled(false);
+				doubleButton.setEnabled(false);
+				playAgainButton.setEnabled(false);
+				exitAndSaveButton.setEnabled(false);
 			}
 			else
 			{
@@ -910,11 +942,11 @@ public class FinalPanel extends JPanel
 			break;
 		}
 		chipNumberText.setText("Your Chips: " + chipNumber);
-		doubleButton.setEnabled(false);
-		hitButton.setEnabled(false);
-		standButton.setEnabled(false);
-		playAgainButton.setEnabled(true);
-		exitAndSaveButton.setEnabled(true);
+//		doubleButton.setEnabled(false);
+//		hitButton.setEnabled(false);
+//		standButton.setEnabled(false);
+//		playAgainButton.setEnabled(true);
+//		exitAndSaveButton.setEnabled(true);
 		System.out.println("hit button enabled2?: " + hitButton.isEnabled());
 	}
 	
@@ -929,6 +961,7 @@ public class FinalPanel extends JPanel
 		scorePanel.removeAll();
 		chipPanel.removeAll();
 		controller.createDeck(isThemed);
+		controller.shuffleCards(isThemed);
 		addAllElements();
 		setupPanel();
 		setupBet();
