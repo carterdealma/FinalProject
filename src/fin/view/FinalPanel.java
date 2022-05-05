@@ -942,11 +942,6 @@ public class FinalPanel extends JPanel
 			break;
 		}
 		chipNumberText.setText("Your Chips: " + chipNumber);
-//		doubleButton.setEnabled(false);
-//		hitButton.setEnabled(false);
-//		standButton.setEnabled(false);
-//		playAgainButton.setEnabled(true);
-//		exitAndSaveButton.setEnabled(true);
 		System.out.println("hit button enabled2?: " + hitButton.isEnabled());
 	}
 	
