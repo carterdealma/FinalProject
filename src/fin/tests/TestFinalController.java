@@ -22,7 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PanelTest
+class TestFinalController
 {
 	private FinalController testedController; //Change me
 	private FinalPanel testedPanel; //Change me
@@ -40,13 +40,41 @@ class PanelTest
 		this.testedController = null;
 		this.testedPanel = null;
 	}
+	
+	@Test
+	void testControllerMethods()
+	{
+		Method [] methods = testedController.getClass().getDeclaredMethods();
+		boolean hasCreateDeck = false;
+		boolean hasShuffleCards = false;
+		boolean hasAuthenticateUser = false;
+		
+		for(Method method : methods)
+		{
+			if (method.getName().equals("createDeck"))
+			{
+				hasCreateDeck = true;
+			}
+			else if (method.getName().equals("shuffleCards"))
+			{
+				hasShuffleCards = true;
+			}
+			else if (method.getName().equals("authenticateUser"))
+			{
+				hasAuthenticateUser = true;
+			}
+		}
+		
+		assertTrue(hasCreateDeck, "You need a method named createDeck");
+		assertTrue(hasShuffleCards, "You need a method named shuffleCards");
+		assertTrue(hasAuthenticateUser, "You need a method named authenticateUser");
+	}
 
 	@Test
 	void testPanelMethods()
 	{
 		Method [] methods = testedPanel.getClass().getDeclaredMethods();
 		assertTrue(methods.length >= 4, "You need at least 3 methods in the controller");
-		boolean hasSetupPane = false;
 		boolean hasSetupPanel = false;
 		boolean hasSetupListeners = false;
 		boolean hasSetupLayout = false;

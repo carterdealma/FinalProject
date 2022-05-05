@@ -256,9 +256,10 @@ public class FinalController
 	
 	/**
 	 * Encrypts the user's password and checks it against the encrypted password which was previously saved to blackjack.passwd unless it is the user's first time.
+	 * If it is the user's first time it will encrypt and save their password and username to blackjack.passwd.
 	 * @param userid: The username the user input.
 	 * @param passwd: The password the user input.
-	 * @return
+	 * @return: Returns whether or not the login was successful.
 	 */
 	public boolean authenticateUser(String userid, String passwd)
 	{

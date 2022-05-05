@@ -22,7 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class FrameTest
+class TestFinalFrame
 {
 	private FinalController testedController; //Change!
 	private FinalFrame testedFrame; //Change!

@@ -7,104 +7,293 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ * FinalPanel for the game Blackjack.
+ * @author Carter Ma
+ *
+ */
 public class FinalPanel extends JPanel
 {
-	
-	private int gameStatus;
-	private int realHouseScore;
-	private int houseAces;
-	private int playerAces;
+	/**
+	 * ArrayList of cardValues used by both the player and the house.
+	 */
 	private ArrayList<Integer> cardValues;
-	private String playerOrHouse;
-	private boolean isThemed;
-	private double chipNumber;
-	private double chipBet;
-	private String userid;
-	private String passwd;
 	
+	/**
+	 * Reference to the FinalController instance.
+	 */
 	private FinalController controller;
 	
+	/**
+	 * A blank starting panel which holds the login and theme panels.
+	 */
 	private JPanel startPanel;
+	
+	/**
+	 * A panel where the user logs in.
+	 */
 	private JPanel loginPanel;
+	
+	/**
+	 * A panel where the user selects the theme of the cards within the game.
+	 */
 	private JPanel themePanel;
+	
+	/**
+	 * A panel that holds the house and player panels which contain cards.
+	 */
 	private JPanel cardPanel;
+	
+	/**
+	 * A panel for the house's cards to be displayed.
+	 */
 	private JPanel housePanel;
+	
+	/**
+	 * A panel for the player's cards to be displayed.
+	 */
 	private JPanel playerPanel;
+	
+	/**
+	 * A panel for the buttons the user must use to play the game.
+	 */
 	private JPanel buttonPanel;
+	
+	/**
+	 * A panel which holds the score for both the player and the house.
+	 */
 	private JPanel scorePanel;
+	
+	/**
+	 * A blank score panel which hides the score panel while the user logs in.
+	 */
 	private JPanel tempScorePanel;
+	
+	/**
+	 * A panel that holds the amount of chips the player has and their bet selection.
+	 */
 	private JPanel chipPanel;
+	
+	/**
+	 * A layout manager for the panel. Uses constraints between components to align or spring from edges.
+	 */
 	private SpringLayout layout;
-	private JLabel houseImageLabel1;
-	private JLabel houseImageLabel2;
-	private JLabel houseImageLabel3;
-	private JLabel houseImageLabel4;
-	private JLabel houseImageLabel5;
-	private JLabel playerImageLabel1;
-	private JLabel playerImageLabel2;
-	private JLabel playerImageLabel3;
-	private JLabel playerImageLabel4;
-	private JLabel playerImageLabel5;
-	private JLabel playerImageLabel;
-	private JLabel houseImageLabel;
-	private ArrayList<JLabel> playerLabelList;
-	private ArrayList<JLabel> houseLabelList;
-	private JLabel faceDownCard;
+	
+	/**
+	 * The image of the face down card.
+	 */
 	private ImageIcon faceDownCardIcon;
-	private ImageIcon playerCard1;
-	private int playerCard1Value;
-	private ImageIcon playerCard2;
-	private int playerCard2Value;
-	private ImageIcon playerCard3;
-	private int playerCard3Value;
-	private ImageIcon playerCard4;
-	private int playerCard4Value;
-	private ImageIcon playerCard5;
-	private int playerCard5Value;
-	private ImageIcon houseCard1;
-	private int houseCard1Value;
-	private ImageIcon houseCard2;
-	private String houseCard2Name;
-	private int houseCard2Value;
-	private ImageIcon houseCard3;
-	private int houseCard3Value;
-	private ImageIcon houseCard4;
-	private int houseCard4Value;
-	private ImageIcon houseCard5;
-	private int houseCard5Value;
+	
+	/**
+	 * A label used to hold the image of a face down card.
+	 */
+	private JLabel faceDownCard;
+	
+	/**
+	 * An ArrayList of labels to hold the images of the player's cards.
+	 */
+	private ArrayList<JLabel> playerLabelList;
+	
+	/**
+	 * An ArrayList of labels to hold the images of the house's cards.
+	 */
+	private ArrayList<JLabel> houseLabelList;
+	
+	/**
+	 * A button used to login before the game begins.
+	 */
 	private JButton loginButton;
+	
+	/**
+	 * A button used to double a player's bet and deal one card to the player.
+	 */
 	private JButton doubleButton;
+	
+	/**
+	 * A button used to deal one card to the player.
+	 */
 	private JButton hitButton;
+	
+	/**
+	 * A button used to end the player's turn.
+	 */
 	private JButton standButton;
+	
+	/**
+	 * A button used to play the Blackjack game again.
+	 */
 	private JButton playAgainButton;
+	
+	/**
+	 * A button used to submit the player's chosen bet of chips.
+	 */
 	private JButton submitBetButton;
+	
+	/**
+	 * A button used to exit the game and save the player's username and chip amount.
+	 */
 	private JButton exitAndSaveButton;
+	
+	/**
+	 * A button used to confirm the chosen theme for the cards in the Blackjack game.
+	 */
 	private JButton confirmThemeButton;
+	
+	/**
+	 * An array of available themes of cards for the player.
+	 */
 	private String [] themeArray = {"Default", "Deadpool"};
+	
+	/**
+	 * A selection box for the user to select a theme.
+	 */
 	private JComboBox<String> themeSelectorBox;
+	
+	/**
+	 * A text area that displays the house's score.
+	 */
 	private JTextArea houseScoreText;
+	
+	/**
+	 * A text area that displays the player's score.
+	 */
 	private JTextArea playerScoreText;
+	
+	/**
+	 * A text area that displays the player's chip amount.
+	 */
 	private JTextArea chipNumberText;
+	
+	/**
+	 * A selection box for the user to select a bet.
+	 */
 	private JTextArea betSelectorText;
+	
+	/**
+	 * A text area that instructs the user to select a theme.
+	 */
 	private JTextArea themeText;
+	
+	/**
+	 * A text area that instructs the user to input a username.
+	 */
 	private JTextArea loginText;
+	
+	/**
+	 * A text area that instructs the user to input a password.
+	 */
 	private JTextArea passwordText;
+	
+	/**
+	 * A text field that the user inputs a username into.
+	 */
 	private JTextField loginField;
+	
+	/**
+	 * A password field that the user inputs a password into.
+	 */
 	private JPasswordField passwdField;
+	
+	/**
+	 * A text area that displays if the user inputs an incorrect password.
+	 */
 	private JTextArea incorrectPasswordText;
-	private int playerScore;
-	private int houseScore;
-	private int playerHitNumber;
+	
+	/**
+	 * An array of bet amounts that will be displayed to the user via selection box.
+	 */
 	private String [] chipBetsArray = {"5 Chips", "10 Chips", "25 Chips", "50 Chips", "100 Chips"};
+	
+	/**
+	 * A selection box that displays an array of bet amounts to the user.
+	 */
 	private JComboBox<Integer> betSelectorBox;
-	boolean houseHasBlackjack = false;
-	boolean betDoubled = false;
-	private String cardPath;
-	private boolean playerBlackjack;
+	
+	/**
+	 * Determines whether to pass in-game methods to either the player or the house.
+	 */
+	private String playerOrHouse;
+	
+	/**
+	 * The username the user input.
+	 */
+	private String userid;
+	
+	/**
+	 * The password the user input.
+	 */
+	private String passwd;
+	
+	/**
+	 * The player's score which is displayed via text area.
+	 */
+	private int playerScore;
+	
+	/**
+	 * The house's score which is displayed via text area.
+	 */
+	private int houseScore;
+	
+	/**
+	 * The status of the game represented as an integer.
+	 * 0 = Game is NOT over, 1 = House wins, 2 = Player wins, 3 = Push
+	 */
+	private int gameStatus;
+	
+	/**
+	 * The house's actual score while the house's second card remains face down.
+	 */
+	private int realHouseScore;
+	
+	/**
+	 * The amount of aces the house has in it's hand.
+	 */
+	private int houseAces;
+	
+	/**
+	 * The amount of aces the player has in their hand.
+	 */
+	private int playerAces;
+	
+	/**
+	 * The amount of chips the player has.
+	 */
+	private double chipNumber;
+	
+	/**
+	 * The amount the player chose to bet.
+	 */
+	private double chipBet;
+	
+	/**
+	 * Whether or not the game is themed.
+	 */
+	private boolean isThemed;
+	
+	/**
+	 * Whether or not the house has Blackjack.
+	 */
 	private boolean houseBlackjack;
+	
+	/**
+	 * Whether or not the player has Blackjack.
+	 */
+	private boolean playerBlackjack;
+	
+	/**
+	 * Whether or not it is both the house and player's first hand.
+	 */
 	private boolean ifFirstHand;
+	
+	/**
+	 * Whether or not it is the player's turn. The player only has one turn per game.
+	 */
 	private boolean ifPlayerTurn;
 	
+	/**
+	 * Builds the FinalPanel. Calls methods to initialize all data members, set up the login, panel, listeners, and layout.
+	 * @param controller: Reference to the Blackjack game passed when the FinalPanel is instantiated in the FinalFrame.
+	 */
 	public FinalPanel(FinalController controller)
 	{
 		super();
@@ -117,18 +306,18 @@ public class FinalPanel extends JPanel
 		setupLayout();
 	}
 	
-	public void addAllElements()
+	/**
+	 * Initializes all data members.
+	 */
+	private void addAllElements()
 	{
 		this.layout = new SpringLayout();
 		this.startPanel = new JPanel();
 		this.loginPanel = new JPanel(new GridLayout (0,1));
 		this.themePanel = new JPanel(new GridLayout(0,1));
 		this.cardPanel = new JPanel(new GridLayout (0,1));
-		cardPanel.setBackground(new Color(0, 153, 0));
 		this.housePanel = new JPanel();
-		housePanel.setBackground(new Color(0, 153, 0));
 		this.playerPanel = new JPanel();
-		playerPanel.setBackground(new Color(0, 153, 0));
 		this.buttonPanel = new JPanel(new GridLayout (0,1));
 		this.scorePanel = new JPanel(new GridLayout(0,1));
 		this.tempScorePanel = new JPanel(new GridLayout(0,1));
@@ -142,6 +331,8 @@ public class FinalPanel extends JPanel
 		this.exitAndSaveButton = new JButton("Exit and Save?");
 		this.confirmThemeButton = new JButton("Confirm Theme");
 		this.themeSelectorBox = new JComboBox(themeArray);
+		this.betSelectorBox = new JComboBox(chipBetsArray);
+		this.betSelectorText = new JTextArea("Select your bet: ");
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
@@ -151,9 +342,12 @@ public class FinalPanel extends JPanel
 		this.loginField = new JTextField("");
 		this.passwdField = new JPasswordField("");
 		this.incorrectPasswordText = new JTextArea("Incorrect Password!");
+		this.faceDownCard = new JLabel();
+		this.playerLabelList = new ArrayList<JLabel>();
+		this.houseLabelList = new ArrayList<JLabel>();
+		this.cardValues = new ArrayList<Integer>();
 		this.playerScore = 0;
 		this.houseScore = 0;
-		this.playerHitNumber = 0;
 		this.chipBet = 0;
 		this.playerAces = 0;
 		this.houseAces = 0;
@@ -161,28 +355,12 @@ public class FinalPanel extends JPanel
 		this.gameStatus = 0;
 		this.playerBlackjack = false;
 		this.houseBlackjack = false;
-		this.betSelectorText = new JTextArea("Select your bet: ");
-		this.betSelectorBox = new JComboBox(chipBetsArray);
-		this.playerLabelList = new ArrayList<JLabel>();
-		this.houseLabelList = new ArrayList<JLabel>();
-		this.faceDownCard = new JLabel();
-		this.playerImageLabel = new JLabel();
-		this.houseImageLabel = new JLabel();
-		this.cardValues = new ArrayList<Integer>();
-//		this.playerImageLabel1 = new JLabel();
-//		this.playerImageLabel2 = new JLabel();
-//		this.playerImageLabel3 = new JLabel();
-//		this.playerImageLabel4 = new JLabel();
-//		this.playerImageLabel5 = new JLabel();
-//		this.houseImageLabel1 = new JLabel();
-//		this.houseImageLabel2 = new JLabel();
-//		this.houseImageLabel3 = new JLabel();
-//		this.houseImageLabel4 = new JLabel();
-//		this.houseImageLabel5 = new JLabel();
-		
 	}
 	
-	public void setupLogin()
+	/**
+	 * Creates the login screen and sets up the listener for the theme button.
+	 */
+	private void setupLogin()
 	{
 		this.add(loginPanel);
 		loginPanel.add(themeText);
@@ -222,13 +400,6 @@ public class FinalPanel extends JPanel
 				{
 					setupLoginListeners();
 					isThemed = false;
-//					controller.createDeck(isThemed);
-//					controller.shuffleCards(isThemed);
-////					cardPath = controller.sendPath(isThemed);
-//					setupBet();
-//					firstDeal(isThemed);
-//					calculateScore(ifPlayerTurn, ifFirstHand);
-//					ifFirstHand = false;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
 				}
@@ -237,13 +408,6 @@ public class FinalPanel extends JPanel
 					setupLoginListeners();
 					System.out.println("Cards are deadpool");
 					isThemed = true;
-//					controller.createDeck(isThemed);
-//					controller.shuffleCards(isThemed);
-////					cardPath = controller.sendPath(isThemed);
-//					setupBet();
-//					firstDeal(isThemed);
-//					calculateScore(ifPlayerTurn, ifFirstHand);
-//					ifFirstHand = false;
 					loginButton.setEnabled(true);
 					confirmThemeButton.setEnabled(false);
 				}
@@ -251,90 +415,10 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
-//	public void setupCards()
-//	{
-//		System.out.println("cardPath in setupCards: " + cardPath);
-//		this.faceDownCard = new ImageIcon(getClass().getResource(cardPath + "face_down" + ".png"));
-//		playerCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		playerCard1Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed); 
-//		playerCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		playerCard2Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		playerCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		playerCard3Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		playerCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		playerCard4Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		playerCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		playerCard5Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		houseCard1 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		houseCard1Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		houseCard2 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		houseCard2Value = controller.sendValue(isThemed);
-//		houseCard2Name = controller.sendName(isThemed);
-//		controller.cardPlayed(isThemed);
-//		houseCard3 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		houseCard3Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		houseCard4 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		houseCard4Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//		houseCard5 = new ImageIcon(getClass().getResource(cardPath + controller.sendName(isThemed)) + ".png");
-//		houseCard5Value = controller.sendValue(isThemed);
-//		controller.cardPlayed(isThemed);
-//	}
-
-	public void setupPanel()
-	{
-		this.setLayout(layout);
-		this.setBackground(Color.DARK_GRAY);
-		this.add(cardPanel);
-		cardPanel.add(housePanel);
-//		housePanel.add(houseImageLabel1);
-//		housePanel.add(houseImageLabel2);
-//		housePanel.add(houseImageLabel3);
-//		housePanel.add(houseImageLabel4);
-//		housePanel.add(houseImageLabel5);
-		cardPanel.add(playerPanel);
-//		playerPanel.add(playerImageLabel1);
-//		playerPanel.add(playerImageLabel2);
-//		playerPanel.add(playerImageLabel3);
-//		playerPanel.add(playerImageLabel4);
-//		playerPanel.add(playerImageLabel5);
-		this.add(buttonPanel);
-		buttonPanel.add(doubleButton);
-		doubleButton.setEnabled(false);
-		buttonPanel.add(hitButton);
-		hitButton.setEnabled(false);
-		buttonPanel.add(standButton);
-		standButton.setEnabled(false);
-		buttonPanel.add(playAgainButton);
-		playAgainButton.setEnabled(false);
-		buttonPanel.add(exitAndSaveButton);
-		exitAndSaveButton.setEnabled(false);
-		this.add(tempScorePanel);
-		tempScorePanel.add(scorePanel);
-		scorePanel.add(houseScoreText);
-		houseScoreText.setEditable(false);
-		scorePanel.add(playerScoreText);
-		playerScoreText.setEditable(false);
-		this.add(chipPanel);
-		chipPanel.add(chipNumberText);
-		chipNumberText.setEditable(false);
-		chipPanel.add(betSelectorText);
-		betSelectorText.setEditable(false);
-		chipPanel.add(betSelectorBox);
-		chipPanel.add(submitBetButton);
-		playerPanel.setVisible(false);
-		housePanel.setVisible(false);
-		scorePanel.setVisible(false);
-	}
-	
-	public void setupLoginListeners()
+	/**
+	 * Sets up login button listener and starts the Blackjack game. 
+	 */
+	private void setupLoginListeners()
 	{
 		loginButton.addActionListener(new ActionListener()
 		{
@@ -385,7 +469,10 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
-	public void setupBet()
+	/**
+	 * Sets up the submit bet button listener.
+	 */
+	private void setupBet()
 	{
 		submitBetButton.addActionListener(new ActionListener()
 		{
@@ -422,7 +509,10 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
-	public void setupListeners()
+	/**
+	 * Sets up listeners for the double, hit, stand, play again, and save and exit buttons.
+	 */
+	private void setupListeners()
 	{
 		exitAndSaveButton.addActionListener(new ActionListener()
 		{
@@ -480,41 +570,12 @@ public class FinalPanel extends JPanel
 		});
 	}
 	
-	public void setupLayout()
-	{
-		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
-		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
-		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
-		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
-		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
-		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
-		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
-		layout.putConstraint(SpringLayout.EAST, cardPanel, -240, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, chipPanel, 0, SpringLayout.SOUTH, scorePanel);
-		layout.putConstraint(SpringLayout.WEST, chipPanel, 0, SpringLayout.WEST, buttonPanel);
-		layout.putConstraint(SpringLayout.SOUTH, chipPanel, 0, SpringLayout.NORTH, buttonPanel);
-		layout.putConstraint(SpringLayout.EAST, chipPanel, 0, SpringLayout.EAST, buttonPanel);
-		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 130, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.NORTH, tempScorePanel, 0, SpringLayout.NORTH, scorePanel);
-		layout.putConstraint(SpringLayout.WEST, tempScorePanel, 0, SpringLayout.WEST, scorePanel);
-		layout.putConstraint(SpringLayout.SOUTH, tempScorePanel, 0, SpringLayout.SOUTH, scorePanel);
-		layout.putConstraint(SpringLayout.EAST, tempScorePanel, 0, SpringLayout.EAST, scorePanel);
-		layout.putConstraint(SpringLayout.WEST, loginPanel, 520, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, loginPanel, -520, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, startPanel, 0, SpringLayout.NORTH, cardPanel);
-		layout.putConstraint(SpringLayout.WEST, startPanel, 0, SpringLayout.WEST, cardPanel);
-		layout.putConstraint(SpringLayout.SOUTH, startPanel, 0, SpringLayout.SOUTH, cardPanel);
-		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
-		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.NORTH, loginPanel, 200, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -200, SpringLayout.SOUTH, this);
-	}
-	
-	public void calculateScore(boolean ifPlayerTurn, boolean ifFirstHand)
+	/**
+	 * Calculates the score for the player and the house.
+	 * @param ifPlayerTurn: Checks whether or not it is the player's turn.
+	 * @param ifFirstHand: Checks whether or not it is the house and player's first hand.
+	 */
+	private void calculateScore(boolean ifPlayerTurn, boolean ifFirstHand)
 	{
 		System.out.println("calculate Score chipBet: " + chipBet);
 		System.out.println("calculate Score chipNumber: " + chipNumber);
@@ -612,6 +673,7 @@ public class FinalPanel extends JPanel
 		{
 			houseScoreText.setText("House Score: " + houseScore);
 		}
+		//Checking for all game outcomes below
 		//Check for blackjack
 		if (realHouseScore == 21 && ifFirstHand == true)
 		{
@@ -633,6 +695,7 @@ public class FinalPanel extends JPanel
 		{
 			gameStatus = 1;
 		}
+		
 		//Check for bust
 		if (playerScore > 21)
 		{
@@ -646,6 +709,7 @@ public class FinalPanel extends JPanel
 			gameStatus = 2;
 			houseBust = true;
 		}
+		
 		//Check for player hitting and getting 21
 		else if (playerScore == 21 && gameStatus == 0 && houseScore < 17)
 		{
@@ -653,7 +717,8 @@ public class FinalPanel extends JPanel
 			playerStand();
 			houseTurn();
 		}
-		//Checking for push, player win, or house win after no more cards can be dealt
+		
+		//Checking for push, player win, or house win after no more cards can be dealt.
 		if (houseScore >= 17 && ifPlayerTurn == false && gameStatus == 0 && houseBust == false && playerBust == false)
 		{
 			if (houseScore == playerScore)
@@ -669,6 +734,7 @@ public class FinalPanel extends JPanel
 				gameStatus = 1;
 			}
 		}
+		
 		//Checks if game is over. Resets buttons and reveals house's second card.
 		System.out.println("gameStatus BBR: " + gameStatus);
 		if (gameStatus > 0)
@@ -725,7 +791,11 @@ public class FinalPanel extends JPanel
 		System.out.println("calculated house score end: " + houseScore);
 	}
 	
-	public void firstDeal(boolean isThemed)
+	/**
+	 * Deals the four cards. Two to the player and two to the house.
+	 * @param isThemed: Checks whether or not the game is themed.
+	 */
+	private void firstDeal(boolean isThemed)
 	{
 		if (isThemed == true)
 		{
@@ -756,10 +826,13 @@ public class FinalPanel extends JPanel
 				housePanel.add(faceDownCard);
 			}
 		}
-		
 	}
 	
-	public void dealNextCard(String playerOrHouse)
+	/**
+	 * Deals a card to either the player or the house.
+	 * @param playerOrHouse: Checks who to deal the card to. 
+	 */
+	private void dealNextCard(String playerOrHouse)
 	{
 		controller.dealCard(isThemed, playerOrHouse);
 		if (playerOrHouse == "player")
@@ -774,7 +847,10 @@ public class FinalPanel extends JPanel
 		}
 	}
 	
-	public void houseTurn()
+	/**
+	 * Decides what the house should do during it's turn when called.
+	 */
+	private void houseTurn()
 	{
 		housePanel.remove(faceDownCard);
 		housePanel.add(houseLabelList.get(houseLabelList.size() - 1));
@@ -793,7 +869,10 @@ public class FinalPanel extends JPanel
 		}
 	}
 	
-	public void playerStand()
+	/**
+	 * Called when the player stands. Reveals the house's second card and disables/enables necessary buttons.
+	 */
+	private void playerStand()
 	{
 		ifPlayerTurn = false;
 		houseScore = realHouseScore;
@@ -805,7 +884,12 @@ public class FinalPanel extends JPanel
 		exitAndSaveButton.setEnabled(true);
 	}
 	
-	public void settleBet(int gameStatus, boolean playerBlackjack)
+	/**
+	 * Calculates the player's bet against the game's outcome and displays to the user their amount of chips.
+	 * @param gameStatus: The status of the game represented as an integer.
+	 * @param playerBlackjack: Whether or not the player has Blackjack.
+	 */
+	private void settleBet(int gameStatus, boolean playerBlackjack)
 	{
 		System.out.println("settle chipBet: " + chipBet);
 		System.out.println("settle chipNumber: " + chipNumber);
@@ -833,7 +917,11 @@ public class FinalPanel extends JPanel
 		exitAndSaveButton.setEnabled(true);
 		System.out.println("hit button enabled2?: " + hitButton.isEnabled());
 	}
-	public void playAgain()
+	
+	/**
+	 * Called when the user clicks the play again button. Restarts the game.
+	 */
+	private void playAgain()
 	{
 		housePanel.removeAll();
 		playerPanel.removeAll();
@@ -853,7 +941,10 @@ public class FinalPanel extends JPanel
 		repaint();
 	}
 	
-	public void betSelected()
+	/**
+	 * Calculates the chip bet and amount when the user selects and confirms their chosen bet. Displays the user's amount of chips.
+	 */
+	private void betSelected()
 	{
 		switch (betSelectorBox.getSelectedIndex())
 		{
@@ -878,6 +969,90 @@ public class FinalPanel extends JPanel
 			chipNumber -= 100;
 			break;
 		}
+		if (chipNumber < 0)
+		{
+			chipNumber = 1000;
+			chipNumberText.setText("Your Chips: " + chipNumber + " (ur welcome)");
+		}
 		chipNumberText.setText("Your Chips: " + chipNumber);
+	}
+	
+	/**
+	 * Helper method to set up the main panel for the Blackjack game.
+	 */
+	private void setupPanel()
+	{
+		this.setLayout(layout);
+		this.setBackground(Color.DARK_GRAY);
+		this.add(cardPanel);
+		cardPanel.add(housePanel);
+		cardPanel.add(playerPanel);
+		this.add(buttonPanel);
+		buttonPanel.add(doubleButton);
+		doubleButton.setEnabled(false);
+		buttonPanel.add(hitButton);
+		hitButton.setEnabled(false);
+		buttonPanel.add(standButton);
+		standButton.setEnabled(false);
+		buttonPanel.add(playAgainButton);
+		playAgainButton.setEnabled(false);
+		buttonPanel.add(exitAndSaveButton);
+		exitAndSaveButton.setEnabled(false);
+		this.add(tempScorePanel);
+		tempScorePanel.add(scorePanel);
+		scorePanel.add(houseScoreText);
+		houseScoreText.setEditable(false);
+		scorePanel.add(playerScoreText);
+		playerScoreText.setEditable(false);
+		this.add(chipPanel);
+		chipPanel.add(chipNumberText);
+		chipNumberText.setEditable(false);
+		chipPanel.add(betSelectorText);
+		betSelectorText.setEditable(false);
+		chipPanel.add(betSelectorBox);
+		chipPanel.add(submitBetButton);
+		playerPanel.setVisible(false);
+		housePanel.setVisible(false);
+		scorePanel.setVisible(false);
+		cardPanel.setBackground(new Color(0, 153, 0));
+		housePanel.setBackground(new Color(0, 153, 0));
+		playerPanel.setBackground(new Color(0, 153, 0));
+	}
+	
+	/**
+	 * Helper method to hold all the constraints for the GUI components in the panel.
+	 */
+	private void setupLayout()
+	{
+		layout.putConstraint(SpringLayout.NORTH, cardPanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, cardPanel, -30, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.WEST, cardPanel, 30, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.WEST, buttonPanel, 30, SpringLayout.EAST, cardPanel);
+		layout.putConstraint(SpringLayout.SOUTH, buttonPanel, 0, SpringLayout.SOUTH, cardPanel);
+		layout.putConstraint(SpringLayout.EAST, buttonPanel, -30, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, scorePanel, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, scorePanel, 0, SpringLayout.WEST, buttonPanel);
+		layout.putConstraint(SpringLayout.EAST, scorePanel, 0, SpringLayout.EAST, buttonPanel);
+		housePanel.setLayout(new BoxLayout(housePanel, BoxLayout.X_AXIS));
+		playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
+		layout.putConstraint(SpringLayout.EAST, cardPanel, -240, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, chipPanel, 0, SpringLayout.SOUTH, scorePanel);
+		layout.putConstraint(SpringLayout.WEST, chipPanel, 0, SpringLayout.WEST, buttonPanel);
+		layout.putConstraint(SpringLayout.SOUTH, chipPanel, 0, SpringLayout.NORTH, buttonPanel);
+		layout.putConstraint(SpringLayout.EAST, chipPanel, 0, SpringLayout.EAST, buttonPanel);
+		layout.putConstraint(SpringLayout.SOUTH, scorePanel, 130, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.NORTH, tempScorePanel, 0, SpringLayout.NORTH, scorePanel);
+		layout.putConstraint(SpringLayout.WEST, tempScorePanel, 0, SpringLayout.WEST, scorePanel);
+		layout.putConstraint(SpringLayout.SOUTH, tempScorePanel, 0, SpringLayout.SOUTH, scorePanel);
+		layout.putConstraint(SpringLayout.EAST, tempScorePanel, 0, SpringLayout.EAST, scorePanel);
+		layout.putConstraint(SpringLayout.WEST, loginPanel, 520, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.EAST, loginPanel, -520, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, startPanel, 0, SpringLayout.NORTH, cardPanel);
+		layout.putConstraint(SpringLayout.WEST, startPanel, 0, SpringLayout.WEST, cardPanel);
+		layout.putConstraint(SpringLayout.SOUTH, startPanel, 0, SpringLayout.SOUTH, cardPanel);
+		layout.putConstraint(SpringLayout.EAST, startPanel, 0, SpringLayout.EAST, buttonPanel);
+		layout.putConstraint(SpringLayout.NORTH, buttonPanel, 245, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.NORTH, loginPanel, 200, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, loginPanel, -200, SpringLayout.SOUTH, this);
 	}
 }
