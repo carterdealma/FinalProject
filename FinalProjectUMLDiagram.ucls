@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="fin.controller" project="FinalProject" file="/FinalProject/src/fin/controller" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="676" width="607" x="65" y="115"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="fin.view" project="FinalProject" file="/FinalProject/src/fin/view" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1404" width="580" x="716" y="132"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="fin.model" project="FinalProject" file="/FinalProject/src/fin/model" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="393" width="613" x="60" y="828"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <class id="4" language="java" name="fin.controller.FinalController" project="FinalProject" 
+    file="/FinalProject/src/fin/controller/FinalController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="462" width="235" x="229" y="177"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="fin.controller.Runner" project="FinalProject" 
+    file="/FinalProject/src/fin/controller/Runner.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="112" width="124" x="85" y="176"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="fin.model.Card" project="FinalProject" 
+    file="/FinalProject/src/fin/model/Card.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="141" y="1040"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="fin.model.DeadpoolCard" project="FinalProject" 
+    file="/FinalProject/src/fin/model/DeadpoolCard.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="347" y="979"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="fin.model.DealtCard" project="FinalProject" 
+    file="/FinalProject/src/fin/model/DealtCard.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="200" x="453" y="914"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="fin.model.EncryptPassword" project="FinalProject" 
+    file="/FinalProject/src/fin/model/EncryptPassword.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="170" width="213" x="222" y="1036"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="fin.view.FinalFrame" project="FinalProject" 
+    file="/FinalProject/src/fin/view/FinalFrame.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="843" y="241"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="fin.view.FinalPanel" project="FinalProject" 
+    file="/FinalProject/src/fin/view/FinalPanel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1328" width="217" x="977" y="191"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="12">    
+    <bendpoint x="608" y="250"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="13" name="frame"/>      
+      <multiplicity id="14" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="16" name="panel"/>      
+      <multiplicity id="17" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="18">    
+    <bendpoint x="104" y="813"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="19" name="cardList"/>      
+      <multiplicity id="20" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="21">    
+    <bendpoint x="555" y="820"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="22" name="dealtCard"/>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="24">    
+    <bendpoint x="425" y="819"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="25" name="houseCardList"/>      
+      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="27">    
+    <bendpoint x="715" y="832"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="28" name="playerCardList"/>      
+      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="31" name="controller"/>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="33">    
+    <bendpoint x="243" y="960"/>    
+    <bendpoint x="220" y="974"/>    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <association id="34">    
+    <bendpoint x="227" y="814"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="35" name="dpCardList"/>      
+      <multiplicity id="36" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="37">    
+    <bendpoint x="193" y="817"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="38" name="card"/>      
+      <multiplicity id="39" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="40">    
+    <bendpoint x="419" y="814"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="41" name="dpCard"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="44" name="controller"/>      
+      <multiplicity id="45" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
