@@ -170,6 +170,11 @@ public class FinalPanel extends JPanel
 	private JTextArea betSelectorText;
 	
 	/**
+	 * A text area of starting instructions for the user
+	 */
+	private JTextArea instructionText;
+	
+	/**
 	 * A text area that instructs the user to select a theme.
 	 */
 	private JTextArea themeText;
@@ -336,6 +341,7 @@ public class FinalPanel extends JPanel
 		this.houseScoreText = new JTextArea("House Score: ");
 		this.playerScoreText = new JTextArea("Your Score: ");
 		this.chipNumberText = new JTextArea("Your Chips: " + chipNumber);
+		this.instructionText = new JTextArea("LOGIN INSTRUCTIONS:\nIf it is your first time playing, create a login below and begin playing!\nOtherwise, you may use a previous login to play!");
 		this.themeText = new JTextArea("Choose your theme:");
 		this.loginText = new JTextArea("Username: ");
 		this.passwordText = new JTextArea("Password : ");
@@ -362,7 +368,9 @@ public class FinalPanel extends JPanel
 	 */
 	private void setupLogin()
 	{
+		instructionText.setEditable(false);
 		this.add(loginPanel);
+		loginPanel.add(instructionText);
 		loginPanel.add(themeText);
 		loginPanel.add(themeSelectorBox);
 		loginPanel.add(confirmThemeButton);
