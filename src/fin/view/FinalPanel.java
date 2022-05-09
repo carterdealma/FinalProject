@@ -370,7 +370,6 @@ public class FinalPanel extends JPanel
 	{
 		instructionText.setEditable(false);
 		this.add(loginPanel);
-		loginPanel.add(instructionText);
 		loginPanel.add(themeText);
 		loginPanel.add(themeSelectorBox);
 		loginPanel.add(confirmThemeButton);
