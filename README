@@ -1,5 +1,7 @@
 # FinalProject
-This is my final project for CS1400 (Object-Oriented Java). In this project I demonstrate an understanding of...
+This is my final project for CS1410 (Object-Oriented Java). I created a game of Blackjack with a few extra features.
+
+In this project I demonstrate an understanding of...
 
 - Data structures (Arrays, ArrayLists, HashMaps)
 - Reading/writing user data to files securely by implementing password encryption
